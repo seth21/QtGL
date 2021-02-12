@@ -4,21 +4,21 @@
     <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\build\CVSCODE_autogen\mocs_compilation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\mainwindow.cpp">
+    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\main.cpp">
+    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\mainwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\scene3d.cpp">
+    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\scene3d.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\mainwindow.h">
+    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\mainwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\scene3d.h">
+    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\scene3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

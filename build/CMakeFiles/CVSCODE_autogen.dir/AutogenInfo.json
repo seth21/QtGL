@@ -8,14 +8,14 @@
 	"HEADERS" : 
 	[
 		[
-			"C:/Users/Seth/Documents/GitHub/CVSCODE/mainwindow.h",
+			"C:/Users/Seth/Documents/GitHub/CVSCODE/src/mainwindow.h",
 			"MU",
-			"EWIEGA46WW/moc_mainwindow.cpp"
+			"UVLADIE3JM/moc_mainwindow.cpp"
 		],
 		[
-			"C:/Users/Seth/Documents/GitHub/CVSCODE/scene3d.h",
+			"C:/Users/Seth/Documents/GitHub/CVSCODE/src/scene3d.h",
 			"MU",
-			"EWIEGA46WW/moc_scene3d.cpp"
+			"UVLADIE3JM/moc_scene3d.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -85,9 +85,9 @@
 	"SETTINGS_FILE_Release" : "C:/Users/Seth/Documents/GitHub/CVSCODE/build/CMakeFiles/CVSCODE_autogen.dir/AutogenUsed_Release.txt",
 	"SOURCES" : 
 	[
-		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/main.cpp", "MU" ],
-		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/mainwindow.cpp", "MU" ],
-		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/scene3d.cpp", "MU" ]
+		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/src/main.cpp", "MU" ],
+		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/src/mainwindow.cpp", "MU" ],
+		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/src/scene3d.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

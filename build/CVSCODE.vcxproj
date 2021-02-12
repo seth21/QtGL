@@ -381,11 +381,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\build\CVSCODE_autogen\mocs_compilation.cpp" />
-    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\mainwindow.cpp" />
-    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\mainwindow.h" />
-    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\main.cpp" />
-    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\scene3d.cpp" />
-    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\scene3d.h" />
+    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\mainwindow.h" />
+    <ClInclude Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\scene3d.h" />
+    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\main.cpp" />
+    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\mainwindow.cpp" />
+    <ClCompile Include="C:\Users\Seth\Documents\GitHub\CVSCODE\src\scene3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\Seth\Documents\GitHub\CVSCODE\build\ZERO_CHECK.vcxproj">

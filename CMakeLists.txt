@@ -20,17 +20,34 @@ else()
     message("Couldn't find Qt")
 endif()
 
-# your source files
-set(sources
-    #mainwindow.ui
-    mainwindow.cpp
-    mainwindow.h
-    main.cpp
-    scene3d.cpp
-    scene3d.h
-)
+## your source files
+# Add source files
+file(GLOB_RECURSE SOURCE_FILES
+        ${CMAKE_SOURCE_DIR}/src/*.c
+        ${CMAKE_SOURCE_DIR}/src/*.cpp)
+
+# Add header files
+file(GLOB_RECURSE HEADER_FILES
+        ${CMAKE_SOURCE_DIR}/src/*.h
+        ${CMAKE_SOURCE_DIR}/src/*.hpp)
+
 # name of the .exe file, window flag and the list of things to compile
-add_executable(${CMAKE_PROJECT_NAME} WIN32 ${sources})
+add_executable(${CMAKE_PROJECT_NAME} WIN32 ${HEADER_FILES} ${SOURCE_FILES})
+
+# resources
+file(GLOB files "resources/*")
+foreach(file ${files})
+	get_filename_component(name ${file} NAME)
+	message(${name})
+	configure_file(${file} resources/${name} COPYONLY)
+endforeach()
+
+# shaders
+file(GLOB files "shaders/*")
+foreach(file ${files})
+	get_filename_component(name ${file} NAME)
+	configure_file(${file} shaders/${name} COPYONLY)
+endforeach()
 
 # also tell CMake to link with the libraries from the line 14
 # otherwise it'll think that you wanted to find those just for fun and won't link them
