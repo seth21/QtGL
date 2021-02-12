@@ -1,0 +1,10 @@
+^C:\USERS\SETH\DOCUMENTS\GITHUB\CVSCODE\BUILD\CMAKEFILES\BE9F8C9FC1B5DC8AC493BE0722469AED\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Seth/Documents/GitHub/CVSCODE -BC:/Users/Seth/Documents/GitHub/CVSCODE/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/Seth/Documents/GitHub/CVSCODE/build/CVSCODE.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
