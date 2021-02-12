@@ -2,6 +2,8 @@
 
 
 #include "scene3d.h"
+#include "assimp/Importer.hpp"
+#include "glm/vec3.hpp"
 
 Scene3D::Scene3D(QWidget *parent) : QGLWidget(parent)
 {
@@ -151,6 +153,9 @@ void Scene3D::initializeGL()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	// mp_timer->start();
 	connect(mp_timer, SIGNAL(timeout()), this, SLOT(update()));
+
+	Assimp::Importer importer;
+	glm::vec3(1,1,1);
 }
 
 void Scene3D::paintGL()

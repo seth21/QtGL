@@ -14,6 +14,12 @@
 # EXTERNAL cache entries
 ########################
 
+//Path to a file.
+ASSIMP_INCLUDE_DIR:PATH=C:/Users/Seth/Documents/GitHub/CVSCODE/include
+
+//Path to a library.
+ASSIMP_LIBRARY:FILEPATH=C:/Users/Seth/Documents/GitHub/CVSCODE/lib/assimp.lib
+
 //Semicolon separated list of supported configuration types, only
 // supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
 // else will be ignored.
@@ -191,6 +197,12 @@ CVSCODE_SOURCE_DIR:STATIC=C:/Users/Seth/Documents/GitHub/CVSCODE
 //Pick a version of Qt to use: 3 or 4
 DESIRED_QT_VERSION:STRING=3
 
+//The directory containing a CMake configuration file for GLM.
+GLM_DIR:PATH=GLM_DIR-NOTFOUND
+
+//Path to a file.
+GLM_INCLUDE_DIR:PATH=C:/Users/Seth/Documents/GitHub/CVSCODE/include
+
 //Path to a file.
 QT3_QGLOBAL_H_FILE:FILEPATH=C:/MinGW/include
 
@@ -358,4 +370,6 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding GLM
+FIND_PACKAGE_MESSAGE_DETAILS_GLM:INTERNAL=[C:/Users/Seth/Documents/GitHub/CVSCODE/include][v()]
 

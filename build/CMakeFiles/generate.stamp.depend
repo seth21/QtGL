@@ -12,6 +12,8 @@ C:/Program Files/CMake/share/cmake-3.16/Modules/CMakeSystemSpecificInitialize.cm
 C:/Program Files/CMake/share/cmake-3.16/Modules/Compiler/CMakeCommonCompilerMacros.cmake
 C:/Program Files/CMake/share/cmake-3.16/Modules/Compiler/MSVC-C.cmake
 C:/Program Files/CMake/share/cmake-3.16/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/FindPackageMessage.cmake
 C:/Program Files/CMake/share/cmake-3.16/Modules/Platform/Windows-MSVC-C.cmake
 C:/Program Files/CMake/share/cmake-3.16/Modules/Platform/Windows-MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-3.16/Modules/Platform/Windows-MSVC.cmake
@@ -56,3 +58,5 @@ C:/Users/Seth/Documents/GitHub/CVSCODE/build/CMakeFiles/3.16.3/CMakeCCompiler.cm
 C:/Users/Seth/Documents/GitHub/CVSCODE/build/CMakeFiles/3.16.3/CMakeCXXCompiler.cmake
 C:/Users/Seth/Documents/GitHub/CVSCODE/build/CMakeFiles/3.16.3/CMakeRCCompiler.cmake
 C:/Users/Seth/Documents/GitHub/CVSCODE/build/CMakeFiles/3.16.3/CMakeSystem.cmake
+C:/Users/Seth/Documents/GitHub/CVSCODE/cmake/FindASSIMP.cmake
+C:/Users/Seth/Documents/GitHub/CVSCODE/cmake/FindGLM.cmake
