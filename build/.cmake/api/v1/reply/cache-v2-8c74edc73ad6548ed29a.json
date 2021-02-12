@@ -1002,6 +1002,114 @@
 			"value" : "C:/Users/Seth/Documents/GitHub/CVSCODE"
 		},
 		{
+			"name" : "DESIRED_QT_VERSION",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Pick a version of Qt to use: 3 or 4"
+				}
+			],
+			"type" : "STRING",
+			"value" : "3"
+		},
+		{
+			"name" : "QT3_QGLOBAL_H_FILE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a file."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/MinGW/include"
+		},
+		{
+			"name" : "QT4_QGLOBAL_H_FILE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a file."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "QT4_QGLOBAL_H_FILE-NOTFOUND"
+		},
+		{
+			"name" : "QT_INCLUDE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "path to Qt3 include directory"
+				}
+			],
+			"type" : "PATH",
+			"value" : "QT_INCLUDE_DIR-NOTFOUND"
+		},
+		{
+			"name" : "QT_QASSISTANTCLIENT_LIBRARY",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a library."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "QT_QASSISTANTCLIENT_LIBRARY-NOTFOUND"
+		},
+		{
+			"name" : "QT_QMAKE_EXECUTABLE_FINDQT",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a program."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/Qt/5.15.2/msvc2019_64/bin/qmake.exe"
+		},
+		{
+			"name" : "QT_QTMAIN_LIBRARY",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "This Library is only needed by and included with Qt3 on MSWindows. It should be NOTFOUND, undefined or IGNORE otherwise."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/Qt/5.15.2/msvc2019_64/lib/qtmain.lib"
+		},
+		{
+			"name" : "QT_QT_LIBRARY",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a library."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "QT_QT_LIBRARY-NOTFOUND"
+		},
+		{
+			"name" : "QT_UIC_EXECUTABLE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a program."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/Qt/5.15.2/msvc2019_64/bin/uic.exe"
+		},
+		{
 			"name" : "Qt5Core_DIR",
 			"properties" : 
 			[
@@ -1024,6 +1132,18 @@
 			],
 			"type" : "PATH",
 			"value" : "C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Gui"
+		},
+		{
+			"name" : "Qt5OpenGL_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt5OpenGL."
+				}
+			],
+			"type" : "PATH",
+			"value" : "C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5OpenGL"
 		},
 		{
 			"name" : "Qt5Widgets_DIR",

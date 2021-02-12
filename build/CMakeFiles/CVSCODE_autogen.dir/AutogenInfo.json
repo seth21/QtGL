@@ -11,6 +11,11 @@
 			"C:/Users/Seth/Documents/GitHub/CVSCODE/mainwindow.h",
 			"MU",
 			"EWIEGA46WW/moc_mainwindow.cpp"
+		],
+		[
+			"C:/Users/Seth/Documents/GitHub/CVSCODE/scene3d.h",
+			"MU",
+			"EWIEGA46WW/moc_scene3d.cpp"
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -20,8 +25,23 @@
 	"INCLUDE_DIR_RelWithDebInfo" : "C:/Users/Seth/Documents/GitHub/CVSCODE/build/CVSCODE_autogen/include_RelWithDebInfo",
 	"INCLUDE_DIR_Release" : "C:/Users/Seth/Documents/GitHub/CVSCODE/build/CVSCODE_autogen/include_Release",
 	"MOC_COMPILATION_FILE" : "C:/Users/Seth/Documents/GitHub/CVSCODE/build/CVSCODE_autogen/mocs_compilation.cpp",
-	"MOC_DEFINITIONS" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB", "WIN32" ],
-	"MOC_DEFINITIONS_Debug" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_WIDGETS_LIB", "WIN32" ],
+	"MOC_DEFINITIONS" : 
+	[
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_OPENGL_LIB",
+		"QT_WIDGETS_LIB",
+		"WIN32"
+	],
+	"MOC_DEFINITIONS_Debug" : 
+	[
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_OPENGL_LIB",
+		"QT_WIDGETS_LIB",
+		"WIN32"
+	],
 	"MOC_DEPEND_FILTERS" : 
 	[
 		[
@@ -38,7 +58,8 @@
 		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
 		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
 		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
-		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtOpenGL"
 	],
 	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
 	"MOC_OPTIONS" : [],
@@ -65,7 +86,8 @@
 	"SOURCES" : 
 	[
 		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/main.cpp", "MU" ],
-		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/mainwindow.cpp", "MU" ]
+		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/mainwindow.cpp", "MU" ],
+		[ "C:/Users/Seth/Documents/GitHub/CVSCODE/scene3d.cpp", "MU" ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

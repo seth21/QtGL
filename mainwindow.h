@@ -8,6 +8,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include "scene3d.h"
 
 class MainWindow : public QMainWindow
 {
@@ -20,4 +21,7 @@ private slots:
 	void OnFileNew();
 	void OnFileOpen();
 	void OnFileSave();
+    
+private:
+    Scene3D *mp_scene3D;
 };

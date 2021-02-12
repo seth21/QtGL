@@ -188,11 +188,42 @@ CVSCODE_BINARY_DIR:STATIC=C:/Users/Seth/Documents/GitHub/CVSCODE/build
 //Value Computed by CMake
 CVSCODE_SOURCE_DIR:STATIC=C:/Users/Seth/Documents/GitHub/CVSCODE
 
+//Pick a version of Qt to use: 3 or 4
+DESIRED_QT_VERSION:STRING=3
+
+//Path to a file.
+QT3_QGLOBAL_H_FILE:FILEPATH=C:/MinGW/include
+
+//Path to a file.
+QT4_QGLOBAL_H_FILE:FILEPATH=QT4_QGLOBAL_H_FILE-NOTFOUND
+
+//path to Qt3 include directory
+QT_INCLUDE_DIR:PATH=QT_INCLUDE_DIR-NOTFOUND
+
+//Path to a library.
+QT_QASSISTANTCLIENT_LIBRARY:FILEPATH=QT_QASSISTANTCLIENT_LIBRARY-NOTFOUND
+
+//Path to a program.
+QT_QMAKE_EXECUTABLE_FINDQT:FILEPATH=C:/Qt/5.15.2/msvc2019_64/bin/qmake.exe
+
+//This Library is only needed by and included with Qt3 on MSWindows.
+// It should be NOTFOUND, undefined or IGNORE otherwise.
+QT_QTMAIN_LIBRARY:FILEPATH=C:/Qt/5.15.2/msvc2019_64/lib/qtmain.lib
+
+//Path to a library.
+QT_QT_LIBRARY:FILEPATH=QT_QT_LIBRARY-NOTFOUND
+
+//Path to a program.
+QT_UIC_EXECUTABLE:FILEPATH=C:/Qt/5.15.2/msvc2019_64/bin/uic.exe
+
 //The directory containing a CMake configuration file for Qt5Core.
 Qt5Core_DIR:PATH=C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core
 
 //The directory containing a CMake configuration file for Qt5Gui.
 Qt5Gui_DIR:PATH=C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Gui
+
+//The directory containing a CMake configuration file for Qt5OpenGL.
+Qt5OpenGL_DIR:PATH=C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5OpenGL
 
 //The directory containing a CMake configuration file for Qt5Widgets.
 Qt5Widgets_DIR:PATH=C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Widgets

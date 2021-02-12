@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget * parent)
 
 	setMinimumSize(800, 450);
 
+    mp_scene3D = new Scene3D(this);
+	setCentralWidget(mp_scene3D);
+
 	// == MENU BAR ==
 	QMenuBar * menuBar = new QMenuBar(this);
 	setMenuBar(menuBar);
