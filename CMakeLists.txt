@@ -75,6 +75,7 @@ endforeach()
 file(GLOB files "shaders/*")
 foreach(file ${files})
 	get_filename_component(name ${file} NAME)
+	message(${name})
 	configure_file(${file} shaders/${name} COPYONLY)
 endforeach()
 
