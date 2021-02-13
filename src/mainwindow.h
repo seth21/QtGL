@@ -21,7 +21,7 @@ private slots:
 	void OnFileNew();
 	void OnFileOpen();
 	void OnFileSave();
-    
+	
 private:
-    Scene3D *mp_scene3D;
+	Scene3D *mp_scene3D;
 };
