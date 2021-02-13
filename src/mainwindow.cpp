@@ -3,6 +3,7 @@
 #include <QAction>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent)
@@ -54,6 +55,8 @@ MainWindow::MainWindow(QWidget * parent)
 void MainWindow::OnFileNew()
 {
 	statusBar()->showMessage("File -> New");
+	qDebug() << "file new from debug";
+	std::cerr << "file new from cout" << std::endl;
 }
 
 void MainWindow::OnFileOpen()
