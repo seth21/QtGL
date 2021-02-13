@@ -12,7 +12,6 @@ set(CMAKE_AUTOUIC ON)
 
 message("Looking for Qt...")
 # Qt modules (https://doc.qt.io/qt-5/qtmodules.html) you're using in your application
-find_package(Qt5 REQUIRED Widgets)
 find_package(Qt5 COMPONENTS Widgets OpenGL REQUIRED)
 if (${Qt5_FOUND})
     message("Found Qt " ${Qt5_VERSION})
@@ -48,13 +47,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # GLM
 find_package(GLM REQUIRED)
-message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
+message(STATUS "Found GLM at ${GLM_INCLUDE_DIR}")
+if(GLM_FOUND)
+	include_directories(${GLM_INCLUDE_DIR})
+endif()
 
 # ASSIMP
+set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+set(ASSIMP_LIBRARY ${CMAKE_SOURCE_DIR}/lib)
 find_package(ASSIMP REQUIRED)
 message(STATUS "Found ASSIMP at ${ASSIMP_INCLUDE_DIR}")
 if(ASSIMP_FOUND)
-    include_directories(${ASSIMP_INCLUDE_DIR})
+	include_directories(${ASSIMP_INCLUDE_DIR})
 endif()
 
 set(LIBS assimp)
@@ -85,8 +89,8 @@ endif()
 # also tell CMake to link with the libraries from the line 14
 # otherwise it'll think that you wanted to find those just for fun and won't link them
 target_link_libraries(
-    ${CMAKE_PROJECT_NAME}
-    Qt5::Widgets
-    Qt5::OpenGL
-    ${LIBS}
-    )
+	${CMAKE_PROJECT_NAME}
+	Qt5::Widgets
+	Qt5::OpenGL
+	${LIBS}
+	)

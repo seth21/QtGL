@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+#include "mainwindow.h"
 
 #include <QAction>
 #include <QMenuBar>
@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget * parent)
 
 	setMinimumSize(800, 450);
 
-    mp_scene3D = new Scene3D(this);
+	mp_scene3D = new Scene3D(this);
 	setCentralWidget(mp_scene3D);
 
 	// == MENU BAR ==
