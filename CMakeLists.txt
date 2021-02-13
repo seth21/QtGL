@@ -44,7 +44,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 # LOOK for the packages that we need! #
 #######################################
 
-
 # GLM
 find_package(GLM REQUIRED)
 message(STATUS "Found GLM at ${GLM_INCLUDE_DIR}")
@@ -63,22 +62,6 @@ endif()
 
 set(LIBS assimp)
 
-# resources
-file(GLOB files "resources/*")
-foreach(file ${files})
-	get_filename_component(name ${file} NAME)
-	message(${name})
-	configure_file(${file} resources/${name} COPYONLY)
-endforeach()
-
-# shaders
-file(GLOB files "shaders/*")
-foreach(file ${files})
-	get_filename_component(name ${file} NAME)
-	message(${name})
-	configure_file(${file} shaders/${name} COPYONLY)
-endforeach()
-
 # Copy dlls
 if(WIN32)
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -95,3 +78,13 @@ target_link_libraries(
 	Qt5::OpenGL
 	${LIBS}
 	)
+
+# copy folder resources and its contents
+file(GLOB files "resources/**/*")
+foreach(file ${files})
+	get_filename_component(name ${file} NAME)
+	get_filename_component(folder ${file} PATH)
+	string(REPLACE "${CMAKE_SOURCE_DIR}/" "" folder "${folder}")
+	message(STATUS "path to copy = ${folder}/${name}")
+	configure_file(${file} "${folder}/${name}" COPYONLY)
+endforeach()
