@@ -5,7 +5,7 @@
 
 Texture::Texture(QString fileName)
 {
-    QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/" +fileName);
+    QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/textures/" +fileName);
     mp_textureData = stbi_load(imagePath.absolutePath().toUtf8(), &m_width, &m_height, &m_nrChannels, 0);
     qDebug() << sizeof(mp_textureData) << m_width << m_height << m_nrChannels;
     uploadGL();

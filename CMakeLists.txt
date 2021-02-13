@@ -10,6 +10,11 @@ set(CMAKE_AUTOMOC ON)
 # if you're using Widgets and editing .ui forms in Designer
 set(CMAKE_AUTOUIC ON)
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+  message(STATUS "Build type not specified: Use Release by default")
+endif(NOT CMAKE_BUILD_TYPE)
+
 message("Looking for Qt...")
 # Qt modules (https://doc.qt.io/qt-5/qtmodules.html) you're using in your application
 find_package(Qt5 COMPONENTS Widgets OpenGL REQUIRED)
@@ -78,7 +83,7 @@ target_link_libraries(
 	Qt5::OpenGL
 	${LIBS}
 	)
-
+#
 # copy folder resources and its contents
 file(GLOB files "resources/**/*")
 foreach(file ${files})
@@ -86,5 +91,9 @@ foreach(file ${files})
 	get_filename_component(folder ${file} PATH)
 	string(REPLACE "${CMAKE_SOURCE_DIR}/" "" folder "${folder}")
 	message(STATUS "path to copy = ${folder}/${name}")
-	configure_file(${file} "${folder}/${name}" COPYONLY)
+	if (MSVC)
+		configure_file(${file} "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE}/${folder}/${name}" COPYONLY)
+	else()
+		configure_file(${file} "${CMAKE_CURRENT_BINARY_DIR}/${folder}/${name}" COPYONLY)
+	endif()
 endforeach()

@@ -75,8 +75,7 @@ void Scene3D::initializeGL()
 	// glViewport(0, 0, 800, 600);
 
 	// build, compile and start our shader program
-	std::string appDir = QCoreApplication::applicationDirPath().toStdString();
-	shader.init(appDir + "/shaders/default");
+	shader.init("default");
 	shader.start();
 
     //assimp

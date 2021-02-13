@@ -4,6 +4,8 @@
 #include <string.h>
 //#include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
+#include <QDir>
+#include <QApplication>
 #include <unordered_map>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.inl>

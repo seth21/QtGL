@@ -11,9 +11,10 @@ void ShaderProgram::init(std::string shaderName)
 {
     if (programID != 0) std::cout << "ShaderProgram already initialized!" << std::endl;
     initializeOpenGLFunctions();
-		
-    unsigned int vertexShader = prepareShader(GL_VERTEX_SHADER, shaderName + ".vert");
-    unsigned int fragmentShader = prepareShader(GL_FRAGMENT_SHADER, shaderName +".frag");
+    std::string shaderDir = QApplication::applicationDirPath().toStdString() + "/resources/shaders/" + shaderName;
+	
+    unsigned int vertexShader = prepareShader(GL_VERTEX_SHADER, shaderDir + ".vert");
+    unsigned int fragmentShader = prepareShader(GL_FRAGMENT_SHADER, shaderDir +".frag");
 
     programID = glCreateProgram();
     glAttachShader(programID, vertexShader);
