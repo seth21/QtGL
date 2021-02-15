@@ -18,8 +18,14 @@
 #include <QOpenGLExtraFunctions>
 #include <QTimer>
 #include <QtMath>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <vector>
 #include "shaderprogram.h"
 #include "texture.h"
+#include "model.h"
+//#include "mesh.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions
 {
@@ -31,6 +37,8 @@ public:
 
 	QSize sizeHint() const override;
     void paintGL() override;
+	Model *model;
+
 protected:
 	void initializeGL() override;
 

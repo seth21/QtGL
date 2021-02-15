@@ -2,12 +2,14 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <iostream>
 
 Texture::Texture(QString fileName)
 {
     QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/textures/" +fileName);
     mp_textureData = stbi_load(imagePath.absolutePath().toUtf8(), &m_width, &m_height, &m_nrChannels, 0);
-    qDebug() << sizeof(mp_textureData) << m_width << m_height << m_nrChannels;
+    qDebug() << "Loaded texture:" << fileName << "->" << sizeof(mp_textureData) << m_width << m_height << m_nrChannels;
+    
     uploadGL();
 }
 

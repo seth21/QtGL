@@ -1,0 +1,11 @@
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
+
+struct Vertex {
+    // Position
+    glm::vec3 Position;
+    // Normal
+    glm::vec3 Normal;
+    // TexCoords
+    glm::vec2 TexCoords;
+};

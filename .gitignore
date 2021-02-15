@@ -74,5 +74,7 @@ Thumbs.db
 
 # Nikos
 build/*
+out/*
 .vscode/*
 *.user
+.vs/*
