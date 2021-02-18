@@ -25,7 +25,9 @@
 #include "shaderprogram.h"
 #include "texture.h"
 #include "model.h"
-//#include "mesh.h"
+#include "inputmgr.h"
+#include "action.h"
+#include "camera.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions
 {
@@ -38,12 +40,13 @@ public:
 	QSize sizeHint() const override;
     void paintGL() override;
 	Model *model;
-
+	//void handleAction(ACTION action, bool pressed) override;
+	//void handleMouseDelta(int dX, int dY) override;
 protected:
 	void initializeGL() override;
 
 	void resizeGL(int w, int h) override;
-
+	
 	void closeEvent(QCloseEvent *event) override;
 protected slots:
 	
@@ -64,6 +67,7 @@ private:
 
     Texture *texture;
 	unsigned char * mp_textureData;
+	Camera cam;
 };
 
 #endif	// SCENE3D_H

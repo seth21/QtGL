@@ -5,17 +5,18 @@
 #include <QStatusBar>
 #include <iostream>
 
-MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent)
+
+MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent)
 {
 	// == WINDOW SETTINGS ==
 	setWindowTitle("Basic Application");
-
+	
 	setMinimumSize(800, 450);
-
+	
 	mp_scene3D = new Scene3D(this);
 	setCentralWidget(mp_scene3D);
-
+	setMouseTracking(true);
+	//grabMouse();
 	// == MENU BAR ==
 	QMenuBar * menuBar = new QMenuBar(this);
 	setMenuBar(menuBar);
@@ -67,4 +68,26 @@ void MainWindow::OnFileOpen()
 void MainWindow::OnFileSave()
 {
 	statusBar()->showMessage("File -> Save");
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* event) {
+	if (event->isAutoRepeat())
+	{
+		return;
+	}
+	InputManager::getInstance().registerPress(event->key(), true);
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent* event) {
+	if (event->isAutoRepeat())
+	{
+		return;
+	}
+	InputManager::getInstance().registerPress(event->key(), false);
+
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent* event) {
+	InputManager::getInstance().registerMouse(event->pos().x(), event->pos().y());
+
 }

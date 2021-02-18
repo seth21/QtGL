@@ -62,7 +62,7 @@ void Model::loadModel(std::string path)
     processNode(scene->mRootNode, scene);
 }  
 
-Mesh* Model::processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex> &vertices, std::vector<GLuint> &indices)
+void Model::processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex> &vertices, std::vector<GLuint> &indices)
 {
     //std::vector<Texture> textures;
     qDebug() << "Vertices " << mesh->mNumVertices;
@@ -106,8 +106,6 @@ Mesh* Model::processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex>
     {
         
     }
-
-    return new Mesh(vertices, indices);
 
 }  
 

@@ -9,6 +9,8 @@
 
 #include <QMainWindow>
 #include "scene3d.h"
+#include <QKeyEvent>
+#include "inputmgr.h"
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +18,9 @@ class MainWindow : public QMainWindow
 
 public:
 	MainWindow(QWidget * parent = nullptr);
-
+	void keyPressEvent(QKeyEvent* event);
+	void keyReleaseEvent(QKeyEvent* event);
+	void mouseMoveEvent(QMouseEvent* event);
 private slots:
 	void OnFileNew();
 	void OnFileOpen();

@@ -11,20 +11,11 @@
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 
 
-glm::mat4 camera(float Translate, glm::vec2 const & Rotate)
-{
-    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.f);
-    glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
-    View = glm::rotate(View, glm::radians(Rotate.y), glm::vec3(-1.0f, 0.0f, 0.0f));
-    View = glm::rotate(View, glm::radians(Rotate.x), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-    return Projection * View * Model;
-}
-
 Scene3D::Scene3D(QWidget *parent) : QGLWidget(parent)
 {
 	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
+	setMouseTracking(true);
+	//grabMouse();
 }
 
 Scene3D::~Scene3D()
@@ -67,14 +58,17 @@ void Scene3D::initializeGL()
 
 }
 
-float rotation = 0;
 void Scene3D::paintGL()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-    rotation += 20.0f*deltaTime();
-    shader.loadMatrix4f("pvm", camera(35+sin(rotation*0.01f), glm::vec2(0,rotation)));
-
+	cam.update(deltaTime());
+    
+	glm::mat4 PVmat = cam.getPVmatrix();
+	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+	shader.loadMatrix4f("pvm", PVmat * Model);
+	if (InputManager::getInstance().isPressed(FORWARD)) {
+		//qDebug() << "FORWARD";
+	}
 	model->drawNow();
 }
 
@@ -96,3 +90,5 @@ void Scene3D::closeEvent(QCloseEvent *event)
     //glDeleteProgram(m_shaderProgram);
 	doneCurrent();	
 }
+
+

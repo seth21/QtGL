@@ -26,7 +26,7 @@ class Model : protected QOpenGLExtraFunctions{
     private:
         
         void processNode(aiNode *node, const aiScene *scene);
-        Mesh* processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
+        void processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
 };
 
 #endif
