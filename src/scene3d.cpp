@@ -44,13 +44,23 @@ void Scene3D::initializeGL()
 	// glViewport(0, 0, 800, 600);
 
 	// build, compile and start our shader program
-	shader.init("default");
+	shader.addFlag("ALBEDO");
+	shader.addFlag("NORMAL");
+	shader.init("default2");
 	shader.start();
+	shader.loadVector3f("lightPos", glm::vec3(40, 40, 0));
+	shader.loadVector3f("ambientLight", glm::vec3(0.2, 0.2, 0.1));
+	shader.loadVector3f("lightColor", glm::vec3(0.7, 0.6, 0.3));
+	shader.loadMatrix4f("projMat", cam.getProjMatrix());
+	model = new Model("crate.obj");
 
-	model = new Model("Dog.obj");
-
-    texture = new Texture("dog01.jpg");
-    texture->bind(0);
+    texture = new Texture("crate.png");
+	texNormal = new Texture("crateNormal.png");
+	
+	texture->bind(0);
+	texNormal->bind(1);
+	shader.loadInt("albedoMap", 0);
+	shader.loadInt("normalMap", 1);
 
     mp_timer->start();
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -63,9 +73,11 @@ void Scene3D::paintGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	cam.update(deltaTime());
     
-	glm::mat4 PVmat = cam.getPVmatrix();
-	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
-	shader.loadMatrix4f("pvm", PVmat * Model);
+	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
+	shader.loadMatrix4f("viewMat", cam.getViewMatrix());
+	shader.loadVector3f("viewPos", cam.position);
+	//qDebug() << cam.up.x <<","<< cam.up.y << "," << cam.up.z;
+	shader.loadMatrix4f("modelMat", Model);
 	if (InputManager::getInstance().isPressed(FORWARD)) {
 		//qDebug() << "FORWARD";
 	}
@@ -74,9 +86,21 @@ void Scene3D::paintGL()
 
 void Scene3D::resizeGL(int w, int h)
 {
-	int side = qMin(w, h);
-	glViewport((w - side) / 2, (h - side) / 2, side, side);
-
+	//int side = qMin(w, h);
+	//glViewport((w - side) / 2, (h - side) / 2, side, side);
+	float aspectRatio = 4.0f / 3.0f;
+	if (h * aspectRatio <= w) {
+		int ww = h * aspectRatio;
+		int hh = h;
+		glViewport((w - ww) / 2, (h - hh) / 2, ww, hh);
+	}
+	else {
+		int ww = w;
+		int hh = (float)h / aspectRatio;
+		glViewport((w - ww) / 2, (h - hh) / 2, ww, hh);
+	}
+	
+	
 }
 
 float Scene3D::deltaTime(){

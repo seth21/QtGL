@@ -17,23 +17,23 @@ public:
 	Camera();
 	glm::mat4 getPVmatrix();
 
+	glm::mat4 getProjMatrix();
+
+	glm::mat4 getViewMatrix();
+
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat rotation;
 
-	//defaults
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 forward = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
-	//camera vectors
-	glm::vec3 frontC = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 rightC = glm::vec3(1.0f, 0.0f, 0.0f);
-	glm::vec3 upC = glm::vec3(0.0f, 1.0f, 0.0f);
-
 	virtual void handleAction(ACTION action, bool pressed) override;
 	virtual void handleMouseDelta(int dx, int dy) override;
+	void updateVectors();
+	const glm::vec3& getFront();
+	const glm::vec3& getRight();
 	void update(float deltaTime);
 private:
-	int pitch = 0, yaw = 0;
+	float rightAngle = 0, upAngle = 0;
+	glm::vec3 Front = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 Right = glm::vec3(1.0f, 0.0f, 0.0f);
 
 };
 

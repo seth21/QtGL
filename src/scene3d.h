@@ -66,6 +66,7 @@ private:
 	float m_green;
 
     Texture *texture;
+	Texture* texNormal;
 	unsigned char * mp_textureData;
 	Camera cam;
 };

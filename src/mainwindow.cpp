@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent)
 	// == WINDOW SETTINGS ==
 	setWindowTitle("Basic Application");
 	
-	setMinimumSize(800, 450);
+	setMinimumSize(800, 600);
 	
 	mp_scene3D = new Scene3D(this);
 	setCentralWidget(mp_scene3D);

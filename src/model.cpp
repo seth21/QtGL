@@ -47,7 +47,7 @@ void Model::loadModel(std::string path)
 {
     //
 	Assimp::Importer import;
-    const aiScene *scene = import.ReadFile((QApplication::applicationDirPath() + "/resources/models/").toStdString() + path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene *scene = import.ReadFile((QApplication::applicationDirPath() + "/resources/models/").toStdString() + path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 	
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
     {
@@ -60,10 +60,12 @@ void Model::loadModel(std::string path)
     //directory = path.substr(0, path.find_last_of('/'));
     qDebug() << "Scene meshes " << scene->mNumMeshes;
     processNode(scene->mRootNode, scene);
+ 
 }  
 
 void Model::processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex> &vertices, std::vector<GLuint> &indices)
 {
+   
     //std::vector<Texture> textures;
     qDebug() << "Vertices " << mesh->mNumVertices;
     for(unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -81,6 +83,12 @@ void Model::processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex> 
 		vector.z = mesh->mNormals[i].z;
 		vertex.Normal = vector;  
 
+        if (mesh->HasTangentsAndBitangents()) {
+            vertex.Tangent.x = mesh->mTangents[i].x;
+            vertex.Tangent.y = mesh->mTangents[i].y;
+            vertex.Tangent.z = mesh->mTangents[i].z;
+        }
+        
 		if(mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
 		{
 			glm::vec2 vec;

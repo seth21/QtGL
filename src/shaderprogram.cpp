@@ -1,10 +1,15 @@
 #include "shaderprogram.h"
 #include <iostream>
 #include <fstream>
+#include <QDebug>
 GLuint ShaderProgram::currentProg = 0;
 
 ShaderProgram::ShaderProgram(){
 
+}
+
+void ShaderProgram::addFlag(std::string flag) {
+    definedFlags.push_back(flag);
 }
 
 void ShaderProgram::init(std::string shaderName)
@@ -86,10 +91,10 @@ GLuint ShaderProgram::getUniformLocation(const std::string &name){
         loc.val = glGetUniformLocation(programID, name.c_str());
         uniformLocs[name] = loc;
         if (loc.val == -1){
-            std::cout << "No uniform with name '" << name << "' in shader" << std::endl;
+            qDebug() << "No uniform with name '" << name.c_str() << "' in shader";
         }
         else{
-            std::cout << "Cached uniform with name '" << name << "' with id:" << loc.val << std::endl;
+            qDebug() << "Cached uniform with name '" << name.c_str() << "' with id:" << loc.val;
         }
     }
     return loc.val;
@@ -105,6 +110,10 @@ void ShaderProgram::loadInt(const std::string &name, GLint data){
 
 void ShaderProgram::loadBoolean(const std::string &name, bool value){
     glUniform1f(getUniformLocation(name), (value ? 1.0f : 0.0f));
+}
+
+void ShaderProgram::loadVector3f(const std::string& name, glm::vec3 vec3) {
+    glUniform3f(getUniformLocation(name), vec3.x, vec3.y, vec3.z);
 }
 
 void ShaderProgram::loadVector3f(const std::string &name, GLfloat x, GLfloat y, GLfloat z){
@@ -162,9 +171,15 @@ std::string ShaderProgram::readFile(const std::string& filePath) {
     }
 
     std::string line = "";
+    bool versionFound = false;
     while (!fileStream.eof()) {
         std::getline(fileStream, line);
         content.append(line + "\n");
+        if (!versionFound && (line.rfind("#version"), 0) == 0) {
+            versionFound = true;
+            for (int i = 0; i < definedFlags.size(); i++)
+                content.append("#define " + definedFlags[i] + "\n");
+        }
         //std::cout << line << std::endl;
     }
 

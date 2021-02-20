@@ -5,6 +5,7 @@
 //#include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 #include <QDir>
+
 #include <QApplication>
 #include <unordered_map>
 #include <glm/mat4x4.hpp>
@@ -14,6 +15,7 @@ class ShaderProgram : protected QOpenGLExtraFunctions
 public:
     static GLuint currentProg;
     ShaderProgram();
+    void addFlag(std::string flag);
     void init(std::string shaderName);
     ~ShaderProgram();
     void start();
@@ -36,6 +38,7 @@ public:
     void loadFloat(const std::string &name, GLfloat data);
     void loadInt(const std::string &name, GLint data);
     void loadBoolean(const std::string &name, bool value);
+    void loadVector3f(const std::string& name, glm::vec3 vec3);
     void loadVector3f(const std::string &name, GLfloat x, GLfloat y, GLfloat z);
     void loadVector2f(const std::string &name, GLfloat x, GLfloat y);
     void loadVector4f(const std::string &name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
@@ -45,6 +48,7 @@ private:
     std::string readFile(const std::string& filePath);
     GLuint programID = 0;
     std::unordered_map<std::string, GLintDefault> uniformLocs;
+    std::vector<std::string> definedFlags;
 };
 
 #endif // SHADERPROGRAM_H
