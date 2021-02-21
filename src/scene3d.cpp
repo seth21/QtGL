@@ -45,22 +45,22 @@ void Scene3D::initializeGL()
 
 	// build, compile and start our shader program
 	shader.addFlag("ALBEDO");
-	shader.addFlag("NORMAL");
+	//shader.addFlag("NORMAL");
 	shader.init("default2");
 	shader.start();
 	shader.loadVector3f("lightPos", glm::vec3(40, 40, 0));
 	shader.loadVector3f("ambientLight", glm::vec3(0.2, 0.2, 0.1));
 	shader.loadVector3f("lightColor", glm::vec3(0.7, 0.6, 0.3));
 	shader.loadMatrix4f("projMat", cam.getProjMatrix());
-	model = new Model("crate.obj");
-
-    texture = new Texture("crate.png");
-	texNormal = new Texture("crateNormal.png");
+	model = new Model("models/sponza.obj");
+	model->entity->scale = glm::vec3(0.05f);
+    //texture = Resources::getInstance().getTexture("textures/Shiba_002_DIFF.tga");
+	//texNormal = Resources::getInstance().getTexture("textures/Shiba_NORM.tga");
 	
-	texture->bind(0);
-	texNormal->bind(1);
+	//texture->bind(0);
+	//texNormal->bind(1);
 	shader.loadInt("albedoMap", 0);
-	shader.loadInt("normalMap", 1);
+	//shader.loadInt("normalMap", 1);
 
     mp_timer->start();
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -73,15 +73,15 @@ void Scene3D::paintGL()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	cam.update(deltaTime());
     
-	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
 	shader.loadMatrix4f("viewMat", cam.getViewMatrix());
 	shader.loadVector3f("viewPos", cam.position);
 	//qDebug() << cam.up.x <<","<< cam.up.y << "," << cam.up.z;
-	shader.loadMatrix4f("modelMat", Model);
+	//shader.loadMatrix4f("modelMat", Model);
 	if (InputManager::getInstance().isPressed(FORWARD)) {
 		//qDebug() << "FORWARD";
 	}
-	model->drawNow();
+	
+	model->entity->drawNow(shader);
 }
 
 void Scene3D::resizeGL(int w, int h)

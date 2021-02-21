@@ -4,13 +4,13 @@
 #include "stb_image.h"
 #include <iostream>
 
-Texture::Texture(QString fileName)
+Texture::Texture(std::string fileName)
 {
-    QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/textures/" +fileName);
+    QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/" +fileName.c_str());
     mp_textureData = stbi_load(imagePath.absolutePath().toUtf8(), &m_width, &m_height, &m_nrChannels, 0);
-    qDebug() << "Loaded texture:" << fileName << "->" << sizeof(mp_textureData) << m_width << m_height << m_nrChannels;
-    
-    uploadGL();
+    qDebug() << "Loaded texture:" << fileName.c_str() << "->" << sizeof(mp_textureData) << m_width << m_height << m_nrChannels;
+    fullPath = imagePath.absolutePath().toStdString();
+    fileOK = uploadGL();
 }
 
 bool Texture::uploadGL(){
@@ -45,6 +45,22 @@ void Texture::unbind(){
 }
 
 Texture::~Texture(){
+    
+}
+
+const std::string& Texture::getFullPath()
+{
+    return fullPath;
+}
+
+bool Texture::fileLoaded()
+{
+    return fileOK;
+}
+
+void Texture::release()
+{
     unbind();
     glDeleteTextures(1, &m_texture);
 }
+

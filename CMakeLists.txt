@@ -26,7 +26,7 @@ endif()
 
 # Add .lib files
 link_directories(${CMAKE_SOURCE_DIR}/lib)
-
+#
 ## your source files
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES
@@ -85,7 +85,7 @@ target_link_libraries(
 	)
 #
 # copy folder resources and its contents
-file(GLOB files "resources/**/*")
+file(GLOB_RECURSE files "resources/**/*")
 foreach(file ${files})
 	get_filename_component(name ${file} NAME)
 	get_filename_component(folder ${file} PATH)

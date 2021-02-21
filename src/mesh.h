@@ -8,6 +8,7 @@
 #include <QDebug>
 #include "vertex.h"
 #include "modeltexturedef.h"
+#include "material.h"
 
 class Mesh : protected QOpenGLExtraFunctions
 {

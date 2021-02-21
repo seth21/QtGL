@@ -28,6 +28,7 @@
 #include "inputmgr.h"
 #include "action.h"
 #include "camera.h"
+#include "resources.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions
 {
