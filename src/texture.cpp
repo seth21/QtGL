@@ -4,8 +4,9 @@
 #include "stb_image.h"
 #include <iostream>
 
-Texture::Texture(std::string fileName)
+Texture::Texture(const std::string &fileName) : Resource(fileName)
 {
+
     QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/" +fileName.c_str());
     mp_textureData = stbi_load(imagePath.absolutePath().toUtf8(), &m_width, &m_height, &m_nrChannels, 0);
     qDebug() << "Loaded texture:" << fileName.c_str() << "->" << sizeof(mp_textureData) << m_width << m_height << m_nrChannels;
@@ -45,7 +46,7 @@ void Texture::unbind(){
 }
 
 Texture::~Texture(){
-    
+    release();
 }
 
 const std::string& Texture::getFullPath()
@@ -53,8 +54,9 @@ const std::string& Texture::getFullPath()
     return fullPath;
 }
 
-bool Texture::fileLoaded()
+bool Texture::loaded()
 {
+    qDebug() << "Texture " << fileOK;
     return fileOK;
 }
 

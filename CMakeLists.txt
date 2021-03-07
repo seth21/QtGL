@@ -83,7 +83,7 @@ target_link_libraries(
 	Qt5::OpenGL
 	${LIBS}
 	)
-#
+
 # copy folder resources and its contents
 file(GLOB_RECURSE files "resources/**/*")
 foreach(file ${files})

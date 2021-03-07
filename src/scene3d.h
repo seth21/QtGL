@@ -22,13 +22,16 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <vector>
+#include <memory>
 #include "shaderprogram.h"
 #include "texture.h"
 #include "model.h"
 #include "inputmgr.h"
 #include "action.h"
 #include "camera.h"
-#include "resources.h"
+#include "resourcemanager.h"
+#include "entity.h"
+#include "postprocessingrenderer.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions
 {
@@ -40,9 +43,9 @@ public:
 
 	QSize sizeHint() const override;
     void paintGL() override;
-	Model *model;
-	//void handleAction(ACTION action, bool pressed) override;
-	//void handleMouseDelta(int dX, int dY) override;
+	Entity* entity;
+	std::unique_ptr<PostProcessingRenderer> postRenderer;
+	int scrWidth = 0, scrHeight = 0, scrX = 0, scrY = 0;
 protected:
 	void initializeGL() override;
 
@@ -53,22 +56,11 @@ protected slots:
 	
 private:
 	QSurfaceFormat *mp_glSurface;
-	float mp_vertices[N_VERTICES*(N_AXES+N_COLORARGS+N_TEXAXES)];
-	unsigned int mp_indices[N_ELEMENTS*N_ELEMENTITEMS];
-	const char *m_vertexShaderSource;
-	const char *m_fragmentShaderSource;
-
-	unsigned int m_vbo;
-	unsigned int m_ebo;
-	unsigned int m_vao;
+	
     ShaderProgram shader;
     QTimer *mp_timer;
     float deltaTime();
-	float m_green;
 
-    Texture *texture;
-	Texture* texNormal;
-	unsigned char * mp_textureData;
 	Camera cam;
 };
 

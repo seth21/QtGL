@@ -12,25 +12,28 @@
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLFunctions>
 #include <QDebug>
-#include "entity.h"
-#include "resources.h"
+#include "resource.h"
 
-class Model : protected QOpenGLExtraFunctions{
+class Model : public Resource, protected QOpenGLExtraFunctions{
 
     public:
         Model(std::string fileName);
         ~Model();
         void addMesh(Mesh mesh);
-        
+        bool loaded();
         std::vector<Mesh*> meshes;
+        std::vector<Material*> materials;
         void loadModel(std::string path);
-        Entity* entity;
+        //Entity* entity;
         std::string filepath;
     private:
-        std::vector<ModelTextureDef> textures;
-        void processNode(aiNode *node, const aiScene *scene, Entity *e);
-        void processMesh(aiMesh *mesh, const aiScene *scene, std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
-        std::vector<ModelTextureDef> loadMaterialTextureDefs(aiMaterial* mat, aiTextureType type, std::string typeName);
+        bool fileLoaded = false;
+        //void processNode(aiNode *node, const aiScene *scene);
+        void processMeshes(const aiScene* scene);
+        void loadMeshVertices(aiMesh *mesh, const aiScene *scene, std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
+        //std::vector<ModelTextureDef> loadMaterialTextureDefs(aiMaterial* mat, aiTextureType type, std::string typeName);
+        void loadMaterialTextureDefs(aiMaterial* mat, aiTextureType type, std::string typeName, std::string modelResPath, std::vector<ModelTextureDef>& outVector);
+        void loadMaterialsFromModel(const aiScene* scene, std::string modelResourcePath);
 };
 
 #endif

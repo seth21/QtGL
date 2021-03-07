@@ -5,9 +5,10 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
-#include "mesh.h"
 #include "shaderprogram.h"
 #include "texture.h"
+#include "model.h"
+#include <memory>
 
 class Entity {
 public:
@@ -18,8 +19,7 @@ public:
 	glm::quat rotation;
 	glm::vec3 scale;
 	glm::mat4 trsMatrix;
-	std::vector<Mesh*> meshes;
-	std::vector<Material*> materials;
+	std::shared_ptr<Model> model;
 	
 	void drawNow(ShaderProgram &shader);
 	void updateChildrenMatrices();

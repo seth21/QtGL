@@ -20,8 +20,8 @@ Scene3D::Scene3D(QWidget *parent) : QGLWidget(parent)
 
 Scene3D::~Scene3D()
 {
-    delete texture;
-	delete model;
+    delete entity;
+
 }
 
 QSize Scene3D::sizeHint() const
@@ -41,7 +41,6 @@ void Scene3D::initializeGL()
 
 	initializeOpenGLFunctions();
 	qDebug() << reinterpret_cast<const char *>(glGetString(GL_RENDERER));
-	// glViewport(0, 0, 800, 600);
 
 	// build, compile and start our shader program
 	shader.addFlag("ALBEDO");
@@ -52,53 +51,48 @@ void Scene3D::initializeGL()
 	shader.loadVector3f("ambientLight", glm::vec3(0.2, 0.2, 0.1));
 	shader.loadVector3f("lightColor", glm::vec3(0.7, 0.6, 0.3));
 	shader.loadMatrix4f("projMat", cam.getProjMatrix());
-	model = new Model("models/sponza.obj");
-	model->entity->scale = glm::vec3(0.05f);
-    //texture = Resources::getInstance().getTexture("textures/Shiba_002_DIFF.tga");
-	//texNormal = Resources::getInstance().getTexture("textures/Shiba_NORM.tga");
-	
-	//texture->bind(0);
-	//texNormal->bind(1);
 	shader.loadInt("albedoMap", 0);
 	//shader.loadInt("normalMap", 1);
 
+	entity = new Entity();
+	entity->model = ResourceManager::getInstance().load<Model>("models/sponza.obj");
+	entity->scale = glm::vec3(0.05f);
+
+	postRenderer = std::make_unique<PostProcessingRenderer>(scrWidth, scrHeight);
+	
     mp_timer->start();
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glEnable(GL_DEPTH_TEST);  
 
 }
 
 void Scene3D::paintGL()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	postRenderer->startPostRenderTarget();
 	cam.update(deltaTime());
-    
+	shader.start();
 	shader.loadMatrix4f("viewMat", cam.getViewMatrix());
 	shader.loadVector3f("viewPos", cam.position);
-	//qDebug() << cam.up.x <<","<< cam.up.y << "," << cam.up.z;
-	//shader.loadMatrix4f("modelMat", Model);
-	if (InputManager::getInstance().isPressed(FORWARD)) {
-		//qDebug() << "FORWARD";
-	}
+	entity->drawNow(shader);
+	postRenderer->renderToScreen();
 	
-	model->entity->drawNow(shader);
 }
 
 void Scene3D::resizeGL(int w, int h)
 {
-	//int side = qMin(w, h);
-	//glViewport((w - side) / 2, (h - side) / 2, side, side);
 	float aspectRatio = 4.0f / 3.0f;
 	if (h * aspectRatio <= w) {
-		int ww = h * aspectRatio;
-		int hh = h;
-		glViewport((w - ww) / 2, (h - hh) / 2, ww, hh);
+		scrWidth = h * aspectRatio;
+		scrHeight = h;
 	}
 	else {
-		int ww = w;
-		int hh = (float)h / aspectRatio;
-		glViewport((w - ww) / 2, (h - hh) / 2, ww, hh);
+		scrWidth = w;
+		scrHeight = (float)w / aspectRatio;
 	}
+	scrX = (w - scrWidth) / 2;
+	scrY = (h - scrHeight) / 2;
+	//glViewport(xS, yS, ww, hh);
+
+	postRenderer->setViewport(scrX, scrY, scrWidth, scrHeight);
 	
 	
 }

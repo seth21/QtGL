@@ -5,17 +5,17 @@
 #include <QDebug>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
+#include "resource.h"
 
-class Texture : protected QOpenGLExtraFunctions
+class Texture : public Resource, protected QOpenGLExtraFunctions
 {
 public:
-    Texture(std::string fileName);
+    Texture(const std::string& fileName);
     void bind(int texUnit);
     void unbind();
     ~Texture();
     const std::string& getFullPath();
-    bool fileLoaded();
-
+    bool loaded();
     void release();
     
 private:
