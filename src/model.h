@@ -13,11 +13,12 @@
 #include <QOpenGLFunctions>
 #include <QDebug>
 #include "resource.h"
+#include "resourceconfig.h"
 
 class Model : public Resource, protected QOpenGLExtraFunctions{
 
     public:
-        Model(std::string fileName);
+        Model(std::string fileName, ResourceConfig config);
         ~Model();
         void addMesh(Mesh mesh);
         bool loaded();
@@ -26,7 +27,9 @@ class Model : public Resource, protected QOpenGLExtraFunctions{
         void loadModel(std::string path);
         //Entity* entity;
         std::string filepath;
+        ResourceConfig& getResourceConfig();
     private:
+        ResourceConfig config;
         bool fileLoaded = false;
         //void processNode(aiNode *node, const aiScene *scene);
         void processMeshes(const aiScene* scene);

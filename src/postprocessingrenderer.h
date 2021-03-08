@@ -5,6 +5,7 @@
 #include "shaderprogram.h"
 #include "framebuffer.h"
 #include <memory>
+#include "resourcemanager.h"
 
 class PostProcessingRenderer : protected QOpenGLExtraFunctions {
 public:
@@ -14,7 +15,7 @@ public:
 	void renderToScreen();
 	void setupScreenQuad();
 	std::unique_ptr<FrameBuffer> mainFBO;
-	std::unique_ptr<ShaderProgram> postShader;
+	std::shared_ptr<ShaderProgram> postShader;
 	void setViewport(int x, int y, int width, int height);
 	
 private:

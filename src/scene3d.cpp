@@ -43,15 +43,18 @@ void Scene3D::initializeGL()
 	qDebug() << reinterpret_cast<const char *>(glGetString(GL_RENDERER));
 
 	// build, compile and start our shader program
-	shader.addFlag("ALBEDO");
+	ResourceConfig shaderConfig;
+	shaderConfig.flags.push_back("ALBEDO");
+	shader = ResourceManager::getInstance().load<ShaderProgram>("default2", shaderConfig);
+	//shader.addFlag("ALBEDO");
 	//shader.addFlag("NORMAL");
-	shader.init("default2");
-	shader.start();
-	shader.loadVector3f("lightPos", glm::vec3(40, 40, 0));
-	shader.loadVector3f("ambientLight", glm::vec3(0.2, 0.2, 0.1));
-	shader.loadVector3f("lightColor", glm::vec3(0.7, 0.6, 0.3));
-	shader.loadMatrix4f("projMat", cam.getProjMatrix());
-	shader.loadInt("albedoMap", 0);
+	//shader.init("default2");
+	shader->start();
+	shader->loadVector3f("lightPos", glm::vec3(0, 90, 20));
+	shader->loadVector3f("ambientLight", glm::vec3(0.2, 0.2, 0.1));
+	shader->loadVector3f("lightColor", glm::vec3(0.7, 0.6, 0.3));
+	shader->loadMatrix4f("projMat", cam.getProjMatrix());
+	shader->loadInt("albedoMap", 0);
 	//shader.loadInt("normalMap", 1);
 
 	entity = new Entity();
@@ -59,6 +62,12 @@ void Scene3D::initializeGL()
 	entity->scale = glm::vec3(0.05f);
 
 	postRenderer = std::make_unique<PostProcessingRenderer>(scrWidth, scrHeight);
+	ResourceConfig cubeConfig;
+	cubeConfig.flags.push_back("cube");
+	auto cubeTex = ResourceManager::getInstance().load<Texture>("textures/skybox/day/*right.jpg*left.jpg*top.jpg*bottom.jpg*front.jpg*back.jpg", cubeConfig);
+	auto skyShader = ResourceManager::getInstance().load<ShaderProgram>("skybox", cubeConfig);
+	skyRenderer = std::make_unique<SkyRenderer>(skyShader, cubeTex);
+
 	
     mp_timer->start();
 
@@ -69,10 +78,12 @@ void Scene3D::paintGL()
 
 	postRenderer->startPostRenderTarget();
 	cam.update(deltaTime());
-	shader.start();
-	shader.loadMatrix4f("viewMat", cam.getViewMatrix());
-	shader.loadVector3f("viewPos", cam.position);
-	entity->drawNow(shader);
+	skyRenderer->render(&cam);
+	shader->start();
+	shader->loadMatrix4f("viewMat", cam.getViewMatrix());
+	shader->loadVector3f("viewPos", cam.position);
+	entity->drawNow(shader.get());
+	
 	postRenderer->renderToScreen();
 	
 }

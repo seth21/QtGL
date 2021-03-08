@@ -32,6 +32,7 @@
 #include "resourcemanager.h"
 #include "entity.h"
 #include "postprocessingrenderer.h"
+#include "skyrenderer.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions
 {
@@ -45,6 +46,8 @@ public:
     void paintGL() override;
 	Entity* entity;
 	std::unique_ptr<PostProcessingRenderer> postRenderer;
+	std::unique_ptr<SkyRenderer> skyRenderer;
+	std::shared_ptr<Texture> skyTexture;
 	int scrWidth = 0, scrHeight = 0, scrX = 0, scrY = 0;
 protected:
 	void initializeGL() override;
@@ -57,7 +60,7 @@ protected slots:
 private:
 	QSurfaceFormat *mp_glSurface;
 	
-    ShaderProgram shader;
+    std::shared_ptr<ShaderProgram> shader;
     QTimer *mp_timer;
     float deltaTime();
 

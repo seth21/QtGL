@@ -1,7 +1,7 @@
 #include "model.h"
 
 
-Model::Model(std::string fileName) : Resource (fileName){
+Model::Model(std::string fileName, ResourceConfig config) : Resource (fileName, config){
     initializeOpenGLFunctions();
     loadModel(fileName);
 }
@@ -158,7 +158,12 @@ void Model::loadModel(std::string path)
     //processNode(scene->mRootNode, scene);
     processMeshes(scene);
     fileLoaded = true;
-}  
+}
+
+ResourceConfig& Model::getResourceConfig()
+{
+    return config;
+}
 
 void Model::loadMeshVertices(aiMesh *mesh, const aiScene *scene, std::vector<Vertex> &vertices, std::vector<GLuint> &indices)
 {

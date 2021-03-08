@@ -9,10 +9,10 @@ Entity::Entity()
     model = nullptr;
 }
 
-void Entity::drawNow(ShaderProgram &shader) {
+void Entity::drawNow(ShaderProgram *shader) {
     if (!parent) trsMatrix = getTRSMatrix();
     else trsMatrix = getTRSMatrix() * parent->trsMatrix;
-    shader.loadMatrix4f("modelMat", trsMatrix);
+    shader->loadMatrix4f("modelMat", trsMatrix);
     for (int i = 0; i < model->meshes.size(); i++) {
         Mesh* mesh = model->meshes[i];
         Material* mat = model->materials[mesh->materialIndex];

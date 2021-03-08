@@ -93,4 +93,5 @@ void Camera::update(float deltaTime)
 	else if (InputManager::getInstance().isPressed(DOWN)) {
 		position -= glm::vec3(0, 1, 0) * 5.0f * deltaTime;
 	}
+	//qDebug() << position.x << " " << position.y << " " << position.z;
 }

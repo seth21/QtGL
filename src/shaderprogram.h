@@ -10,11 +10,13 @@
 #include <unordered_map>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.inl>
-class ShaderProgram : protected QOpenGLExtraFunctions
+#include "resourceconfig.h"
+#include "resource.h"
+class ShaderProgram : public Resource, protected QOpenGLExtraFunctions
 {
 public:
     static GLuint currentProg;
-    ShaderProgram();
+    ShaderProgram(const std::string& fileName, ResourceConfig config);
     void addFlag(std::string flag);
     void init(std::string shaderName);
     ~ShaderProgram();
@@ -42,13 +44,16 @@ public:
     void loadVector3f(const std::string &name, GLfloat x, GLfloat y, GLfloat z);
     void loadVector2f(const std::string &name, GLfloat x, GLfloat y);
     void loadVector4f(const std::string &name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-
+    bool loaded();
+    ResourceConfig& getResourceConfig();
 private:
     unsigned int prepareShader(GLenum type, const std::string& shaderSource);
     std::string readFile(const std::string& filePath);
     GLuint programID = 0;
     std::unordered_map<std::string, GLintDefault> uniformLocs;
     std::vector<std::string> definedFlags;
+    bool fileLoaded = false;
+    ResourceConfig config;
 };
 
 #endif // SHADERPROGRAM_H

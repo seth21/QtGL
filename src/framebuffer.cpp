@@ -22,6 +22,8 @@ FrameBuffer::~FrameBuffer()
 	unbind();
 	glDeleteFramebuffers(1, &fbo);
 	//delete textures
+	if (depthAtt != 0) glDeleteTextures(1, &depthAtt);
+	for (int i = 0; i < colorAtts.size(); i++) glDeleteTextures(1, &colorAtts[i]);
 }
 
 void FrameBuffer::setup()

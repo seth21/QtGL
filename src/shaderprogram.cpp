@@ -4,8 +4,14 @@
 #include <QDebug>
 GLuint ShaderProgram::currentProg = 0;
 
-ShaderProgram::ShaderProgram(){
-
+ShaderProgram::ShaderProgram(const std::string& fileName, ResourceConfig config) : Resource(fileName, config)
+{
+    this->config = config;
+    for (int i = 0; i < config.flags.size(); i++) {
+        addFlag(config.flags[i]);
+    }
+    //addFlag("ALBEDO");
+    init(fileName);
 }
 
 void ShaderProgram::addFlag(std::string flag) {
@@ -39,9 +45,11 @@ void ShaderProgram::init(std::string shaderName)
     {
         glGetProgramInfoLog(programID, 512, NULL, infoLog);
         printf ("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
+        fileLoaded = false;
     }
     else{
         std::cout << "Loaded shader ->" << shaderName << std::endl;
+        fileLoaded = true;
     }
     //cleanup
     glDetachShader(programID, vertexShader);
@@ -126,6 +134,16 @@ void ShaderProgram::loadVector2f(const std::string &name, GLfloat x, GLfloat y){
 
 void ShaderProgram::loadVector4f(const std::string &name, GLfloat x, GLfloat y, GLfloat z, GLfloat w){
     glUniform4f(getUniformLocation(name), x, y, z, w);
+}
+
+bool ShaderProgram::loaded()
+{
+    return fileLoaded;
+}
+
+ResourceConfig& ShaderProgram::getResourceConfig()
+{
+    return config;
 }
 
 void ShaderProgram::loadFloat(GLuint loc, GLfloat data){

@@ -1,5 +1,8 @@
-#pragma once
+#ifndef ENTITY_H
+#define ENTITY_H
+
 #include <vector>
+#include <memory>
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -8,7 +11,8 @@
 #include "shaderprogram.h"
 #include "texture.h"
 #include "model.h"
-#include <memory>
+
+#include "resourceconfig.h"
 
 class Entity {
 public:
@@ -21,7 +25,9 @@ public:
 	glm::mat4 trsMatrix;
 	std::shared_ptr<Model> model;
 	
-	void drawNow(ShaderProgram &shader);
+	void drawNow(ShaderProgram *shader);
 	void updateChildrenMatrices();
 	glm::mat4 getTRSMatrix();
 };
+
+#endif

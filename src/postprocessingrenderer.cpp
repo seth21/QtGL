@@ -16,8 +16,7 @@ PostProcessingRenderer::PostProcessingRenderer(int screenWidth, int screenHeight
     initializeOpenGLFunctions();
     setupScreenQuad();
     mainFBO = std::make_unique<FrameBuffer>(1, true, screenWidth, screenHeight);
-    postShader = std::make_unique<ShaderProgram>();
-    postShader->init("grayscale");
+    postShader = ResourceManager::getInstance().load<ShaderProgram>("grayscale");
     postShader->start();
     postShader->loadInt("screenTexture", 0);
 }
