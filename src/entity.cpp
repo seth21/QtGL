@@ -9,18 +9,25 @@ Entity::Entity()
     model = nullptr;
 }
 
-void Entity::drawNow(ShaderProgram *shader) {
+void Entity::drawNow(ShaderProgram *shader, Camera* camera) {
     if (!parent) trsMatrix = getTRSMatrix();
     else trsMatrix = getTRSMatrix() * parent->trsMatrix;
     shader->loadMatrix4f("modelMat", trsMatrix);
+    
+    drawCount = 0;
     for (int i = 0; i < model->meshes.size(); i++) {
         Mesh* mesh = model->meshes[i];
+        tempAABB.setAABB(mesh->aabb);
+        tempAABB.mul(trsMatrix);
+        if (!camera->frustum->boundsInFrustum(tempAABB)) continue;
+        drawCount++;
         Material* mat = model->materials[mesh->materialIndex];
         if (mat) {
             if (mat->diffuseMaps.size() > 0) mat->diffuseMaps[0]->bind(0);
         }
         mesh->drawNow();
     }
+    //qDebug() << "Meshes drawn:" << drawCount;
     for (int i = 0; i < children.size(); i++) {
         //children[i]->drawNow(shader);
     }

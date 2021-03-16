@@ -82,7 +82,7 @@ void Scene3D::paintGL()
 	shader->start();
 	shader->loadMatrix4f("viewMat", cam.getViewMatrix());
 	shader->loadVector3f("viewPos", cam.position);
-	entity->drawNow(shader.get());
+	entity->drawNow(shader.get(), &cam);
 	
 	postRenderer->renderToScreen();
 	

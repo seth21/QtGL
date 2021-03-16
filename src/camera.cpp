@@ -2,6 +2,11 @@
 
 Camera::Camera()
 {
+	FOVy = 45.0f;
+	nearPlane = 0.1f;
+	farPlane = 1000.0f;
+	aspect = 800.0f / 600.0f;
+	frustum = std::make_unique<CameraFrustum>();
 	rotation = glm::quat(0, 0, 0, -1);
 	InputManager::getInstance().registerHandler(this);
 	position = glm::vec3(0, 0, 35);
@@ -10,12 +15,11 @@ Camera::Camera()
 
 glm::mat4 Camera::getPVmatrix()
 {
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 1000.f);	
-	return Projection * getViewMatrix();
+	return getProjMatrix() * getViewMatrix();
 }
 
 glm::mat4 Camera::getProjMatrix() {
-	return glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.f);
+	return glm::perspective(glm::radians(FOVy), aspect, nearPlane, farPlane);
 }
 
 glm::mat4 Camera::getViewMatrix()
@@ -73,6 +77,7 @@ void Camera::update(float deltaTime)
 	glm::quat qF = rotation * glm::quat(0, 0, 0, -1) * glm::conjugate(rotation);
 	Front = { qF.x, qF.y, qF.z };
 	Right = glm::normalize(glm::cross(Front, glm::vec3(0, 1, 0)));
+	frustum->calculateFrustum(FOVy, nearPlane, farPlane, aspect, position, Front, Right);
 
 	//Handle Input
 	if (InputManager::getInstance().isPressed(FORWARD)) {

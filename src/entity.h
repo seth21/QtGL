@@ -11,8 +11,10 @@
 #include "shaderprogram.h"
 #include "texture.h"
 #include "model.h"
-
+#include "camera.h"
 #include "resourceconfig.h"
+#include "boundingbox.h"
+#include <QDebug>
 
 class Entity {
 public:
@@ -25,9 +27,12 @@ public:
 	glm::mat4 trsMatrix;
 	std::shared_ptr<Model> model;
 	
-	void drawNow(ShaderProgram *shader);
+	void drawNow(ShaderProgram *shader, Camera *camera);
 	void updateChildrenMatrices();
 	glm::mat4 getTRSMatrix();
+	int drawCount = 0;
+private:
+	BoundingBox tempAABB;
 };
 
 #endif

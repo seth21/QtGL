@@ -9,6 +9,7 @@
 #include "vertex.h"
 #include "modeltexturedef.h"
 #include "material.h"
+#include "boundingbox.h"
 
 class Mesh : protected QOpenGLExtraFunctions
 {
@@ -18,6 +19,7 @@ public:
     std::vector<GLuint> indices;
     std::vector<ModelTextureDef> textures;
     std::string name;
+    BoundingBox aabb;
     Mesh();
     Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
     Mesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<ModelTextureDef> textures);

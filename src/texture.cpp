@@ -8,7 +8,7 @@ Texture::Texture(const std::string &fileName, ResourceConfig config) : Resource(
 {
     resConfig = config;
     cubeTexture = resConfig.flagExists("cube");
-    qDebug() << "Texture cube:" << cubeTexture;
+    //qDebug() << "Texture cube:" << cubeTexture;
 
     if (!cubeTexture) loadImage(fileName);
     else loadCubeImage(fileName);
@@ -105,7 +105,7 @@ ResourceConfig& Texture::getResourceConfig()
 
 bool Texture::loaded()
 {
-    qDebug() << "Texture " << fileOK;
+    //qDebug() << "Texture " << fileOK;
     return fileOK;
 }
 

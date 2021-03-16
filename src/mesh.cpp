@@ -14,6 +14,7 @@ Mesh::Mesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> i
     this->name = name;
     // Now that we have all the required data, set the vertex buffers and its attribute pointers.
     this->setupMesh();
+    aabb.findMinMax(vertices);
 }
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices)
@@ -23,6 +24,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices)
     qDebug() << "Uploading mesh to GL";
     // Now that we have all the required data, set the vertex buffers and its attribute pointers.
     this->setupMesh();
+    aabb.findMinMax(vertices);
 }
 
 Mesh::~Mesh()

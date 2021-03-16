@@ -75,6 +75,7 @@ void Model::processMeshes(const aiScene* scene)
         loadMeshVertices(mesh, scene, m->vertices, m->indices);
         m->setupMesh();
         m->materialIndex = mesh->mMaterialIndex;
+        m->aabb.findMinMax(m->vertices);
         meshes.push_back(m);
     }
 
