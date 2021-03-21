@@ -33,6 +33,7 @@
 #include "entity.h"
 #include "postprocessingrenderer.h"
 #include "skyrenderer.h"
+#include "deferredrenderer.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions
 {
@@ -45,6 +46,7 @@ public:
 	QSize sizeHint() const override;
     void paintGL() override;
 	Entity* entity;
+	std::unique_ptr<DeferredRenderer> deferredRenderer;
 	std::unique_ptr<PostProcessingRenderer> postRenderer;
 	std::unique_ptr<SkyRenderer> skyRenderer;
 	std::shared_ptr<Texture> skyTexture;

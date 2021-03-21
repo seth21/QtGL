@@ -53,7 +53,7 @@ void Scene3D::initializeGL()
 	shader->loadVector3f("lightPos", glm::vec3(0, 90, 20));
 	shader->loadVector3f("ambientLight", glm::vec3(0.2, 0.2, 0.1));
 	shader->loadVector3f("lightColor", glm::vec3(0.7, 0.6, 0.3));
-	shader->loadMatrix4f("projMat", cam.getProjMatrix());
+	
 	shader->loadInt("albedoMap", 0);
 	//shader.loadInt("normalMap", 1);
 
@@ -67,7 +67,7 @@ void Scene3D::initializeGL()
 	auto cubeTex = ResourceManager::getInstance().load<Texture>("textures/skybox/day/*right.jpg*left.jpg*top.jpg*bottom.jpg*front.jpg*back.jpg", cubeConfig);
 	auto skyShader = ResourceManager::getInstance().load<ShaderProgram>("skybox", cubeConfig);
 	skyRenderer = std::make_unique<SkyRenderer>(skyShader, cubeTex);
-
+	deferredRenderer = std::make_unique<DeferredRenderer>(scrWidth, scrHeight);
 	
     mp_timer->start();
 
@@ -75,17 +75,17 @@ void Scene3D::initializeGL()
 
 void Scene3D::paintGL()
 {
-
-	postRenderer->startPostRenderTarget();
 	cam.update(deltaTime());
-	skyRenderer->render(&cam);
-	shader->start();
-	shader->loadMatrix4f("viewMat", cam.getViewMatrix());
-	shader->loadVector3f("viewPos", cam.position);
-	entity->drawNow(shader.get(), &cam);
+	//postRenderer->startPostRenderTarget();
+	//skyRenderer->render(&cam);
+	//shader->start();
+	//shader->loadMatrix4f("viewMat", cam.getViewMatrix());
+	//shader->loadVector3f("viewPos", cam.position);
+	//shader->loadMatrix4f("projMat", cam.getProjMatrix());
+	//entity->drawNow(shader.get(), &cam);
 	
-	postRenderer->renderToScreen();
-	
+	//postRenderer->renderToScreen();
+	deferredRenderer->render(&cam, entity);
 }
 
 void Scene3D::resizeGL(int w, int h)
@@ -104,7 +104,7 @@ void Scene3D::resizeGL(int w, int h)
 	//glViewport(xS, yS, ww, hh);
 
 	postRenderer->setViewport(scrX, scrY, scrWidth, scrHeight);
-	
+	deferredRenderer->setViewport(scrX, scrY, scrWidth, scrHeight);
 	
 }
 
