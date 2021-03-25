@@ -49,6 +49,7 @@ public:
 	std::unique_ptr<DeferredRenderer> deferredRenderer;
 	std::unique_ptr<PostProcessingRenderer> postRenderer;
 	std::unique_ptr<SkyRenderer> skyRenderer;
+	
 	std::shared_ptr<Texture> skyTexture;
 	int scrWidth = 0, scrHeight = 0, scrX = 0, scrY = 0;
 protected:

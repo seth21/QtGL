@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "resourcemanager.h"
+#include "debugrenderer.h"
 #include <QDebug>
 
 class DeferredRenderer : protected QOpenGLExtraFunctions {
@@ -16,11 +17,13 @@ public:
 	~DeferredRenderer();
 	void render(Camera *cam, Entity *entity);
 	void setViewport(int x, int y, int width, int height);
+	DebugRenderer* getDebugRenderer();
 private:
 	void setupScreenQuad();
 	std::unique_ptr<FrameBuffer> gBuffer;
 	std::shared_ptr<ShaderProgram> gBufferShader;
 	std::shared_ptr<ShaderProgram> dirLightShader;
+	std::unique_ptr<DebugRenderer> debugRenderer;
 	unsigned int VAO, VBO;
 	int width = 0;
 	int height = 0;

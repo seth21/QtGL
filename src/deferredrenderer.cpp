@@ -32,6 +32,8 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 	gBufferShader = ResourceManager::getInstance().load<ShaderProgram>("gbuffer", shaderConfig);
 	qDebug() << "Shader dirlight";
 	dirLightShader = ResourceManager::getInstance().load<ShaderProgram>("gdirlight");
+
+	debugRenderer = std::make_unique<DebugRenderer>();
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -77,6 +79,18 @@ void DeferredRenderer::render(Camera* cam, Entity* entity)
 	glBindVertexArray(VAO);
 	glViewport(xS, yS, width, height);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//DEBUG RENDERER
+	//debugRenderer->glBegin(GL_LINES);
+	//debugRenderer->glColor3f(1, 0, 0);
+	/*for (int i = 0; i < entity->model->meshes.size(); i++) {
+		std::vector<glm::vec3> segs = entity->model->meshes[i]->transformedAabb.getLineSegments();
+		for (int j = 0; j < segs.size(); j++) debugRenderer->glVertex3f(segs[j]);
+	}*/
+	//std::vector<glm::vec3> segs = cam->frustum->getLineSegments();
+	//for (int i=0; i<segs.size();i++) debugRenderer->glVertex3f(segs[i]);
+
+	//debugRenderer->glEnd(cam);
 }
 
 void DeferredRenderer::setViewport(int x, int y, int width, int height)
@@ -86,6 +100,11 @@ void DeferredRenderer::setViewport(int x, int y, int width, int height)
 	this->height = height;
 	this->xS = x;
 	this->yS = y;
+}
+
+DebugRenderer* DeferredRenderer::getDebugRenderer()
+{
+	return debugRenderer.get();
 }
 
 void DeferredRenderer::setupScreenQuad() {

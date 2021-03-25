@@ -17,9 +17,9 @@ void Entity::drawNow(ShaderProgram *shader, Camera* camera) {
     drawCount = 0;
     for (int i = 0; i < model->meshes.size(); i++) {
         Mesh* mesh = model->meshes[i];
-        tempAABB.setAABB(mesh->aabb);
-        tempAABB.mul(trsMatrix);
-        if (!camera->frustum->boundsInFrustum(tempAABB)) continue;
+        mesh->transformedAabb.setAABB(mesh->aabb);
+        mesh->transformedAabb.mul(trsMatrix);
+        if (!camera->frustum->boundsInFrustum(mesh->transformedAabb)) continue;
         drawCount++;
         Material* mat = model->materials[mesh->materialIndex];
         if (mat) {

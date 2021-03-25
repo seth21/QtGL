@@ -40,6 +40,48 @@ glm::vec3 BoundingBox::getCorner111(glm::vec3& out) {
 
 }
 
+std::vector<glm::vec3> BoundingBox::getLineSegments()
+{
+	std::vector<glm::vec3> seg;
+	//bottom
+	seg.push_back(glm::vec3(min.x, min.y, min.z));
+	seg.push_back(glm::vec3(min.x, min.y, max.z));
+	
+	seg.push_back(glm::vec3(min.x, min.y, max.z));
+	seg.push_back(glm::vec3(max.x, min.y, max.z));
+	
+	seg.push_back(glm::vec3(max.x, min.y, max.z));
+	seg.push_back(glm::vec3(max.x, min.y, min.z));
+	
+	seg.push_back(glm::vec3(max.x, min.y, min.z));
+	seg.push_back(glm::vec3(min.x, min.y, min.z));
+	//top
+	seg.push_back(glm::vec3(min.x, max.y, min.z));
+	seg.push_back(glm::vec3(min.x, max.y, max.z));
+
+	seg.push_back(glm::vec3(min.x, max.y, max.z));
+	seg.push_back(glm::vec3(max.x, max.y, max.z));
+
+	seg.push_back(glm::vec3(max.x, max.y, max.z));
+	seg.push_back(glm::vec3(max.x, max.y, min.z));
+
+	seg.push_back(glm::vec3(max.x, max.y, min.z));
+	seg.push_back(glm::vec3(min.x, max.y, min.z));
+	//sides
+	seg.push_back(glm::vec3(min.x, min.y, min.z));
+	seg.push_back(glm::vec3(min.x, max.y, min.z));
+
+	seg.push_back(glm::vec3(min.x, min.y, max.z));
+	seg.push_back(glm::vec3(min.x, max.y, max.z));
+
+	seg.push_back(glm::vec3(max.x, min.y, max.z));
+	seg.push_back(glm::vec3(max.x, max.y, max.z));
+	
+	seg.push_back(glm::vec3(max.x, min.y, min.z));
+	seg.push_back(glm::vec3(max.x, max.y, min.z));
+	return seg;
+}
+
 BoundingBox::BoundingBox()
 {
 	infinity();
@@ -85,6 +127,8 @@ void BoundingBox::mul(const glm::mat4 &transform) {
 	extend(transform * glm::vec4(x1, y1, z1, 1));
 	
 }
+
+
 
 void BoundingBox::findMinMax(std::vector<Vertex>& vertices) {
 	infinity();

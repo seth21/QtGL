@@ -16,11 +16,13 @@ public:
 	bool pointInFrustum(glm::vec3& p);
 	bool sphereInFrustum(glm::vec3& p, float radius);
 	bool CameraFrustum::boundsInFrustum(BoundingBox& bounds);
+	std::vector<glm::vec3> getLineSegments();
 private:
 	enum {
 		TOP = 0, BOTTOM, LEFT,
 		RIGHT, NEARP, FARP
 	};
+	std::vector<glm::vec3> frustumPoints;
 };
 
 #endif

@@ -19,7 +19,7 @@ void CameraFrustum::calculateFrustum(const float fovYdegrees, const float near, 
 	float Hfar = 2.0f * tan(fovYrads / 2.0f) * far;
 	float Wfar = Hfar * aspect;
 	//qDebug() << "Hfar/near:" << Hfar << "," << Hnear;
-	glm::vec3 up = glm::vec3(0, 1, 0);
+	glm::vec3 up = -glm::cross(camFront, camRight);
 	glm::vec3 fc = camPos + camFront * far;
 	//qDebug() << "fc:" << fc.x << "," << fc.y << "," << fc.z;
 	glm::vec3 ftl = fc + (up * Hfar / 2.0f) - (camRight * Wfar / 2.0f);
@@ -42,6 +42,16 @@ void CameraFrustum::calculateFrustum(const float fovYdegrees, const float near, 
 	planes[RIGHT]->set3Points(nbr, ntr, fbr);
 	planes[NEARP]->set3Points(ntl, ntr, nbr);
 	planes[FARP]->set3Points(ftr, ftl, fbl);
+
+	frustumPoints.clear();
+	frustumPoints.push_back(ntl);
+	frustumPoints.push_back(ntr);
+	frustumPoints.push_back(nbr);
+	frustumPoints.push_back(nbl);
+	frustumPoints.push_back(ftl);
+	frustumPoints.push_back(ftr);
+	frustumPoints.push_back(fbr);
+	frustumPoints.push_back(fbl);
 }
 
 bool CameraFrustum::intersects()
@@ -89,4 +99,37 @@ bool CameraFrustum::boundsInFrustum(BoundingBox &bounds) {
 	}
 
 	return true;
+}
+
+std::vector<glm::vec3> CameraFrustum::getLineSegments()
+{
+	std::vector<glm::vec3> seg;
+	seg.push_back(frustumPoints[0]);
+	seg.push_back(frustumPoints[1]);
+	seg.push_back(frustumPoints[1]);
+	seg.push_back(frustumPoints[2]);
+	seg.push_back(frustumPoints[2]);
+	seg.push_back(frustumPoints[3]);
+	seg.push_back(frustumPoints[3]);
+	seg.push_back(frustumPoints[0]);
+
+	seg.push_back(frustumPoints[4]);
+	seg.push_back(frustumPoints[5]);
+	seg.push_back(frustumPoints[5]);
+	seg.push_back(frustumPoints[6]);
+	seg.push_back(frustumPoints[6]);
+	seg.push_back(frustumPoints[7]);
+	seg.push_back(frustumPoints[7]);
+	seg.push_back(frustumPoints[4]);
+
+	seg.push_back(frustumPoints[0]);
+	seg.push_back(frustumPoints[4]);
+	seg.push_back(frustumPoints[1]);
+	seg.push_back(frustumPoints[5]);
+	seg.push_back(frustumPoints[2]);
+	seg.push_back(frustumPoints[6]);
+	seg.push_back(frustumPoints[3]);
+	seg.push_back(frustumPoints[7]);
+	return seg;
+
 }

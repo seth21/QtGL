@@ -27,6 +27,7 @@ public:
 	void infinity();
 	void extend(const glm::vec3 &point);
 	void mul(const glm::mat4 &transform);
+	std::vector<glm::vec3> getLineSegments();
 
 private:
 

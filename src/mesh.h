@@ -20,6 +20,7 @@ public:
     std::vector<ModelTextureDef> textures;
     std::string name;
     BoundingBox aabb;
+    BoundingBox transformedAabb;
     Mesh();
     Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
     Mesh(std::string name, std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<ModelTextureDef> textures);

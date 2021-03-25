@@ -36,7 +36,9 @@ void main()
     #endif
     // and the diffuse per-fragment color
     #ifdef ALBEDO
-    gAlbedoSpec.rgb = texture(albedoMap, TexCoord).rgb;
+    vec4 albedoTex = texture(albedoMap, TexCoord);
+    if (albedoTex.a < 0.3) discard;
+    gAlbedoSpec.rgb = albedoTex.rgb;
     #else
     gAlbedoSpec.rgb = vec3(0.8,0.8,0.8);
     #endif
