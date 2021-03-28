@@ -27,7 +27,7 @@ public:
 	glm::mat4 trsMatrix;
 	std::shared_ptr<Model> model;
 	
-	void drawNow(ShaderProgram *shader, Camera *camera);
+	void drawNow(ShaderProgram *shader, Camera *camera, bool frustumCull);
 	void updateChildrenMatrices();
 	glm::mat4 getTRSMatrix();
 	int drawCount = 0;

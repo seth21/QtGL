@@ -1,6 +1,6 @@
 #version 330 core
-out vec4 FragColor;
-  
+//out vec4 FragColor;
+layout (location = 0) out vec4 FragLight;
 in vec2 TexCoords;
 //GBUFFER
 uniform sampler2D gPosition;
@@ -35,6 +35,6 @@ void main()
     float spec = pow(clamp(dot(viewDir, reflectDir), 0, 1), 32);
     vec3 specular = specularStrength * spec * lightColor;  
 
-    vec3 result = (ambient + diffuse + specular) * albedo;
-    FragColor = vec4(result, 1.0);
+    vec3 result = (ambient + diffuse + specular);
+    FragLight = vec4(result, 1.0);
 }

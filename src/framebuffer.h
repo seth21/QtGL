@@ -37,6 +37,7 @@ public:
 	void setup();
 	void setRenderTargets(int, ...);
 	void bindAllColorAttachments();
+	void bindColorAttachment(int id);
 private:
 	unsigned int fbo = 0;
 	void createFBO();

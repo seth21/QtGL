@@ -36,9 +36,13 @@ void main()
     #endif
     // and the diffuse per-fragment color
     #ifdef ALBEDO
+   
+    float gamma = 2.2;
     vec4 albedoTex = texture(albedoMap, TexCoord);
     if (albedoTex.a < 0.3) discard;
-    gAlbedoSpec.rgb = albedoTex.rgb;
+    //apply gamma correction ->to linear space
+    gAlbedoSpec.rgb = pow(albedoTex.rgb, vec3(gamma));
+    //gAlbedoSpec.rgb = albedoTex.rgb;
     #else
     gAlbedoSpec.rgb = vec3(0.8,0.8,0.8);
     #endif

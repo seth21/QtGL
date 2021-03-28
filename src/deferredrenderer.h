@@ -23,11 +23,20 @@ private:
 	std::unique_ptr<FrameBuffer> gBuffer;
 	std::shared_ptr<ShaderProgram> gBufferShader;
 	std::shared_ptr<ShaderProgram> dirLightShader;
+	std::shared_ptr<ShaderProgram> pointLightShader;
+	std::shared_ptr<ShaderProgram> combineShader;
 	std::unique_ptr<DebugRenderer> debugRenderer;
-	unsigned int VAO, VBO;
+	std::unique_ptr<Entity> pointLight;
+	unsigned int screenVAO, screenVBO;
+	void doGeometryPass(Camera* cam, Entity* entity);
+	void doDirectionalLightPass(Camera* cam, Entity* entity);
+	void doPointLightPass(Camera* cam, Entity* entity);
+	void doCombinePass(Camera* cam, Entity* entity);
+	void doDebugPass(Camera* cam, Entity* entity);
 	int width = 0;
 	int height = 0;
 	int xS = 0, yS = 0;
+	float exposure = 0.5;
 	
 };
 #endif

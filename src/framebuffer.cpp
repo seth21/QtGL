@@ -74,17 +74,29 @@ void FrameBuffer::setup()
 void FrameBuffer::setRenderTargets(int num, ...)
 {
 	va_list arguments;                    
-
+	renderTargets.clear();
 	va_start(arguments, num);           
 	for (int x = 0; x < num; x++)        
 		renderTargets.push_back(GL_COLOR_ATTACHMENT0 + va_arg(arguments, int)); 
 	va_end(arguments);
+	if (setupDone) glDrawBuffers(renderTargets.size(), &renderTargets[0]);
 }
 
 //Binds all color attachments using the attachment id as the texture unit.
 void FrameBuffer::bindAllColorAttachments()
 {
 	for (int i = 0; i < colorAttachments.size(); i++) {
+		unsigned int texUnit = GL_TEXTURE0 + colorAttachments[i]->attachmentID;
+		GLuint texHandle = colorAttachments[i]->texture;
+		glActiveTexture(texUnit);
+		glBindTexture(GL_TEXTURE_2D, texHandle);
+	}
+}
+
+void FrameBuffer::bindColorAttachment(int id)
+{
+	for (int i = 0; i < colorAttachments.size(); i++) {
+		if (colorAttachments[i]->attachmentID != id) continue;
 		unsigned int texUnit = GL_TEXTURE0 + colorAttachments[i]->attachmentID;
 		GLuint texHandle = colorAttachments[i]->texture;
 		glActiveTexture(texUnit);

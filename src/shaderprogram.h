@@ -42,6 +42,7 @@ public:
     void loadBoolean(const std::string &name, bool value);
     void loadVector3f(const std::string& name, glm::vec3 vec3);
     void loadVector3f(const std::string &name, GLfloat x, GLfloat y, GLfloat z);
+    void loadVector2f(const std::string& name, glm::vec2 vec2);
     void loadVector2f(const std::string &name, GLfloat x, GLfloat y);
     void loadVector4f(const std::string &name, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
     bool loaded();

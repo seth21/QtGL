@@ -44,11 +44,11 @@ void ShaderProgram::init(std::string shaderName)
     if (!success)
     {
         glGetProgramInfoLog(programID, 512, NULL, infoLog);
-        printf ("ERROR::SHADER::PROGRAM::LINKING_FAILED\n");
+        qDebug() << shaderName.c_str() << " ERROR::SHADER::PROGRAM::LINKING_FAILED";
         fileLoaded = false;
     }
     else{
-        std::cout << "Loaded shader ->" << shaderName << std::endl;
+        qDebug() << "Loaded shader ->" << shaderName.c_str();
         fileLoaded = true;
     }
     //cleanup
@@ -126,6 +126,11 @@ void ShaderProgram::loadVector3f(const std::string& name, glm::vec3 vec3) {
 
 void ShaderProgram::loadVector3f(const std::string &name, GLfloat x, GLfloat y, GLfloat z){
     glUniform3f(getUniformLocation(name), x, y, z);
+}
+
+void ShaderProgram::loadVector2f(const std::string& name, glm::vec2 vec2)
+{
+    glUniform2f(getUniformLocation(name), vec2.x, vec2.y);
 }
 
 void ShaderProgram::loadVector2f(const std::string &name, GLfloat x, GLfloat y){

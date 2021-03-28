@@ -9,7 +9,7 @@ Entity::Entity()
     model = nullptr;
 }
 
-void Entity::drawNow(ShaderProgram *shader, Camera* camera) {
+void Entity::drawNow(ShaderProgram *shader, Camera* camera, bool frustumCull) {
     if (!parent) trsMatrix = getTRSMatrix();
     else trsMatrix = getTRSMatrix() * parent->trsMatrix;
     shader->loadMatrix4f("modelMat", trsMatrix);
@@ -19,7 +19,7 @@ void Entity::drawNow(ShaderProgram *shader, Camera* camera) {
         Mesh* mesh = model->meshes[i];
         mesh->transformedAabb.setAABB(mesh->aabb);
         mesh->transformedAabb.mul(trsMatrix);
-        if (!camera->frustum->boundsInFrustum(mesh->transformedAabb)) continue;
+        if (frustumCull && !camera->frustum->boundsInFrustum(mesh->transformedAabb)) continue;
         drawCount++;
         Material* mat = model->materials[mesh->materialIndex];
         if (mat) {
