@@ -11,7 +11,7 @@
 #include "inputhandler.h"
 #include "inputmgr.h"
 #include "action.h"
-#include "camerafrustum.h"
+#include "frustum.h"
 
 class Camera : public InputHandler {
 public:
@@ -32,15 +32,16 @@ public:
 	const glm::vec3& getRight();
 	void update(float deltaTime);
 	
-	std::unique_ptr<CameraFrustum> frustum;
-private:
-	float rightAngle = 0, upAngle = 0;
-	glm::vec3 Front = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 Right = glm::vec3(1.0f, 0.0f, 0.0f);
+	std::unique_ptr<Frustum> frustum;
 	float FOVy;
 	float nearPlane;
 	float farPlane;
 	float aspect;
+private:
+	float rightAngle = 0, upAngle = 0;
+	glm::vec3 Front = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 Right = glm::vec3(1.0f, 0.0f, 0.0f);
+	
 };
 
 

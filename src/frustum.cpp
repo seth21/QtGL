@@ -1,17 +1,18 @@
-#include "camerafrustum.h"
+#include "frustum.h"
+#include "frustum.h"
 
-CameraFrustum::CameraFrustum()
+Frustum::Frustum()
 {
 	for (int i = 0; i < 6; i++) {
 		planes[i] = std::make_unique<Plane>();
 	}
 }
 
-CameraFrustum::~CameraFrustum()
+Frustum::~Frustum()
 {
 }
 
-void CameraFrustum::calculateFrustum(const float fovYdegrees, const float near, const float far, const float aspect, const glm::vec3 &camPos, const glm::vec3 &camFront, const glm::vec3 &camRight)
+void Frustum::calculateFrustum(const float fovYdegrees, const float near, const float far, const float aspect, const glm::vec3 &camPos, const glm::vec3 &camFront, const glm::vec3 &camRight)
 {
 	float fovYrads = glm::radians(fovYdegrees);
 	float Hnear = 2.0f * tan(fovYrads / 2.0f) * near;
@@ -54,12 +55,18 @@ void CameraFrustum::calculateFrustum(const float fovYdegrees, const float near, 
 	frustumPoints.push_back(fbl);
 }
 
-bool CameraFrustum::intersects()
+BoundingBox Frustum::getFrustumAABB() {
+	BoundingBox aabb;
+	aabb.findMinMax(frustumPoints);
+	return aabb;
+}
+
+bool Frustum::intersects()
 {
 	return false;
 }
 
-bool CameraFrustum::pointInFrustum(glm::vec3& p)
+bool Frustum::pointInFrustum(glm::vec3& p)
 {
 	for (int i = 0; i < 6; i++) {
 		if (planes[i]->testPoint(p) == Back)
@@ -68,7 +75,7 @@ bool CameraFrustum::pointInFrustum(glm::vec3& p)
 	return true;
 }
 
-bool CameraFrustum::sphereInFrustum(glm::vec3& p, float radius) {
+bool Frustum::sphereInFrustum(glm::vec3& p, float radius) {
 
 	float distance;
 
@@ -80,7 +87,7 @@ bool CameraFrustum::sphereInFrustum(glm::vec3& p, float radius) {
 	return true;
 }
 
-bool CameraFrustum::boundsInFrustum(BoundingBox &bounds) {
+bool Frustum::boundsInFrustum(BoundingBox &bounds) {
 	glm::vec3 tmpV;
 	tmpV = bounds.getCorner000(tmpV);
 	//qDebug() << "Corner000: " << tmpV.x << "," << tmpV.y << "," << tmpV.z;
@@ -101,7 +108,7 @@ bool CameraFrustum::boundsInFrustum(BoundingBox &bounds) {
 	return true;
 }
 
-std::vector<glm::vec3> CameraFrustum::getLineSegments()
+std::vector<glm::vec3> Frustum::getLineSegments()
 {
 	std::vector<glm::vec3> seg;
 	seg.push_back(frustumPoints[0]);
@@ -132,4 +139,9 @@ std::vector<glm::vec3> CameraFrustum::getLineSegments()
 	seg.push_back(frustumPoints[7]);
 	return seg;
 
+}
+
+const std::vector<glm::vec3>& Frustum::getFrustumPoints()
+{
+	return frustumPoints;
 }

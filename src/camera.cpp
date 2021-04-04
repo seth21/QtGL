@@ -4,9 +4,9 @@ Camera::Camera()
 {
 	FOVy = 45.0f;
 	nearPlane = 0.1f;
-	farPlane = 1000.0f;
+	farPlane = 400.0f;
 	aspect = 800.0f / 600.0f;
-	frustum = std::make_unique<CameraFrustum>();
+	frustum = std::make_unique<Frustum>();
 	rotation = glm::quat(0, 0, 0, -1);
 	InputManager::getInstance().registerHandler(this);
 	position = glm::vec3(0, 0, 35);

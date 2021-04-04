@@ -56,6 +56,10 @@ void PostProcessingRenderer::setViewport(int x, int y, int width, int height)
     this->yS = y;
 }
 
+void PostProcessingRenderer::render(Camera* cam)
+{
+}
+
 PostProcessingRenderer::~PostProcessingRenderer()
 {
     glDeleteVertexArrays(1, &VAO);

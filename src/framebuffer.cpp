@@ -51,11 +51,15 @@ void FrameBuffer::setup()
 	}
 	if (renderTargets.size() > 0) {
 		// set multiple render targets 
-		qDebug() << "MRT ENABLED";
 		//std::vector<unsigned int> attachments;
 		//for (int i = 0; i < renderTargetCount; i++) attachments.push_back(GL_COLOR_ATTACHMENT0 + renderTargets[i]);
 		//unsigned int attach[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 		glDrawBuffers(renderTargets.size(), &renderTargets[0]);
+	}
+	else {
+		glDrawBuffers(0, NULL);
+		//glDrawBuffer(GL_NONE);
+		//glReadBuffer(GL_NONE);
 	}
 	if (depthAttachment) createTexAttachment(depthAttachment.get());
 	//unbind();
@@ -79,7 +83,14 @@ void FrameBuffer::setRenderTargets(int num, ...)
 	for (int x = 0; x < num; x++)        
 		renderTargets.push_back(GL_COLOR_ATTACHMENT0 + va_arg(arguments, int)); 
 	va_end(arguments);
-	if (setupDone) glDrawBuffers(renderTargets.size(), &renderTargets[0]);
+	if (setupDone) {
+		if (num > 0) glDrawBuffers(renderTargets.size(), &renderTargets[0]);
+		else {
+			//glDrawBuffer(GL_NONE);
+			//glReadBuffer(GL_NONE);
+			glDrawBuffers(0, NULL);
+		}
+	}
 }
 
 //Binds all color attachments using the attachment id as the texture unit.
@@ -102,6 +113,15 @@ void FrameBuffer::bindColorAttachment(int id)
 		glActiveTexture(texUnit);
 		glBindTexture(GL_TEXTURE_2D, texHandle);
 	}
+}
+
+void FrameBuffer::bindDepthAttachment(int textureUnit)
+{
+	if (!depthAttachment) return;
+	GLuint texHandle = depthAttachment->texture;
+	unsigned int texUnit = GL_TEXTURE0 + textureUnit;
+	glActiveTexture(texUnit);
+	glBindTexture(GL_TEXTURE_2D, texHandle);
 }
 
 void FrameBuffer::bind()

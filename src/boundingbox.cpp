@@ -82,6 +82,11 @@ std::vector<glm::vec3> BoundingBox::getLineSegments()
 	return seg;
 }
 
+glm::vec3 BoundingBox::getCenter()
+{
+	return (min + max) / 2.0f;
+}
+
 BoundingBox::BoundingBox()
 {
 	infinity();
@@ -128,7 +133,14 @@ void BoundingBox::mul(const glm::mat4 &transform) {
 	
 }
 
-
+void BoundingBox::findMinMax(std::vector<glm::vec3>& points) {
+	infinity();
+	for (int i = 0; i < points.size(); i++)
+	{
+		extend(points[i]);
+	}
+	//qDebug() << "AABB - min:" << min.x << "," << min.y << "," << min.z << " max:" << max.x << "," << max.y << "," << max.z;
+}
 
 void BoundingBox::findMinMax(std::vector<Vertex>& vertices) {
 	infinity();
@@ -145,4 +157,14 @@ float BoundingBox::minF(float a, float b) {
 
 float BoundingBox::maxF(float a, float b) {
 	return a > b ? a : b;
+}
+
+float BoundingBox::getWidth() {
+	return max.x - min.x;
+}
+float BoundingBox::getHeight() {
+	return max.y - min.y;
+}
+float BoundingBox::getLength() {
+	return max.z - min.z;
 }

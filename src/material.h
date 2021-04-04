@@ -7,6 +7,9 @@
 #include "resourcemanager.h"
 #include "modeltexturedef.h"
 #include "texture.h"
+#include <unordered_map>
+#include <string>
+#include <glm/vec3.hpp>
 
 class Material {
 public:
@@ -23,6 +26,10 @@ public:
 	void releaseAllTextures();
 	//Call when all the texture definitions are set
 	void fetchTextures();
+private:
+	std::unordered_map<std::string, float> floats;
+	std::unordered_map<std::string, glm::vec3> vec3s;
+	std::unordered_map<std::string, unsigned int> textures;
 };
 
 #endif

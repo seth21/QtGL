@@ -10,6 +10,7 @@
 #include "resourcemanager.h"
 #include "debugrenderer.h"
 #include <QDebug>
+#include "directionallight.h"
 
 class DeferredRenderer : protected QOpenGLExtraFunctions {
 public:
@@ -23,13 +24,16 @@ private:
 	std::unique_ptr<FrameBuffer> gBuffer;
 	std::shared_ptr<ShaderProgram> gBufferShader;
 	std::shared_ptr<ShaderProgram> dirLightShader;
+	std::shared_ptr<ShaderProgram> dirLightDepthShader;
 	std::shared_ptr<ShaderProgram> pointLightShader;
 	std::shared_ptr<ShaderProgram> combineShader;
 	std::unique_ptr<DebugRenderer> debugRenderer;
 	std::unique_ptr<Entity> pointLight;
+	std::unique_ptr<DirectionalLight> dirLight;
 	unsigned int screenVAO, screenVBO;
 	void doGeometryPass(Camera* cam, Entity* entity);
 	void doDirectionalLightPass(Camera* cam, Entity* entity);
+	void doDirectionalLightDepthPass(Camera* cam, Entity* entity);
 	void doPointLightPass(Camera* cam, Entity* entity);
 	void doCombinePass(Camera* cam, Entity* entity);
 	void doDebugPass(Camera* cam, Entity* entity);

@@ -35,11 +35,13 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 	dirLightShader = ResourceManager::getInstance().load<ShaderProgram>("gdirlight");
 	pointLightShader = ResourceManager::getInstance().load<ShaderProgram>("gpointlight");
 	combineShader = ResourceManager::getInstance().load<ShaderProgram>("gfinal");
+	dirLightDepthShader = ResourceManager::getInstance().load<ShaderProgram>("dirlightdepth");
 	debugRenderer = std::make_unique<DebugRenderer>();
 	pointLight = std::make_unique<Entity>();
 	pointLight->model = ResourceManager::getInstance().load<Model>("models/uniticosphere.obj");
 	pointLight->position = glm::vec3(0, 4, 0);
 	pointLight->scale = glm::vec3(6);
+	dirLight = std::make_unique<DirectionalLight>();
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -48,6 +50,9 @@ DeferredRenderer::~DeferredRenderer()
 
 void DeferredRenderer::render(Camera* cam, Entity* entity)
 {
+	//LIGHT SHADOW PASS-------
+	doDirectionalLightDepthPass(cam, entity);
+	//GEOMETRY PASS-----------
 	gBuffer->bind();
 	gBuffer->setRenderTargets(3, 0, 1, 2);
 	doGeometryPass(cam, entity);
@@ -138,13 +143,35 @@ void DeferredRenderer::doDirectionalLightPass(Camera* cam, Entity* entity)
 	gBuffer->bindColorAttachment(1);
 	gBuffer->bindColorAttachment(2);
 	//Lighting Uniforms
-	dirLightShader->loadVector3f("lightPos", glm::vec3(0, 90, 20));
-	dirLightShader->loadVector3f("ambientLight", glm::vec3(0.2, 0.2, 0.1));
-	dirLightShader->loadVector3f("lightColor", glm::vec3(0.7, 0.6, 0.3));
+	dirLightShader->loadVector3f("lightDir", dirLight->getDirection());
+	dirLightShader->loadVector3f("ambientLight", glm::vec3(0.11, 0.11, 0.06));
+	dirLightShader->loadVector3f("lightColor", glm::vec3(0.9, 0.8, 0.3));
 	dirLightShader->loadVector3f("viewPos", cam->position);
+	dirLightShader->loadInt("shadowMap", 3);
+	dirLight->getShadowMap()->bindDepthAttachment(3);
+	dirLightShader->loadMatrix4f("shadowMapSpaceMatrix", dirLight->getToShadowMapSpaceMatrix());
+	dirLightShader->loadFloat("shadowDistance", 250);
+	dirLightShader->loadFloat("transitionDistance", 220);
 	//Render Directional Light as a screen-sized Quad to render attachment 3
 	glBindVertexArray(screenVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void DeferredRenderer::doDirectionalLightDepthPass(Camera* cam, Entity* entity)
+{
+	dirLight->getShadowMap()->bind();
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	dirLight->updateMatrices(cam);
+	dirLightDepthShader->start();
+	dirLightDepthShader->loadMatrix4f("projMat", dirLight->getProjectionMatrix());
+	dirLightDepthShader->loadMatrix4f("lightViewMat", dirLight->getLightViewMatrix());
+	glViewport(0, 0, dirLight->getShadowMapSize(), dirLight->getShadowMapSize());
+	entity->drawNow(dirLightDepthShader.get(), cam, false);
 }
 
 void DeferredRenderer::doPointLightPass(Camera* cam, Entity* entity)
