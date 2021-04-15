@@ -15,6 +15,18 @@ Texture::Texture(const std::string &fileName, ResourceConfig config) : Resource(
     
 }
 
+Texture::Texture(): Resource("null", ResourceConfig())
+{
+    fileOK = false;
+    m_texUnit = 0;
+    m_texture = 0;
+    m_width = 0;
+    m_height = 0;
+    m_nrChannels = 0;
+    
+    initializeOpenGLFunctions();
+}
+
 void Texture::loadCubeImage(const std::string& fileName) {
     std::vector<std::string> splits = splitString(fileName, "*");
     if (splits.size() != 7) {
@@ -70,8 +82,12 @@ void Texture::loadImage(const std::string& fileName) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, m_nrChannels == 4 ? GL_RGBA : GL_RGB, m_width, m_height, 0, m_nrChannels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, mp_textureData);
+    GLint internalFormat;
+    if (m_nrChannels == 4) internalFormat = GL_RGBA;
+    else if (m_nrChannels == 3) internalFormat = GL_RGB;
+    else if (m_nrChannels == 2) internalFormat = GL_RG;
+    else internalFormat = GL_RED;
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_width, m_height, 0, internalFormat, GL_UNSIGNED_BYTE, mp_textureData);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(mp_textureData);
@@ -101,6 +117,20 @@ const std::string& Texture::getFullPath()
 ResourceConfig& Texture::getResourceConfig()
 {
     return resConfig;
+}
+
+void Texture::uploadFloat2D(int width, int height, const float *data, GLint internalFormat, GLenum format, GLenum filter, GLenum wrap)
+{
+    if (fileOK) return;
+    
+    glGenTextures(1, &m_texture);
+    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_FLOAT, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+    fileOK = true;
 }
 
 bool Texture::loaded()

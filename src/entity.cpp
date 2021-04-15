@@ -23,7 +23,18 @@ void Entity::drawNow(ShaderProgram *shader, Camera* camera, bool frustumCull) {
         drawCount++;
         Material* mat = model->materials[mesh->materialIndex];
         if (mat) {
-            if (mat->diffuseMaps.size() > 0) mat->diffuseMaps[0]->bind(0);
+            int counter = 0;
+            for (auto tex : mat->getTextures()) {
+                shader->loadInt(tex.first, counter);
+                tex.second->bind(counter);
+                counter++;
+            }
+            for (auto f : mat->getFloats()) {
+                shader->loadFloat(f.first, f.second);
+            }
+            for (auto v3 : mat->getVec3s()) {
+                shader->loadVector3f(v3.first, v3.second);
+            }
         }
         mesh->drawNow();
     }

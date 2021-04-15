@@ -17,6 +17,8 @@ uniform float shadowDistance;
 uniform float transitionDistance;
 const int pcfCount = 2;
 const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
+//ssao
+uniform sampler2D ssaoTexture;
 
 /*float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -70,6 +72,11 @@ float calcShadowStrength(float cameraDist){
 	return distance;
 }
 
+float brightnessContrast(float value, float brightness, float contrast)
+{
+    return (value - 0.5) * contrast + 0.5 + brightness;
+}
+
 void main()
 { 
     vec4 albedoSpec = texture(gAlbedoSpec, TexCoords);
@@ -82,7 +89,10 @@ void main()
     //FragColor = vec4(average, average, average, 1.0);
 
     float ambientStrength = 0.1;
-    vec3 ambient = ambientLight * lightColor;
+    float ssao = texture(ssaoTexture, TexCoords).r;
+    //contrast
+    ssao = pow(ssao, 1.5) * 2;
+    vec3 ambient = ambientLight * lightColor * ssao;
   	vec3 lightDir = normalize(lightDir);
     // diffuse
     float diff = clamp(dot(worldNormal, -lightDir), 0, 1);

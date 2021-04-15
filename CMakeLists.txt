@@ -26,7 +26,7 @@ endif()
 
 # Add .lib files
 link_directories(${CMAKE_SOURCE_DIR}/lib)
-#
+
 ## your source files
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES

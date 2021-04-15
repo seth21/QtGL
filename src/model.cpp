@@ -101,6 +101,8 @@ void Model::loadMaterialsFromModel(const aiScene* scene, std::string modelResour
         //textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         // 3. Normal maps
         loadMaterialTextureDefs(material, aiTextureType_NORMALS, "tex_normal", modelResourcePath, mat->normalDefs);
+        // 4. Bump maps
+        loadMaterialTextureDefs(material, aiTextureType_HEIGHT, "tex_bump", modelResourcePath, mat->bumpDefs);
         //textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());*/
         mat->fetchTextures();
       

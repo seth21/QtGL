@@ -30,8 +30,8 @@ public:
     /*  Render data  */
     GLuint VAO, VBO, EBO;
     unsigned int materialIndex = 0;
-    unsigned int baseVertex = 0;
-    unsigned int vertexCount = 0;
+    unsigned int baseIndex = 0;
+    unsigned int indexCount = 0;
 private:
 
     void releaseResources();

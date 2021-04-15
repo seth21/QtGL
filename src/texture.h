@@ -7,11 +7,13 @@
 #include <QOpenGLExtraFunctions>
 #include "resource.h"
 #include "resourceconfig.h"
+#include <glm/vec3.hpp>
 
 class Texture : public Resource, protected QOpenGLFunctions
 {
 public:
     Texture(const std::string& fileName, ResourceConfig config);
+    Texture();
     virtual void bind(int texUnit);
     virtual void unbind();
     ~Texture();
@@ -19,6 +21,7 @@ public:
     bool loaded();
     void release();
     ResourceConfig& getResourceConfig();
+    void uploadFloat2D(int width, int height, const float* data, GLint internalFormat, GLenum format, GLenum filter, GLenum wrap);
 private:
     unsigned char * mp_textureData;
     unsigned int m_texture, m_texUnit;

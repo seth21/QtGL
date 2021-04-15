@@ -12,6 +12,7 @@ out vec3 fragPos;
 
 #ifdef NORMAL
 out mat3 TBN;
+out mat3 inverseTBN;
 #else
 out vec3 ourNormal;
 #endif
@@ -21,11 +22,12 @@ void main()
         fragPos = (modelMat * vec4(aPos, 1.0)).xyz;
         TexCoord = aTexCoord;
         #ifdef NORMAL
-        //create TBN matrix
+        //create TBN matrix (tangent to world space)
         vec3 T = normalize(vec3(modelMat * vec4(aTangent,   0.0)));
         vec3 N = normalize(vec3(modelMat * vec4(aNormal,    0.0)));
         vec3 B = cross(T, N);
         TBN = mat3(T, B, N);
+        inverseTBN = transpose(TBN);
         #else
         ourNormal = mat3(transpose(inverse(modelMat))) * aNormal; 
         #endif

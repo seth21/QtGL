@@ -115,6 +115,17 @@ void FrameBuffer::bindColorAttachment(int id)
 	}
 }
 
+void FrameBuffer::bindColorAttachmentAtUnit(int id, int textureUnit)
+{
+	for (int i = 0; i < colorAttachments.size(); i++) {
+		if (colorAttachments[i]->attachmentID != id) continue;
+		unsigned int texUnit = GL_TEXTURE0 + textureUnit;
+		GLuint texHandle = colorAttachments[i]->texture;
+		glActiveTexture(texUnit);
+		glBindTexture(GL_TEXTURE_2D, texHandle);
+	}
+}
+
 void FrameBuffer::bindDepthAttachment(int textureUnit)
 {
 	if (!depthAttachment) return;
@@ -154,6 +165,8 @@ void FrameBuffer::createTexAttachment(TextureAttachment* attachment)
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, attachment->minMagFilter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, attachment->minMagFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	//Attach the texture to the FBO
 	glFramebufferTexture2D(GL_FRAMEBUFFER, (attachment->depth) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + attachment->attachmentID, GL_TEXTURE_2D, attachment->texture, 0);
 }

@@ -11,6 +11,9 @@
 #include "debugrenderer.h"
 #include <QDebug>
 #include "directionallight.h"
+#include "vao.h"
+#include "vertexattrib.h"
+#include "ssao.h"
 
 class DeferredRenderer : protected QOpenGLExtraFunctions {
 public:
@@ -20,7 +23,7 @@ public:
 	void setViewport(int x, int y, int width, int height);
 	DebugRenderer* getDebugRenderer();
 private:
-	void setupScreenQuad();
+	//void setupScreenQuad();
 	std::unique_ptr<FrameBuffer> gBuffer;
 	std::shared_ptr<ShaderProgram> gBufferShader;
 	std::shared_ptr<ShaderProgram> dirLightShader;
@@ -30,13 +33,16 @@ private:
 	std::unique_ptr<DebugRenderer> debugRenderer;
 	std::unique_ptr<Entity> pointLight;
 	std::unique_ptr<DirectionalLight> dirLight;
-	unsigned int screenVAO, screenVBO;
+	std::unique_ptr<VAO> screenVAO;
+	std::unique_ptr<SSAO> ssao;
+	//unsigned int screenVAO, screenVBO;
 	void doGeometryPass(Camera* cam, Entity* entity);
 	void doDirectionalLightPass(Camera* cam, Entity* entity);
 	void doDirectionalLightDepthPass(Camera* cam, Entity* entity);
 	void doPointLightPass(Camera* cam, Entity* entity);
 	void doCombinePass(Camera* cam, Entity* entity);
 	void doDebugPass(Camera* cam, Entity* entity);
+	void doSSAO(Camera* cam);
 	int width = 0;
 	int height = 0;
 	int xS = 0, yS = 0;

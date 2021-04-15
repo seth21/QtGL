@@ -38,6 +38,7 @@ public:
 	void setRenderTargets(int, ...);
 	void bindAllColorAttachments();
 	void bindColorAttachment(int id);
+	void bindColorAttachmentAtUnit(int id, int textureUnit);
 	void bindDepthAttachment(int textureUnit);
 private:
 	unsigned int fbo = 0;

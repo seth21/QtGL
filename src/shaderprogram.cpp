@@ -44,7 +44,7 @@ void ShaderProgram::init(std::string shaderName)
     if (!success)
     {
         glGetProgramInfoLog(programID, 512, NULL, infoLog);
-        qDebug() << shaderName.c_str() << " ERROR::SHADER::PROGRAM::LINKING_FAILED";
+        qDebug() << shaderName.c_str() << " ERROR::SHADER::PROGRAM::LINKING_FAILED " << infoLog;
         fileLoaded = false;
     }
     else{

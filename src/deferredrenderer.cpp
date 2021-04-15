@@ -14,7 +14,11 @@ float quadVerts[] = {
 DeferredRenderer::DeferredRenderer(int width, int height)
 {
 	initializeOpenGLFunctions();
-	setupScreenQuad();
+	screenVAO = std::make_unique<VAO>();
+	int vaoPos = screenVAO->createAttribute(VertexAttrib::POSITION, 0, 2, VAO::screenQuadPos, 12);
+	int vaoTex = screenVAO->createAttribute(VertexAttrib::TEXCOORDS, 1, 2, VAO::screenQuadUV, 12);
+	screenVAO->upload();
+	//setupScreenQuad();
 	gBuffer = std::make_unique<FrameBuffer>(width, height);
 	//POSITIONS
 	gBuffer->registerColorAttachment(0, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_NEAREST);
@@ -31,6 +35,7 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 
 	ResourceConfig shaderConfig;
 	shaderConfig.flags.push_back("ALBEDO");
+	shaderConfig.flags.push_back("BUMP");
 	gBufferShader = ResourceManager::getInstance().load<ShaderProgram>("gbuffer", shaderConfig);
 	dirLightShader = ResourceManager::getInstance().load<ShaderProgram>("gdirlight");
 	pointLightShader = ResourceManager::getInstance().load<ShaderProgram>("gpointlight");
@@ -42,6 +47,8 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 	pointLight->position = glm::vec3(0, 4, 0);
 	pointLight->scale = glm::vec3(6);
 	dirLight = std::make_unique<DirectionalLight>();
+
+	ssao = std::make_unique<SSAO>(width, height);
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -56,7 +63,10 @@ void DeferredRenderer::render(Camera* cam, Entity* entity)
 	gBuffer->bind();
 	gBuffer->setRenderTargets(3, 0, 1, 2);
 	doGeometryPass(cam, entity);
+	//SSAO--------------------
+	doSSAO(cam);
 	//LIGHTS------------------
+	gBuffer->bind();
 	gBuffer->setRenderTargets(1, 3); //Render to the light target only
 	glClear(GL_COLOR_BUFFER_BIT);
 	doDirectionalLightPass(cam, entity);
@@ -69,6 +79,7 @@ void DeferredRenderer::render(Camera* cam, Entity* entity)
 void DeferredRenderer::setViewport(int x, int y, int width, int height)
 {
 	gBuffer->setViewport(x, y, width, height);
+	ssao->screenSizeChanged(width, height);
 	this->width = width;
 	this->height = height;
 	this->xS = x;
@@ -80,7 +91,7 @@ DebugRenderer* DeferredRenderer::getDebugRenderer()
 	return debugRenderer.get();
 }
 
-void DeferredRenderer::setupScreenQuad() {
+/*void DeferredRenderer::setupScreenQuad() {
 
 	// Create buffers/arrays
 	glGenVertexArrays(1, &screenVAO);
@@ -101,7 +112,7 @@ void DeferredRenderer::setupScreenQuad() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-}
+}*/
 
 void DeferredRenderer::doGeometryPass(Camera* cam, Entity* entity)
 {
@@ -117,6 +128,7 @@ void DeferredRenderer::doGeometryPass(Camera* cam, Entity* entity)
 	gBufferShader->start();
 	gBufferShader->loadMatrix4f("viewMat", cam->getViewMatrix());
 	gBufferShader->loadMatrix4f("projMat", cam->getProjMatrix());
+	gBufferShader->loadVector3f("viewPos", cam->position);
 	/*
 	for(Object obj : Objects)
 	{
@@ -152,8 +164,13 @@ void DeferredRenderer::doDirectionalLightPass(Camera* cam, Entity* entity)
 	dirLightShader->loadMatrix4f("shadowMapSpaceMatrix", dirLight->getToShadowMapSpaceMatrix());
 	dirLightShader->loadFloat("shadowDistance", 250);
 	dirLightShader->loadFloat("transitionDistance", 220);
+	//ssao
+	dirLightShader->loadInt("ssaoTexture", 4);
+	ssao->bindResult(4);
+	glViewport(0, 0, gBuffer->getWidth(), gBuffer->getHeight());
 	//Render Directional Light as a screen-sized Quad to render attachment 3
-	glBindVertexArray(screenVAO);
+	//glBindVertexArray(screenVAO);
+	screenVAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -231,7 +248,8 @@ void DeferredRenderer::doCombinePass(Camera* cam, Entity* entity)
 	combineShader->loadFloat("exposure", exposure);
 	gBuffer->bindColorAttachment(2);
 	gBuffer->bindColorAttachment(3);
-	glBindVertexArray(screenVAO);
+	//glBindVertexArray(screenVAO);
+	screenVAO->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -248,4 +266,12 @@ void DeferredRenderer::doDebugPass(Camera* cam, Entity* entity)
 	//for (int i=0; i<segs.size();i++) debugRenderer->glVertex3f(segs[i]);
 
 	//debugRenderer->glEnd(cam);
+}
+
+void DeferredRenderer::doSSAO(Camera *cam)
+{
+	glDisable(GL_DEPTH_TEST);
+	glCullFace(GL_BACK);
+	ssao->calculateSSAO(gBuffer.get(), screenVAO.get(), cam->getProjMatrix(), cam->getViewMatrix());
+	
 }

@@ -9,6 +9,12 @@ out vec3 FragPos;
 uniform mat4 projMat;
 uniform mat4 viewMat; 
 uniform mat4 modelMat;
+uniform vec3 viewPos;
+
+#ifdef BUMP
+out vec3 tangentViewPos;
+out vec3 tangentFragPos;
+#endif
 
 #ifdef NORMAL
 out mat3 TBN;
@@ -20,14 +26,27 @@ void main()
 {  
         FragPos = (modelMat * vec4(aPos, 1.0)).xyz;
         TexCoord = aTexCoord;
-        #ifdef NORMAL
-        //create TBN matrix
-        vec3 T = normalize(vec3(modelMat * vec4(aTangent,   0.0)));
-        vec3 N = normalize(vec3(modelMat * vec4(aNormal,    0.0)));
+        
+        #if defined BUMP || defined NORMAL
+        //create TBN matrix (tangent to world space)
+        mat3 normalMatrix = mat3(transpose(inverse(modelMat)));
+        vec3 T = normalize(normalMatrix * aTangent);
+        vec3 N = normalize(normalMatrix * aNormal);
         vec3 B = cross(T, N);
-        TBN = mat3(T, B, N);
-        #else
+        mat3 _TBN = mat3(T, B, N);
+        #endif
+        
+        #ifdef NORMAL 
+        TBN = _TBN;
+        #else 
         Normal = mat3(transpose(inverse(modelMat))) * aNormal; 
         #endif
+
+        #ifdef BUMP
+        mat3 inverseTBN = transpose(_TBN);
+        tangentViewPos  = inverseTBN * viewPos;
+        tangentFragPos  = inverseTBN * FragPos;
+        #endif
+        
         gl_Position = projMat * viewMat * vec4(FragPos, 1.0);
 }
