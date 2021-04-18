@@ -16,8 +16,8 @@ PostProcessingRenderer::PostProcessingRenderer(int screenWidth, int screenHeight
     initializeOpenGLFunctions();
     setupScreenQuad();
     mainFBO = std::make_unique<FrameBuffer>(screenWidth, screenHeight);
-    mainFBO->registerColorAttachment(0, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, GL_LINEAR);
-    mainFBO->registerDepthAttachment(GL_UNSIGNED_BYTE, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_LINEAR);
+    mainFBO->registerColorAttachment(0, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, GL_LINEAR, "color");
+    mainFBO->registerDepthAttachment(GL_UNSIGNED_BYTE, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_LINEAR, "depth");
     mainFBO->setup();
     postShader = ResourceManager::getInstance().load<ShaderProgram>("grayscale");
     postShader->start();
@@ -90,7 +90,7 @@ void PostProcessingRenderer::renderToScreen()
     auto &colorAtts = mainFBO->getColorAttachments();
     if (colorAtts.size() > 0) {
         glActiveTexture(0);
-        glBindTexture(GL_TEXTURE_2D, colorAtts[0]->texture);
+        glBindTexture(GL_TEXTURE_2D, colorAtts[0]->tex->getHandle());
     }
     glViewport(xS, yS, width, height);
     glDrawArrays(GL_TRIANGLES, 0, 6);

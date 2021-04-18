@@ -91,7 +91,8 @@ void main()
     float ambientStrength = 0.1;
     float ssao = texture(ssaoTexture, TexCoords).r;
     //contrast
-    ssao = pow(ssao, 1.5) * 2;
+    ssao = pow(ssao, 1.2) * 1.6;
+    
     vec3 ambient = ambientLight * lightColor * ssao;
   	vec3 lightDir = normalize(lightDir);
     // diffuse

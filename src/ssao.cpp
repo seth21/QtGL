@@ -8,17 +8,17 @@ SSAO::SSAO(int width, int height)
     blurShader = ResourceManager::getInstance().load<ShaderProgram>("gaussianblur");
     generateKernelNoise();
     noiseTexture = std::make_unique<Texture>();
-    noiseTexture->uploadFloat2D(4, 4, ssaoNoise.data(), GL_RGBA16F, GL_RGB, GL_NEAREST, GL_REPEAT);
+    noiseTexture->uploadFloat2D(4, 4, ssaoNoise.data(), GL_RGBA16F, GL_RGB, GL_FLOAT, GL_NEAREST, GL_REPEAT);
     
     ssaoBuffer = std::make_unique<FrameBuffer>(width, height);
-    ssaoBuffer->registerColorAttachment(0, GL_FLOAT, GL_RED, GL_RED, GL_LINEAR);
+    ssaoBuffer->registerColorAttachment(0, GL_FLOAT, GL_RED, GL_RED, GL_LINEAR, "ssao");
     ssaoBuffer->setup();
     
     blurBuffer = std::make_unique<FrameBuffer>(width/2, height/2);
     //1
-    blurBuffer->registerColorAttachment(0, GL_FLOAT, GL_RED, GL_RED, GL_LINEAR);
+    blurBuffer->registerColorAttachment(0, GL_FLOAT, GL_RED, GL_RED, GL_LINEAR, "blur1");
     //2
-    blurBuffer->registerColorAttachment(1, GL_FLOAT, GL_RED, GL_RED, GL_LINEAR);
+    blurBuffer->registerColorAttachment(1, GL_FLOAT, GL_RED, GL_RED, GL_LINEAR, "blur2");
     blurBuffer->setup();
     
     ssaoShader->start();
@@ -46,8 +46,8 @@ void SSAO::calculateSSAO(FrameBuffer* gBuffer, VAO* screenVAO, glm::mat4 project
     ssaoShader->loadMatrix4f("projection", projection);
     ssaoShader->loadMatrix4f("view", view);
     
-    gBuffer->bindColorAttachment(0);
-    gBuffer->bindColorAttachment(1);
+    gBuffer->bindColorAttachmentAtUnit("position", 0);
+    gBuffer->bindColorAttachmentAtUnit("normal", 1);
     noiseTexture->bind(2);
     
     screenVAO->bind();
@@ -104,7 +104,7 @@ void SSAO::generateKernelNoise()
     {
         glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
         sample = glm::normalize(sample);
-        if (glm::dot(sample, glm::vec3(0, 0, 1)) < 0.1f) continue;
+        if (glm::dot(sample, glm::vec3(0, 0, 1)) < 0.15f) continue;
         sample *= randomFloats(generator);
         float scale = float(ssaoKernel.size()) / 64.0;
 

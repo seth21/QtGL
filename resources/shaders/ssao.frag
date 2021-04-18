@@ -13,7 +13,7 @@ uniform mat4 view;
 uniform vec3 camPos;
 
 int kernelSize = 64;
-float radius = 0.7;
+float radius = 2.0;
 float bias = 0.03;
 
 void main()

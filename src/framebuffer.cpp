@@ -22,8 +22,14 @@ FrameBuffer::~FrameBuffer()
 	unbind();
 	glDeleteFramebuffers(1, &fbo);
 	//delete textures
-	if (depthAttachment) glDeleteTextures(1, &depthAttachment->texture);
-	for (int i = 0; i < colorAttachments.size(); i++) glDeleteTextures(1, &colorAttachments[i]->texture);
+	if (depthAttachment) {
+		//glDeleteTextures(1, &depthAttachment->texture);
+		depthAttachment->tex.reset();
+	}
+	for (int i = 0; i < colorAttachments.size(); i++) {
+		//glDeleteTextures(1, &colorAttachments[i]->texture);
+		colorAttachments[i]->tex.reset();
+	}
 }
 
 void FrameBuffer::setup()
@@ -34,16 +40,19 @@ void FrameBuffer::setup()
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	//Destroy old textures, if any
-	if (depthAttachment && depthAttachment->texture != 0) {
+	if (depthAttachment && depthAttachment->tex.get() != nullptr) {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, NULL, 0);
-		glDeleteTextures(1, &(depthAttachment->texture));
-		depthAttachment->texture = 0;
+		//glDeleteTextures(1, &(depthAttachment->texture));
+		depthAttachment->tex.reset(nullptr);
+		//depthAttachment->texture = 0;
 	}
 	for (int i = 0; i < colorAttachments.size(); i++) {
-		if (colorAttachments[i]->texture == 0) continue; //Non initialized attachment, nothing to delete
+		if (colorAttachments[i]->tex.get() == nullptr) continue; //Non initialized attachment, nothing to delete
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, NULL, 0);
-		glDeleteTextures(1, &(colorAttachments[i]->texture));
-		colorAttachments[i]->texture = 0;
+		//glDeleteTextures(1, &(colorAttachments[i]->texture));
+		//colorAttachments[i]->texture = 0;
+		colorAttachments[i]->tex.reset(nullptr);
+		qDebug() << "AAAAAAAAAAAAAAa";
 	}
 	//Create new textures
 	for (int i = 0; i < colorAttachments.size(); i++) {
@@ -97,42 +106,62 @@ void FrameBuffer::setRenderTargets(int num, ...)
 void FrameBuffer::bindAllColorAttachments()
 {
 	for (int i = 0; i < colorAttachments.size(); i++) {
-		unsigned int texUnit = GL_TEXTURE0 + colorAttachments[i]->attachmentID;
-		GLuint texHandle = colorAttachments[i]->texture;
-		glActiveTexture(texUnit);
-		glBindTexture(GL_TEXTURE_2D, texHandle);
+		Texture* tex = colorAttachments[i]->tex.get();
+		if (tex) tex->bind(colorAttachments[i]->attachmentID);
+		//glActiveTexture(texUnit);
+		//glBindTexture(GL_TEXTURE_2D, texHandle);
 	}
 }
 
 void FrameBuffer::bindColorAttachment(int id)
 {
 	for (int i = 0; i < colorAttachments.size(); i++) {
-		if (colorAttachments[i]->attachmentID != id) continue;
-		unsigned int texUnit = GL_TEXTURE0 + colorAttachments[i]->attachmentID;
-		GLuint texHandle = colorAttachments[i]->texture;
-		glActiveTexture(texUnit);
-		glBindTexture(GL_TEXTURE_2D, texHandle);
+		if (colorAttachments[i]->attachmentID == id) {
+			Texture* tex = colorAttachments[i]->tex.get();
+			if (tex) tex->bind(colorAttachments[i]->attachmentID);
+			break;
+		}
+		//glActiveTexture(texUnit);
+		//glBindTexture(GL_TEXTURE_2D, texHandle);
+	}
+}
+
+void FrameBuffer::bindColorAttachmentAtUnit(std::string name, unsigned int textureUnit)
+{
+	for (int i = 0; i < colorAttachments.size(); i++) {
+		if (colorAttachments[i]->name == name) {
+			Texture* tex = colorAttachments[i]->tex.get();
+			if (tex) tex->bind(textureUnit);
+			break;
+		}
+		//glActiveTexture(texUnit);
+		//glBindTexture(GL_TEXTURE_2D, texHandle);
 	}
 }
 
 void FrameBuffer::bindColorAttachmentAtUnit(int id, int textureUnit)
 {
 	for (int i = 0; i < colorAttachments.size(); i++) {
-		if (colorAttachments[i]->attachmentID != id) continue;
-		unsigned int texUnit = GL_TEXTURE0 + textureUnit;
-		GLuint texHandle = colorAttachments[i]->texture;
-		glActiveTexture(texUnit);
-		glBindTexture(GL_TEXTURE_2D, texHandle);
+		if (colorAttachments[i]->attachmentID == id)
+		{
+			Texture* tex = colorAttachments[i]->tex.get();
+			if (tex) tex->bind(textureUnit);
+			break;
+		}
+		
+		//glActiveTexture(texUnit);
+		//glBindTexture(GL_TEXTURE_2D, texHandle);
 	}
 }
 
 void FrameBuffer::bindDepthAttachment(int textureUnit)
 {
 	if (!depthAttachment) return;
-	GLuint texHandle = depthAttachment->texture;
-	unsigned int texUnit = GL_TEXTURE0 + textureUnit;
-	glActiveTexture(texUnit);
-	glBindTexture(GL_TEXTURE_2D, texHandle);
+	//GLuint texHandle = depthAttachment->texture;
+	Texture* tex = depthAttachment->tex.get();
+	if (tex) tex->bind(textureUnit);
+	//glActiveTexture(texUnit);
+	//glBindTexture(GL_TEXTURE_2D, texHandle);
 }
 
 void FrameBuffer::bind()
@@ -158,20 +187,23 @@ std::unique_ptr<TextureAttachment> const& FrameBuffer::getDepthAttachment() cons
 
 void FrameBuffer::createTexAttachment(TextureAttachment* attachment)
 {
-	glGenTextures(1, &(attachment->texture));
-	glBindTexture(GL_TEXTURE_2D, attachment->texture);
+	attachment->tex = std::make_unique<Texture>();
+	attachment->tex->uploadFloat2D(width, height, nullptr, attachment->internalFormat, attachment->format, attachment->dataType, attachment->minMagFilter, GL_CLAMP_TO_EDGE);
+	
+	//glGenTextures(1, &(attachment->texture));
+	//glBindTexture(GL_TEXTURE_2D, attachment->texture);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, attachment->internalFormat, width, height, 0, attachment->format, attachment->dataType, NULL);
+	//glTexImage2D(GL_TEXTURE_2D, 0, attachment->internalFormat, width, height, 0, attachment->format, attachment->dataType, NULL);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, attachment->minMagFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, attachment->minMagFilter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, attachment->minMagFilter);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, attachment->minMagFilter);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	//Attach the texture to the FBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, (attachment->depth) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + attachment->attachmentID, GL_TEXTURE_2D, attachment->texture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, (attachment->depth) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + attachment->attachmentID, GL_TEXTURE_2D, attachment->tex->getHandle(), 0);
 }
 
-void FrameBuffer::registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag)
+void FrameBuffer::registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name)
 {
 	std::unique_ptr<TextureAttachment> att = std::make_unique<TextureAttachment>();
 	for (int i = 0; i < colorAttachments.size(); i++) {
@@ -183,10 +215,11 @@ void FrameBuffer::registerColorAttachment(unsigned int attachmentID, GLenum data
 	att->internalFormat = internalFormat;
 	att->format = format;
 	att->minMagFilter = minMag;
+	att->name = name;
 	colorAttachments.push_back(std::move(att));
 }
 
-void FrameBuffer::registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag)
+void FrameBuffer::registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name)
 {
 	depthAttachment = std::make_unique<TextureAttachment>();
 	depthAttachment->depth = true;
@@ -195,6 +228,7 @@ void FrameBuffer::registerDepthAttachment(GLenum dataType, GLint internalFormat,
 	depthAttachment->internalFormat = internalFormat;
 	depthAttachment->format = format;
 	depthAttachment->minMagFilter = minMag;
+	depthAttachment->name = name;
 }
 
 void FrameBuffer::setViewport(int x, int y, int width, int height)

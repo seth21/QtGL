@@ -21,7 +21,8 @@ public:
     bool loaded();
     void release();
     ResourceConfig& getResourceConfig();
-    void uploadFloat2D(int width, int height, const float* data, GLint internalFormat, GLenum format, GLenum filter, GLenum wrap);
+    void uploadFloat2D(int width, int height, const float* data, GLint internalFormat, GLenum format, GLenum type, GLenum filter, GLenum wrap);
+    unsigned int getHandle();
 private:
     unsigned char * mp_textureData;
     unsigned int m_texture, m_texUnit;

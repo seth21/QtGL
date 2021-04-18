@@ -119,18 +119,26 @@ ResourceConfig& Texture::getResourceConfig()
     return resConfig;
 }
 
-void Texture::uploadFloat2D(int width, int height, const float *data, GLint internalFormat, GLenum format, GLenum filter, GLenum wrap)
+void Texture::uploadFloat2D(int width, int height, const float *data, GLint internalFormat, GLenum format, GLenum type, GLenum filter, GLenum wrap)
 {
     if (fileOK) return;
-    
+    m_width = width;
+    m_height = height;
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_FLOAT, data);
+    
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, data);
     fileOK = true;
+}
+
+unsigned int Texture::getHandle()
+{
+    return m_texture;
 }
 
 bool Texture::loaded()

@@ -7,17 +7,19 @@
 #include <vector>
 #include <memory>
 #include <cstdarg>
+#include "texture.h"
+#include <string>
 
 struct TextureAttachment {
 	GLenum dataType; //ex GL_FLOAT, GL_UNSIGNED_BYTE
 	GLint internalFormat; //ex GL_RGBA16F, GL_RGBA
 	GLenum format; //ex GL_RGBA
 	GLint minMagFilter; // ex GL_LINEAR, GL_NEAREST
-	GLuint texture = 0;
+	//GLuint texture = 0;
 	unsigned int attachmentID = 0;
 	bool depth = false;
-
-
+	std::unique_ptr<Texture> tex;
+	std::string name;
 };
 
 class FrameBuffer : protected QOpenGLExtraFunctions {
@@ -32,13 +34,14 @@ public:
 	void setViewport(int xS, int yS, int width, int height);
 	unsigned int getWidth();
 	unsigned int getHeight();
-	void registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag);
-	void registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag);
+	void registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name);
+	void registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name);
 	void setup();
 	void setRenderTargets(int, ...);
 	void bindAllColorAttachments();
 	void bindColorAttachment(int id);
 	void bindColorAttachmentAtUnit(int id, int textureUnit);
+	void bindColorAttachmentAtUnit(std::string name, unsigned int textureUnit);
 	void bindDepthAttachment(int textureUnit);
 private:
 	unsigned int fbo = 0;

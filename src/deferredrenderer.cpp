@@ -21,15 +21,15 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 	//setupScreenQuad();
 	gBuffer = std::make_unique<FrameBuffer>(width, height);
 	//POSITIONS
-	gBuffer->registerColorAttachment(0, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_NEAREST);
+	gBuffer->registerColorAttachment(0, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_NEAREST, "position");
 	//NORMALS
-	gBuffer->registerColorAttachment(1, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_NEAREST);
+	gBuffer->registerColorAttachment(1, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_NEAREST, "normal");
 	//COLOR+SPEC
-	gBuffer->registerColorAttachment(2, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, GL_NEAREST);
+	gBuffer->registerColorAttachment(2, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, GL_NEAREST, "albedospec");
 	//LIGHT
-	gBuffer->registerColorAttachment(3, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_LINEAR);
+	gBuffer->registerColorAttachment(3, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_LINEAR, "light");
 	//DEPTH
-	gBuffer->registerDepthAttachment(GL_UNSIGNED_BYTE, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_NEAREST);
+	gBuffer->registerDepthAttachment(GL_UNSIGNED_BYTE, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_NEAREST, "depth");
 	gBuffer->setRenderTargets(4, 0, 1, 2, 3);
 	gBuffer->setup();
 

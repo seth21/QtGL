@@ -4,7 +4,7 @@ DirectionalLight::DirectionalLight()
 {
 	shadowMap = std::make_unique<FrameBuffer>(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 	//ONLY DEPTH
-	shadowMap->registerDepthAttachment(GL_FLOAT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_LINEAR);
+	shadowMap->registerDepthAttachment(GL_FLOAT, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_LINEAR, "depth");
 	shadowMap->setRenderTargets(0);
 	shadowMap->setup();
 	shadowBox = std::make_unique<ShadowBox>();
