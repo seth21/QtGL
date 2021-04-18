@@ -14,6 +14,9 @@
 #include "vao.h"
 #include "vertexattrib.h"
 #include "ssao.h"
+#include "posteffectrenderer.h"
+#include "grayscaleeffect.h"
+#include "colorcorrection.h"
 
 class DeferredRenderer : protected QOpenGLExtraFunctions {
 public:
@@ -35,6 +38,7 @@ private:
 	std::unique_ptr<DirectionalLight> dirLight;
 	std::unique_ptr<VAO> screenVAO;
 	std::unique_ptr<SSAO> ssao;
+	std::unique_ptr<PostEffectRenderer> postRenderer;
 	//unsigned int screenVAO, screenVBO;
 	void doGeometryPass(Camera* cam, Entity* entity);
 	void doDirectionalLightPass(Camera* cam, Entity* entity);
@@ -43,6 +47,7 @@ private:
 	void doCombinePass(Camera* cam, Entity* entity);
 	void doDebugPass(Camera* cam, Entity* entity);
 	void doSSAO(Camera* cam);
+	void doPostProcessing(Camera* cam);
 	int width = 0;
 	int height = 0;
 	int xS = 0, yS = 0;

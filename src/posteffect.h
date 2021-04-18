@@ -3,14 +3,24 @@
 #include "framebuffer.h"
 #include "shaderprogram.h"
 #include "material.h"
-class PostEffect {
+#include "camera.h"
+#include <QOpenGLFunctions>
+#include <QOpenGLExtraFunctions>
+#include "resourcemanager.h"
+#include "vao.h"
+#include <QDebug>
+class PostEffect : protected QOpenGLFunctions {
 public:
-	PostEffect();
-	~PostEffect();
+	PostEffect() { initializeOpenGLFunctions(); };
+	~PostEffect() {};
+	virtual void update(Texture *mainTex, FrameBuffer* dest, Camera* cam, FrameBuffer *gBuffer) {};
 	void blit(Material* material, FrameBuffer* dest);
-	void update(unsigned int mainTex, FrameBuffer* dest, FrameBuffer* gBuffer);
-private:
-	void bindTextureAtUnit(unsigned int texHandle, unsigned int texUnit);
+	int screenWidth = 0;
+	int screenHeight = 0;
+	int screenX = 0;
+	int screenY = 0;
+	void setViewport(int x, int y, int w, int h);
+	VAO* screenVAO;
 };
 
 #endif

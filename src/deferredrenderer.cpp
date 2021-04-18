@@ -49,6 +49,9 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 	dirLight = std::make_unique<DirectionalLight>();
 
 	ssao = std::make_unique<SSAO>(width, height);
+	postRenderer = std::make_unique<PostEffectRenderer>(0, 0, width, height);
+	ColorCorrection *correction = postRenderer->addEffect<ColorCorrection>();
+	correction->exposure = exposure;
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -71,15 +74,16 @@ void DeferredRenderer::render(Camera* cam, Entity* entity)
 	glClear(GL_COLOR_BUFFER_BIT);
 	doDirectionalLightPass(cam, entity);
 	doPointLightPass(cam, entity);
-	gBuffer->unbind();
+	
 	doCombinePass(cam, entity);
-
+	doPostProcessing(cam);
 }
 
 void DeferredRenderer::setViewport(int x, int y, int width, int height)
 {
 	gBuffer->setViewport(x, y, width, height);
 	ssao->screenSizeChanged(width, height);
+	postRenderer->setViewport(x, y, width, height);
 	this->width = width;
 	this->height = height;
 	this->xS = x;
@@ -235,10 +239,20 @@ void DeferredRenderer::doPointLightPass(Camera* cam, Entity* entity)
 
 void DeferredRenderer::doCombinePass(Camera* cam, Entity* entity)
 {
-	//COMBINE EVERYTHING(INCLUDING LIGHT) AND SHOW TO SCREEN
+	//IS THERE POST RENDERING OR SHOW DIRECTLY TO SCREEN?
+	if (postRenderer->getActiveEffectsCount() == 0) {
+		gBuffer->unbind();
+		glViewport(xS, yS, width, height);
+	}
+	else {
+		//qDebug() << "ASDFASDF";
+		postRenderer->getDefaultFBO()->bind();
+		glViewport(0, 0, width, height);
+	}
+	//COMBINE EVERYTHING(INCLUDING LIGHT)
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(xS, yS, width, height);
+	
 	glDisable(GL_DEPTH_TEST);
 	//glDepthMask(GL_TRUE);
 	glCullFace(GL_BACK);
@@ -274,4 +288,10 @@ void DeferredRenderer::doSSAO(Camera *cam)
 	glCullFace(GL_BACK);
 	ssao->calculateSSAO(gBuffer.get(), screenVAO.get(), cam->getProjMatrix(), cam->getViewMatrix());
 	
+}
+
+void DeferredRenderer::doPostProcessing(Camera* cam)
+{
+	if (postRenderer->getActiveEffectsCount() == 0) return;
+	postRenderer->render(cam, gBuffer.get(), screenVAO.get());
 }

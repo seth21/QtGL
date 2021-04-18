@@ -48,9 +48,19 @@ void Material::setTexture(std::string name, std::shared_ptr<Texture> texture)
 	textures[name] = texture;
 }
 
+void Material::setTempTexture(std::string name, Texture* texture)
+{
+	temptextures[name] = texture;
+}
+
 std::unordered_map<std::string, std::shared_ptr<Texture>>& Material::getTextures()
 {
 	return textures;
+}
+
+std::unordered_map<std::string, Texture*>& Material::getTempTextures()
+{
+	return temptextures;
 }
 
 std::unordered_map<std::string, glm::vec3>& Material::getVec3s()

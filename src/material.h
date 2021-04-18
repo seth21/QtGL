@@ -31,14 +31,17 @@ public:
 	void setFloat(std::string name, float x);
 	void setVec3(std::string name, glm::vec3 xyz);
 	void setTexture(std::string name, std::shared_ptr<Texture> texture);
+	void setTempTexture(std::string name, Texture *texture);
 	std::shared_ptr<ShaderProgram> shader;
 	std::unordered_map<std::string, std::shared_ptr<Texture>>& getTextures();
+	std::unordered_map<std::string, Texture*>& getTempTextures();
 	std::unordered_map<std::string, glm::vec3>& getVec3s();
 	std::unordered_map<std::string, float>& getFloats();
 private:
 	std::unordered_map<std::string, float> floats;
 	std::unordered_map<std::string, glm::vec3> vec3s;
 	std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
+	std::unordered_map<std::string, Texture*> temptextures;
 };
 
 #endif
