@@ -164,6 +164,16 @@ void FrameBuffer::bindDepthAttachment(int textureUnit)
 	//glBindTexture(GL_TEXTURE_2D, texHandle);
 }
 
+void FrameBuffer::setClearColor(glm::vec3 color)
+{
+	clearColor = color;
+}
+
+glm::vec3 FrameBuffer::getClearColor()
+{
+	return clearColor;
+}
+
 void FrameBuffer::bind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -257,4 +267,13 @@ unsigned int FrameBuffer::getHeight()
 void FrameBuffer::createFBO()
 {
 	glGenFramebuffers(1, &fbo);
+}
+
+void FrameBuffer::clear()
+{
+	GLbitfield cl = GL_NONE;
+	if (renderTargets.size() > 0 && colorAttachments.size() > 0) cl = GL_COLOR_BUFFER_BIT;
+	if (depthAttachment) cl = cl | GL_DEPTH_BUFFER_BIT;
+	glClearColor(clearColor.x, clearColor.y, clearColor.z, 1.0);
+	glClear(cl);
 }

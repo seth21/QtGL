@@ -2,6 +2,7 @@
 
 Material::Material()
 {
+	
 }
 
 Material::~Material()

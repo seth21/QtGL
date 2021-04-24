@@ -50,8 +50,10 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 
 	ssao = std::make_unique<SSAO>(width, height);
 	postRenderer = std::make_unique<PostEffectRenderer>(0, 0, width, height);
+	FXAA* fxaa = postRenderer->addEffect<FXAA>();
 	ColorCorrection *correction = postRenderer->addEffect<ColorCorrection>();
 	correction->exposure = exposure;
+	
 }
 
 DeferredRenderer::~DeferredRenderer()

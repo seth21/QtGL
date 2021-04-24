@@ -76,16 +76,10 @@ void Scene3D::initializeGL()
 void Scene3D::paintGL()
 {
 	cam.update(deltaTime());
-	//postRenderer->startPostRenderTarget();
-	//skyRenderer->render(&cam);
-	//shader->start();
-	//shader->loadMatrix4f("viewMat", cam.getViewMatrix());
-	//shader->loadVector3f("viewPos", cam.position);
-	//shader->loadMatrix4f("projMat", cam.getProjMatrix());
-	//entity->drawNow(shader.get(), &cam);
-	
+	world.update(deltaTime());
 	//postRenderer->renderToScreen();
 	deferredRenderer->render(&cam, entity);
+	
 }
 
 void Scene3D::resizeGL(int w, int h)

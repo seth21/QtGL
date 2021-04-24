@@ -43,6 +43,9 @@ public:
 	void bindColorAttachmentAtUnit(int id, int textureUnit);
 	void bindColorAttachmentAtUnit(std::string name, unsigned int textureUnit);
 	void bindDepthAttachment(int textureUnit);
+	void setClearColor(glm::vec3 color);
+	glm::vec3 getClearColor();
+	void clear();
 private:
 	unsigned int fbo = 0;
 	void createFBO();
@@ -59,5 +62,6 @@ private:
 	//unsigned int depthAtt = 0;
 	std::vector<std::unique_ptr<TextureAttachment>> colorAttachments;
 	std::unique_ptr<TextureAttachment> depthAttachment;
+	glm::vec3 clearColor;
 };
 #endif // !FRAMEBUFFER_H

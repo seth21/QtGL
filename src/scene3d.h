@@ -34,6 +34,7 @@
 #include "postprocessingrenderer.h"
 #include "skyrenderer.h"
 #include "deferredrenderer.h"
+#include "ecs/world.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions
 {
@@ -52,6 +53,7 @@ public:
 	
 	std::shared_ptr<Texture> skyTexture;
 	int scrWidth = 0, scrHeight = 0, scrX = 0, scrY = 0;
+	World world;
 protected:
 	void initializeGL() override;
 

@@ -11,12 +11,20 @@
 #include <string>
 #include <glm/vec3.hpp>
 #include "shaderprogram.h"
+#include <bitset>
+
+enum MaterialFlag {
+	TWOSIDED,
+	ADDBLEND,
+	BLENDING,
+	COUNT
+};
 
 class Material {
 public:
-	std::vector<std::shared_ptr<Texture>> diffuseMaps;
-	std::vector<std::shared_ptr<Texture>> normalMaps;
-	std::vector<std::shared_ptr<Texture>> specularMaps;
+	//std::vector<std::shared_ptr<Texture>> diffuseMaps;
+	//std::vector<std::shared_ptr<Texture>> normalMaps;
+	//std::vector<std::shared_ptr<Texture>> specularMaps;
 	std::string modelResourcePath;
 	int materialID = 0;
 	Material();
@@ -37,11 +45,13 @@ public:
 	std::unordered_map<std::string, Texture*>& getTempTextures();
 	std::unordered_map<std::string, glm::vec3>& getVec3s();
 	std::unordered_map<std::string, float>& getFloats();
+	
 private:
 	std::unordered_map<std::string, float> floats;
 	std::unordered_map<std::string, glm::vec3> vec3s;
 	std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 	std::unordered_map<std::string, Texture*> temptextures;
+	std::bitset<MaterialFlag::COUNT> state;
 };
 
 #endif

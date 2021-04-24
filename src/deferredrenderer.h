@@ -17,6 +17,7 @@
 #include "posteffectrenderer.h"
 #include "grayscaleeffect.h"
 #include "colorcorrection.h"
+#include "fxaa.h"
 
 class DeferredRenderer : protected QOpenGLExtraFunctions {
 public:

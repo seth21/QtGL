@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
-
+##! C++ Standard needed is 17
+set(CMAKE_CXX_STANDARD 17)
 # your project name
 project("CVSCODE")
 
@@ -26,17 +27,13 @@ endif()
 
 # Add .lib files
 link_directories(${CMAKE_SOURCE_DIR}/lib)
-#
+
 ## your source files
 # Add source files
-file(GLOB_RECURSE SOURCE_FILES
-        ${CMAKE_SOURCE_DIR}/src/*.c
-        ${CMAKE_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
 # Add header files
-file(GLOB_RECURSE HEADER_FILES
-        ${CMAKE_SOURCE_DIR}/src/*.h
-        ${CMAKE_SOURCE_DIR}/src/*.hpp)
+file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.h)
 
 # name of the .exe file, window flag and the list of things to compile
 add_executable(${CMAKE_PROJECT_NAME} WIN32 ${HEADER_FILES} ${SOURCE_FILES})
