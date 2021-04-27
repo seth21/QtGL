@@ -33,6 +33,7 @@ private:
 };
 #endif
 
+
 template<typename T>
 inline T* PostEffectRenderer::addEffect()
 {

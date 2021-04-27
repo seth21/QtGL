@@ -15,7 +15,7 @@ struct TransformComp {
 	TransformComp() {
 		position = glm::vec3(0);
 		scale = glm::vec3(1);
-		orientation = glm::quat(0, 0, 0, -1);
+		orientation = glm::quat(1.0, 0.0, 0.0, 0.0);
 		transformMatrix = glm::mat4(1);
 		dirty = true;
 	}

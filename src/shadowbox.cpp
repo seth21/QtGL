@@ -73,4 +73,9 @@ ShadowBox::~ShadowBox()
 {
 }
 
+Frustum* ShadowBox::getFrustum()
+{
+	return frustum.get();
+}
+
 

@@ -87,6 +87,11 @@ int DirectionalLight::getShadowMapSize()
 	return SHADOW_MAP_SIZE;
 }
 
+ShadowBox* DirectionalLight::getShadowBox()
+{
+	return shadowBox.get();
+}
+
 void DirectionalLight::setDirection(glm::vec3 dir)
 {
 	direction = glm::normalize(dir);

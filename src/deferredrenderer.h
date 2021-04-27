@@ -14,7 +14,7 @@
 #include "vao.h"
 #include "vertexattrib.h"
 #include "ssao.h"
-#include "posteffectrenderer.h"
+
 #include "grayscaleeffect.h"
 #include "colorcorrection.h"
 #include "fxaa.h"
@@ -39,7 +39,7 @@ private:
 	std::unique_ptr<DirectionalLight> dirLight;
 	std::unique_ptr<VAO> screenVAO;
 	std::unique_ptr<SSAO> ssao;
-	std::unique_ptr<PostEffectRenderer> postRenderer;
+	//std::unique_ptr<PostEffectRenderer> postRenderer;
 	//unsigned int screenVAO, screenVBO;
 	void doGeometryPass(Camera* cam, Entity* entity);
 	void doDirectionalLightPass(Camera* cam, Entity* entity);

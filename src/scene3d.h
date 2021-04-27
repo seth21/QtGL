@@ -46,14 +46,14 @@ public:
 
 	QSize sizeHint() const override;
     void paintGL() override;
-	Entity* entity;
-	std::unique_ptr<DeferredRenderer> deferredRenderer;
-	std::unique_ptr<PostProcessingRenderer> postRenderer;
-	std::unique_ptr<SkyRenderer> skyRenderer;
+	//Entity* entity;
+	//std::unique_ptr<DeferredRenderer> deferredRenderer;
+	//std::unique_ptr<PostProcessingRenderer> postRenderer;
+	//std::unique_ptr<SkyRenderer> skyRenderer;
 	
-	std::shared_ptr<Texture> skyTexture;
+	//std::shared_ptr<Texture> skyTexture;
 	int scrWidth = 0, scrHeight = 0, scrX = 0, scrY = 0;
-	World world;
+	std::unique_ptr<World> world;
 protected:
 	void initializeGL() override;
 
@@ -65,11 +65,11 @@ protected slots:
 private:
 	QSurfaceFormat *mp_glSurface;
 	
-    std::shared_ptr<ShaderProgram> shader;
+    //std::shared_ptr<ShaderProgram> shader;
     QTimer *mp_timer;
     float deltaTime();
 
-	Camera cam;
+	//Camera cam;
 };
 
 #endif	// SCENE3D_H

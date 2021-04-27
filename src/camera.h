@@ -8,12 +8,12 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
 #include <memory>
-#include "inputhandler.h"
+
 #include "inputmgr.h"
 #include "action.h"
 #include "frustum.h"
 
-class Camera : public InputHandler {
+class Camera {
 public:
 	Camera();
 	glm::mat4 getPVmatrix();
@@ -25,8 +25,8 @@ public:
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::quat rotation;
 
-	virtual void handleAction(ACTION action, bool pressed) override;
-	virtual void handleMouseDelta(int dx, int dy) override;
+	void handleAction(ACTION action, bool pressed);
+	void handleMouseDelta(int dx, int dy);
 	void updateVectors();
 	const glm::vec3& getFront();
 	const glm::vec3& getRight();

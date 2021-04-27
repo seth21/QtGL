@@ -27,6 +27,7 @@ public:
 	glm::vec3 getColor();
 	FrameBuffer* getShadowMap();
 	int getShadowMapSize();
+	ShadowBox* getShadowBox();
 private:
 	std::unique_ptr<FrameBuffer> shadowMap;
 	int SHADOW_MAP_SIZE = 4096;

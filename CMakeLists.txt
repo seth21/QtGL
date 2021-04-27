@@ -3,9 +3,12 @@ cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 17)
 # your project name
 project("CVSCODE")
-
+#
 # find includes in the corresponding build directories
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#include_directories(".")
+#set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#include_directories(${CMAKE_SOURCE_DIR}/src/)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 # run moc automatically
 set(CMAKE_AUTOMOC ON)
 # if you're using Widgets and editing .ui forms in Designer

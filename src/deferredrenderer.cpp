@@ -49,10 +49,10 @@ DeferredRenderer::DeferredRenderer(int width, int height)
 	dirLight = std::make_unique<DirectionalLight>();
 
 	ssao = std::make_unique<SSAO>(width, height);
-	postRenderer = std::make_unique<PostEffectRenderer>(0, 0, width, height);
-	FXAA* fxaa = postRenderer->addEffect<FXAA>();
-	ColorCorrection *correction = postRenderer->addEffect<ColorCorrection>();
-	correction->exposure = exposure;
+	//postRenderer = std::make_unique<PostEffectRenderer>(0, 0, width, height);
+	//FXAA* fxaa = postRenderer->addEffect<FXAA>();
+	//ColorCorrection *correction = postRenderer->addEffect<ColorCorrection>();
+	//correction->exposure = exposure;
 	
 }
 
@@ -69,7 +69,7 @@ void DeferredRenderer::render(Camera* cam, Entity* entity)
 	gBuffer->setRenderTargets(3, 0, 1, 2);
 	doGeometryPass(cam, entity);
 	//SSAO--------------------
-	doSSAO(cam);
+	//doSSAO(cam);
 	//LIGHTS------------------
 	gBuffer->bind();
 	gBuffer->setRenderTargets(1, 3); //Render to the light target only
@@ -85,7 +85,7 @@ void DeferredRenderer::setViewport(int x, int y, int width, int height)
 {
 	gBuffer->setViewport(x, y, width, height);
 	ssao->screenSizeChanged(width, height);
-	postRenderer->setViewport(x, y, width, height);
+	//postRenderer->setViewport(x, y, width, height);
 	this->width = width;
 	this->height = height;
 	this->xS = x;
@@ -242,7 +242,7 @@ void DeferredRenderer::doPointLightPass(Camera* cam, Entity* entity)
 void DeferredRenderer::doCombinePass(Camera* cam, Entity* entity)
 {
 	//IS THERE POST RENDERING OR SHOW DIRECTLY TO SCREEN?
-	if (postRenderer->getActiveEffectsCount() == 0) {
+	/*if (postRenderer->getActiveEffectsCount() == 0) {
 		gBuffer->unbind();
 		glViewport(xS, yS, width, height);
 	}
@@ -250,7 +250,7 @@ void DeferredRenderer::doCombinePass(Camera* cam, Entity* entity)
 		//qDebug() << "ASDFASDF";
 		postRenderer->getDefaultFBO()->bind();
 		glViewport(0, 0, width, height);
-	}
+	}*/
 	//COMBINE EVERYTHING(INCLUDING LIGHT)
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -294,6 +294,6 @@ void DeferredRenderer::doSSAO(Camera *cam)
 
 void DeferredRenderer::doPostProcessing(Camera* cam)
 {
-	if (postRenderer->getActiveEffectsCount() == 0) return;
-	postRenderer->render(cam, gBuffer.get(), screenVAO.get());
+	//if (postRenderer->getActiveEffectsCount() == 0) return;
+	//postRenderer->render(cam, gBuffer.get(), screenVAO.get());
 }

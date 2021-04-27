@@ -17,14 +17,14 @@ enum MaterialFlag {
 	TWOSIDED,
 	ADDBLEND,
 	BLENDING,
+	CASTSHADOW,
+	CUSTOM,
 	COUNT
 };
 
 class Material {
 public:
-	//std::vector<std::shared_ptr<Texture>> diffuseMaps;
-	//std::vector<std::shared_ptr<Texture>> normalMaps;
-	//std::vector<std::shared_ptr<Texture>> specularMaps;
+
 	std::string modelResourcePath;
 	int materialID = 0;
 	Material();
@@ -40,18 +40,19 @@ public:
 	void setVec3(std::string name, glm::vec3 xyz);
 	void setTexture(std::string name, std::shared_ptr<Texture> texture);
 	void setTempTexture(std::string name, Texture *texture);
+
 	std::shared_ptr<ShaderProgram> shader;
 	std::unordered_map<std::string, std::shared_ptr<Texture>>& getTextures();
 	std::unordered_map<std::string, Texture*>& getTempTextures();
 	std::unordered_map<std::string, glm::vec3>& getVec3s();
 	std::unordered_map<std::string, float>& getFloats();
-	
+	std::bitset<MaterialFlag::COUNT> state;
 private:
 	std::unordered_map<std::string, float> floats;
 	std::unordered_map<std::string, glm::vec3> vec3s;
 	std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
 	std::unordered_map<std::string, Texture*> temptextures;
-	std::bitset<MaterialFlag::COUNT> state;
+	
 };
 
 #endif

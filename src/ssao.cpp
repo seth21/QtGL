@@ -37,6 +37,9 @@ SSAO::~SSAO()
 //Bind gPosition to texUnit=0, gNormal to texUnit=1
 void SSAO::calculateSSAO(FrameBuffer* gBuffer, VAO* screenVAO, glm::mat4 projection, glm::mat4 view)
 {
+    //GL state
+    glDisable(GL_DEPTH_TEST);
+    glCullFace(GL_BACK);
     ssaoBuffer->bind();
     ssaoBuffer->setRenderTargets(1, 0);
     glClear(GL_COLOR_BUFFER_BIT);

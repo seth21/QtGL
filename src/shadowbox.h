@@ -30,7 +30,7 @@ public:
 	glm::vec3 getMin();
 	glm::vec3 getMax();
 	~ShadowBox();
-
+	Frustum* getFrustum();
 private:
 	//offset to not stop shadows as moving
 	float OFFSET = 50;
