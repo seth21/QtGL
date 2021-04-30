@@ -33,7 +33,6 @@
 #include "entity.h"
 #include "postprocessingrenderer.h"
 #include "skyrenderer.h"
-#include "deferredrenderer.h"
 #include "ecs/world.h"
 
 class Scene3D : public QGLWidget, protected QOpenGLExtraFunctions

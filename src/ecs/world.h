@@ -11,6 +11,9 @@ public:
 	void render(float deltaTime);
 	void setupScene();
 	void setViewport(int x, int y, int width, int height);
+	entt::registry &getECS();
+	std::vector<std::unique_ptr<ComponentSystem>>& getSystems();
+	entt::entity createEntity();
 private:
 	entt::registry m_Registry;
 	entt::entity sponza, dirLight, pointLight, player;

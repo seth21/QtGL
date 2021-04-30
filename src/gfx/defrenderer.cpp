@@ -126,15 +126,14 @@ void DefRenderer::addDirectionalLight(DirectionalLight* dirLight)
 	dirLights.push_back(dirLight);
 }
 
-void DefRenderer::addPointLight(PointLight* dirLight)
+void DefRenderer::addPointLight(PointLight* pointLight)
 {
+	pointLights.push_back(pointLight);
 }
 
 void DefRenderer::doDirectionalLightPass(Camera* cam, SSAO* ssao)
 {
-	gBuffer->bind();
-	gBuffer->setRenderTargets(1, 3); //Render to the light target only
-	glClear(GL_COLOR_BUFFER_BIT);
+	
 	for (auto dirLight : dirLights) {
 		//DIRECTIONAL LIGHT
 		glDisable(GL_DEPTH_TEST);
@@ -221,6 +220,15 @@ void DefRenderer::doPointLightPass(Camera* cam)
 		
 	}
 	glDisable(GL_BLEND);
+}
+
+void DefRenderer::doDeferredLighting(Camera* cam, SSAO* ssao)
+{
+	gBuffer->bind();
+	gBuffer->setRenderTargets(1, 3); //Render to the light target only
+	glClear(GL_COLOR_BUFFER_BIT);
+	doDirectionalLightPass(cam, ssao);
+	doPointLightPass(cam);
 }
 
 void DefRenderer::doCombinePass(FrameBuffer* target)

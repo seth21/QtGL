@@ -16,10 +16,10 @@ struct ShadowQueue {
 	}
 };
 
-class LightRenderer : protected QOpenGLExtraFunctions {
+class ShadowRenderer : protected QOpenGLExtraFunctions {
 public:
 
-	LightRenderer();
+	ShadowRenderer();
 	void addDirectionalLight(DirectionalLight* light);
 	void addShadowCaster(unsigned int vaoID, unsigned int baseVertex, unsigned int vertexCount, glm::mat4x4 transformMatrix, Material* material, BoundingBox* transformedAABB);
 	void updateDirectionalLights(Camera* cam);

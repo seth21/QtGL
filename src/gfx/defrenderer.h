@@ -20,9 +20,9 @@ public:
 	FrameBuffer* getGBuffer();
 	VAO* getScreenVAO();
 	void addDirectionalLight(DirectionalLight* dirLight);
-	void addPointLight(PointLight* dirLight);
-	void doDirectionalLightPass(Camera* cam, SSAO* ssao);
-	void doPointLightPass(Camera* cam);
+	void addPointLight(PointLight* pointLight);
+	
+	void doDeferredLighting(Camera* cam, SSAO* ssao);
 	void doCombinePass(FrameBuffer* target);
 	void setExposure(float exp);
 private:
@@ -37,9 +37,9 @@ private:
 	std::shared_ptr<Model> unitSphere;
 
 	std::unique_ptr<VAO> screenVAO;
-	//std::unique_ptr<SSAO> ssao;
-	//unsigned int screenVAO, screenVBO;
 	
+	void doDirectionalLightPass(Camera* cam, SSAO* ssao);
+	void doPointLightPass(Camera* cam);
 	
 	int m_width = 0;
 	int m_height = 0;

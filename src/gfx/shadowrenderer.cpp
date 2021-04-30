@@ -1,6 +1,6 @@
 #include "shadowrenderer.h"
 
-LightRenderer::LightRenderer()
+ShadowRenderer::ShadowRenderer()
 {
 	initializeOpenGLFunctions();
 	dirLightShader = ResourceManager::getInstance().load<ShaderProgram>("gdirlight");
@@ -8,12 +8,12 @@ LightRenderer::LightRenderer()
 	dirLightDepthShader = ResourceManager::getInstance().load<ShaderProgram>("dirlightdepth");
 }
 
-void LightRenderer::addDirectionalLight(DirectionalLight* light)
+void ShadowRenderer::addDirectionalLight(DirectionalLight* light)
 {
 	dirShadowQueues.push_back(ShadowQueue(light));
 }
 
-void LightRenderer::addShadowCaster(unsigned int vaoID, unsigned int baseVertex, unsigned int vertexCount, glm::mat4x4 transformMatrix, Material* material, BoundingBox *transformedAABB)
+void ShadowRenderer::addShadowCaster(unsigned int vaoID, unsigned int baseVertex, unsigned int vertexCount, glm::mat4x4 transformMatrix, Material* material, BoundingBox *transformedAABB)
 {
 	//add to shadow caster queue if the light can "see" it
 	for (int i = 0; i < dirShadowQueues.size(); i++) {
@@ -24,7 +24,7 @@ void LightRenderer::addShadowCaster(unsigned int vaoID, unsigned int baseVertex,
 	}
 }
 
-void LightRenderer::updateDirectionalLights(Camera* cam)
+void ShadowRenderer::updateDirectionalLights(Camera* cam)
 {
 	for (int i = 0; i < dirShadowQueues.size(); i++) {
 		DirectionalLight* light = dirShadowQueues[i].m_light;
@@ -32,12 +32,12 @@ void LightRenderer::updateDirectionalLights(Camera* cam)
 	}
 }
 
-void LightRenderer::clearQueues()
+void ShadowRenderer::clearQueues()
 {
 	dirShadowQueues.clear();
 }
 
-void LightRenderer::doDirectionalLightDepthPass()
+void ShadowRenderer::doDirectionalLightDepthPass()
 {
 	//Prepare state
 	glEnable(GL_DEPTH_TEST);

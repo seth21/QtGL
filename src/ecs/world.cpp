@@ -63,6 +63,21 @@ void World::setViewport(int x, int y, int width, int height)
 	masterRenderer->setViewport(x, y, width, height);
 }
 
+entt::registry& World::getECS()
+{
+	return m_Registry;
+}
+
+std::vector<std::unique_ptr<ComponentSystem>>& World::getSystems()
+{
+	return systems;
+}
+
+entt::entity World::createEntity()
+{
+	return m_Registry.create();
+}
+
 void World::render(float deltaTime)
 {
 	

@@ -9,6 +9,7 @@
 #include "defrenderer.h"
 #include "ssao.h"
 #include "posteffectrenderer.h"
+#include "debugrenderer.h"
 
 class MasterRenderer {
 public:
@@ -22,6 +23,7 @@ public:
 	void setViewport(int x, int y, int width, int height);
 	PostEffectRenderer* getPostEffectRenderer();
 	DefRenderer* getDeferredRenderer();
+	DebugRenderer* getDebugRenderer();
 private:
 	
 	CommandQueue forwardOpaqueQueue;
@@ -29,10 +31,11 @@ private:
 	Camera* camera;
 	
 	//SUB-RENDERERS
-	std::unique_ptr<LightRenderer> shadowRenderer;
+	std::unique_ptr<ShadowRenderer> shadowRenderer;
 	std::unique_ptr<DefRenderer> deferredRenderer;
 	std::unique_ptr<SSAO> ssao;
 	std::unique_ptr<PostEffectRenderer> postRenderer;
+	std::unique_ptr<DebugRenderer> debugRenderer;
 
 	int m_x, m_y, m_width, m_height;
 };

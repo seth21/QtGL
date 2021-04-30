@@ -6,7 +6,7 @@ MasterRenderer::MasterRenderer(int x, int y, int width, int height)
 	m_y = y;
 	m_width = width;
 	m_height = height;
-	shadowRenderer = std::make_unique<LightRenderer>();
+	shadowRenderer = std::make_unique<ShadowRenderer>();
 	deferredRenderer = std::make_unique<DefRenderer>(x, y, width, height);
 	ssao = std::make_unique<SSAO>(width, height);
 	postRenderer = std::make_unique<PostEffectRenderer>(x, y, width, height);
@@ -99,10 +99,15 @@ void MasterRenderer::render(float deltaTime)
 	shadowRenderer->doDirectionalLightDepthPass();
 	deferredRenderer->doGeometryPass(camera);
 	ssao->calculateSSAO(deferredRenderer->getGBuffer(), deferredRenderer->getScreenVAO(), camera->getProjMatrix(), camera->getViewMatrix());
-	deferredRenderer->doDirectionalLightPass(camera, ssao.get());
-	deferredRenderer->doPointLightPass(camera);
+	deferredRenderer->doDeferredLighting(camera, ssao.get());
 	deferredRenderer->doCombinePass(postRenderer->getActiveEffectsCount() != 0 ? postRenderer->getDefaultFBO() : nullptr);
-	if (postRenderer->getActiveEffectsCount() != 0) postRenderer->render(camera, deferredRenderer->getGBuffer(), deferredRenderer->getScreenVAO());
+	if (postRenderer->getActiveEffectsCount() != 0) {
+		deferredRenderer->doCombinePass(postRenderer->getDefaultFBO());
+		postRenderer->render(camera, deferredRenderer->getGBuffer(), deferredRenderer->getScreenVAO());
+	}
+	else {
+		deferredRenderer->doCombinePass(nullptr);
+	}
 	//Clear Queues
 	forwardBlendQueue.clear();
 	forwardOpaqueQueue.clear();
@@ -141,4 +146,9 @@ PostEffectRenderer* MasterRenderer::getPostEffectRenderer()
 DefRenderer* MasterRenderer::getDeferredRenderer()
 {
 	return deferredRenderer.get();
+}
+
+DebugRenderer* MasterRenderer::getDebugRenderer()
+{
+	return debugRenderer.get();
 }
