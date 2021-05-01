@@ -43,6 +43,7 @@ public:
 	void bindColorAttachmentAtUnit(int id, int textureUnit);
 	void bindColorAttachmentAtUnit(std::string name, unsigned int textureUnit);
 	void bindDepthAttachment(int textureUnit);
+	Texture* getColorAttachment(std::string name);
 	void setClearColor(glm::vec3 color);
 	glm::vec3 getClearColor();
 	void clear();

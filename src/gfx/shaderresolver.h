@@ -1,0 +1,6 @@
+#ifndef SHADERRESOLVER_H
+#define SHADERRESOLVER_H
+
+
+
+#endif

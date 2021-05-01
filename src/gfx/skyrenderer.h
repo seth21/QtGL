@@ -5,19 +5,23 @@
 #include "texture.h"
 #include "camera.h"
 #include <QOpenGLExtraFunctions>
+#include "vao.h"
+#include "resourcemanager.h"
+#include "framebuffer.h"
 
 class SkyRenderer : protected QOpenGLExtraFunctions {
 public:
-	SkyRenderer(std::shared_ptr<ShaderProgram> skyShader, std::shared_ptr<Texture> skyTexture);
+	SkyRenderer();
 	~SkyRenderer();
-	void render(Camera* cam);
+	void render(Camera* cam, FrameBuffer* target);
+	void setSkyTexture(std::shared_ptr<Texture> skyTex);
 private:
 	std::shared_ptr<ShaderProgram> skyShader;
 	std::shared_ptr<Texture> skyTexture;
-	unsigned int VAO = 0, VBO = 0;
-	void generateCubeMesh();
-	
 
+	void generateCubeMesh();
+	std::unique_ptr<VAO> cubeVAO;
+	const static float cubeVertices[];
 };
 
 #endif

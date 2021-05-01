@@ -10,6 +10,7 @@ MasterRenderer::MasterRenderer(int x, int y, int width, int height)
 	deferredRenderer = std::make_unique<DefRenderer>(x, y, width, height);
 	ssao = std::make_unique<SSAO>(width, height);
 	postRenderer = std::make_unique<PostEffectRenderer>(x, y, width, height);
+	skyRenderer = std::make_unique<SkyRenderer>();
 }
 
 /*Ensure the camera and lights are updated before adding to queue
@@ -100,13 +101,14 @@ void MasterRenderer::render(float deltaTime)
 	deferredRenderer->doGeometryPass(camera);
 	ssao->calculateSSAO(deferredRenderer->getGBuffer(), deferredRenderer->getScreenVAO(), camera->getProjMatrix(), camera->getViewMatrix());
 	deferredRenderer->doDeferredLighting(camera, ssao.get());
-	deferredRenderer->doCombinePass(postRenderer->getActiveEffectsCount() != 0 ? postRenderer->getDefaultFBO() : nullptr);
+	deferredRenderer->doCombinePass();
+	skyRenderer->render(camera, deferredRenderer->getGBuffer());
 	if (postRenderer->getActiveEffectsCount() != 0) {
-		deferredRenderer->doCombinePass(postRenderer->getDefaultFBO());
 		postRenderer->render(camera, deferredRenderer->getGBuffer(), deferredRenderer->getScreenVAO());
 	}
 	else {
-		deferredRenderer->doCombinePass(nullptr);
+		//blit to screen
+		//skyRenderer->render(camera, deferredRenderer->getGBuffer(), 2);
 	}
 	//Clear Queues
 	forwardBlendQueue.clear();
@@ -151,4 +153,9 @@ DefRenderer* MasterRenderer::getDeferredRenderer()
 DebugRenderer* MasterRenderer::getDebugRenderer()
 {
 	return debugRenderer.get();
+}
+
+SkyRenderer* MasterRenderer::getSkyRenderer()
+{
+	return skyRenderer.get();
 }

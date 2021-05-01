@@ -23,7 +23,7 @@ public:
 	void addPointLight(PointLight* pointLight);
 	
 	void doDeferredLighting(Camera* cam, SSAO* ssao);
-	void doCombinePass(FrameBuffer* target);
+	void doCombinePass();
 	void setExposure(float exp);
 private:
 	CommandQueue deferredQueue;

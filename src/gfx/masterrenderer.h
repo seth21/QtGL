@@ -10,6 +10,8 @@
 #include "ssao.h"
 #include "posteffectrenderer.h"
 #include "debugrenderer.h"
+#include <gfx/skyrenderer.h>
+
 
 class MasterRenderer {
 public:
@@ -24,6 +26,7 @@ public:
 	PostEffectRenderer* getPostEffectRenderer();
 	DefRenderer* getDeferredRenderer();
 	DebugRenderer* getDebugRenderer();
+	SkyRenderer* getSkyRenderer();
 private:
 	
 	CommandQueue forwardOpaqueQueue;
@@ -36,6 +39,7 @@ private:
 	std::unique_ptr<SSAO> ssao;
 	std::unique_ptr<PostEffectRenderer> postRenderer;
 	std::unique_ptr<DebugRenderer> debugRenderer;
+	std::unique_ptr<SkyRenderer> skyRenderer;
 
 	int m_x, m_y, m_width, m_height;
 };

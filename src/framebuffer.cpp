@@ -164,6 +164,16 @@ void FrameBuffer::bindDepthAttachment(int textureUnit)
 	//glBindTexture(GL_TEXTURE_2D, texHandle);
 }
 
+Texture* FrameBuffer::getColorAttachment(std::string name)
+{
+	for (int i = 0; i < colorAttachments.size(); i++) {
+		if (colorAttachments[i]->name == name)
+		{
+			return colorAttachments[i]->tex.get();
+		}
+	}
+}
+
 void FrameBuffer::setClearColor(glm::vec3 color)
 {
 	clearColor = color;

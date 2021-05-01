@@ -23,9 +23,12 @@ PostEffectRenderer::~PostEffectRenderer()
 
 void PostEffectRenderer::render(Camera* cam, FrameBuffer* gBuffer, VAO *screenVAO)
 {
+
 	currBuffer = 0;
 	for (int i = 0; i < effects.size(); i++) {
-		Texture* mainTex = fbos[currBuffer]->getColorAttachments()[0]->tex.get();
+		Texture* mainTex;
+		if (i == 0) mainTex = gBuffer->getColorAttachment("combined");
+		else mainTex = fbos[currBuffer]->getColorAttachments()[0]->tex.get();
 		FrameBuffer* dest = nullptr;
 		if (i != effects.size() - 1) {
 			dest = fbos[currBuffer == 0 ? 1 : 0].get();

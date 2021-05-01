@@ -21,9 +21,11 @@ DefRenderer::DefRenderer(int x, int y, int width, int height)
 	gBuffer->registerColorAttachment(2, GL_UNSIGNED_BYTE, GL_RGBA, GL_RGBA, GL_NEAREST, "albedospec");
 	//LIGHT
 	gBuffer->registerColorAttachment(3, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_LINEAR, "light");
+	//COMBINED
+	gBuffer->registerColorAttachment(4, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_LINEAR, "combined");
 	//DEPTH
 	gBuffer->registerDepthAttachment(GL_UNSIGNED_BYTE, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_NEAREST, "depth");
-	gBuffer->setRenderTargets(4, 0, 1, 2, 3);
+	gBuffer->setRenderTargets(5, 0, 1, 2, 3, 4);
 	gBuffer->setup();
 
 	ResourceConfig shaderConfig;
@@ -231,17 +233,10 @@ void DefRenderer::doDeferredLighting(Camera* cam, SSAO* ssao)
 	doPointLightPass(cam);
 }
 
-void DefRenderer::doCombinePass(FrameBuffer* target)
+void DefRenderer::doCombinePass()
 {
-	//IS THERE POST RENDERING OR SHOW DIRECTLY TO SCREEN?
-	if (target == nullptr) {
-		gBuffer->unbind();
-		glViewport(m_xS, m_yS, m_width, m_height);
-	}
-	else {
-		target->bind();
-		glViewport(0, 0, m_width, m_height);
-	}
+	gBuffer->bind();
+	gBuffer->setRenderTargets(1, 4); //Render to the combined target only
 	//COMBINE EVERYTHING(INCLUDING LIGHT)
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

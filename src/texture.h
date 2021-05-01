@@ -34,6 +34,7 @@ private:
     bool cubeTexture = false;
     ResourceConfig resConfig;
     std::vector<std::string> splitString(const std::string& s, const std::string& delim);
+    QOpenGLFunctions* gl;
 };
 
 #endif // TEXTURE_H

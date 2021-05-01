@@ -48,6 +48,11 @@ void World::setupScene()
 	pointLight = m_Registry.create();
 	m_Registry.emplace<PointLightComp>(pointLight);
 
+	ResourceConfig cubeConfig;
+	cubeConfig.flags.push_back("cube");
+	auto cubeTex = ResourceManager::getInstance().load<Texture>("textures/skybox/day/*right.jpg*left.jpg*top.jpg*bottom.jpg*front.jpg*back.jpg", cubeConfig);
+	masterRenderer->getSkyRenderer()->setSkyTexture(cubeTex);
+
 	FXAA* fxaa = masterRenderer->getPostEffectRenderer()->addEffect<FXAA>();
 	ColorCorrection *correction = masterRenderer->getPostEffectRenderer()->addEffect<ColorCorrection>();
 	correction->exposure = 0.5f;

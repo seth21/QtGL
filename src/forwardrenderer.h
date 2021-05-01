@@ -1,4 +1,0 @@
-#ifndef FORWARDRENDERER_H
-#define FORWARDRENDERER_H
-
-#endif

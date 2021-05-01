@@ -1,6 +1,6 @@
 #include "skyrenderer.h"
 
-float cubeVertices[] = {
+const float SkyRenderer::cubeVertices[] = {
     // positions          
     -1.0f,  1.0f, -1.0f,
     -1.0f, -1.0f, -1.0f,
@@ -45,41 +45,38 @@ float cubeVertices[] = {
      1.0f, -1.0f,  1.0f
 };
 
-SkyRenderer::SkyRenderer(std::shared_ptr<ShaderProgram> skyShader, std::shared_ptr<Texture> skyTexture) {
+SkyRenderer::SkyRenderer() {
     initializeOpenGLFunctions();
     generateCubeMesh();
-    this->skyShader = skyShader;
+    ResourceConfig cubeConfig;
+    cubeConfig.flags.push_back("cube");
+    skyShader = ResourceManager::getInstance().load<ShaderProgram>("skybox", cubeConfig);
     skyShader->start();
     skyShader->loadInt("skybox", 0);
-    this->skyTexture = skyTexture;
 }
 
 SkyRenderer::~SkyRenderer() {
-    glBindVertexArray(0);
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+
 }
 
 void SkyRenderer::generateCubeMesh()
 {
-    // Create buffers/arrays
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    // Load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices[0], GL_STATIC_DRAW);
-    // Vertex Positions
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)(0));
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    cubeVAO = std::make_unique<VAO>();
+    int vaoPos = cubeVAO->createAttribute(VertexAttrib::POSITION, 0, 3, cubeVertices, 108);
+    cubeVAO->upload();
 }
 
-void SkyRenderer::render(Camera* cam)
+void SkyRenderer::render(Camera* cam, FrameBuffer* target)
 {
+    if (!skyTexture || !skyShader) return;
+    target->bind();
+    target->setRenderTargets(1, 4);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glCullFace(GL_BACK);
+    //glDepthMask(GL_FALSE);
     //Do not write to the depth buffer
-    glDepthMask(GL_FALSE);
+    
     skyShader->start();
     
     skyShader->loadMatrix4f("projection", cam->getProjMatrix());
@@ -87,7 +84,13 @@ void SkyRenderer::render(Camera* cam)
     glm::mat4 view = glm::mat4(glm::mat3(cam->getViewMatrix()));
     skyShader->loadMatrix4f("view", view);
     skyTexture->bind(0);
-    glBindVertexArray(VAO);
+    cubeVAO->bind();
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    glDepthMask(GL_TRUE);
+    //glDepthMask(GL_TRUE);
+    glDisable(GL_DEPTH_TEST);
+}
+
+void SkyRenderer::setSkyTexture(std::shared_ptr<Texture> skyTex)
+{
+    skyTexture = skyTex;
 }
