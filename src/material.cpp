@@ -1,5 +1,10 @@
 #include "material.h"
 
+const std::string Material::ALBEDO_UNIFORM = "albedoMap";
+const std::string Material::NORMAL_UNIFORM = "normalMap";
+const std::string Material::SPEC_UNIFORM = "specularMap";
+const std::string Material::BUMP_UNIFORM = "bumpMap";
+
 Material::Material()
 {
 	
@@ -72,6 +77,16 @@ std::unordered_map<std::string, glm::vec3>& Material::getVec3s()
 std::unordered_map<std::string, float>& Material::getFloats()
 {
 	return floats;
+}
+
+bool Material::textureUniformExists(std::string name)
+{
+	auto it = textures.find(name);
+
+	if (it == textures.end())
+		return false;
+	else if (it->second) return true;
+	else return false;
 }
 
 void Material::releaseAllTextures()

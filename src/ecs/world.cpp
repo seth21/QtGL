@@ -36,7 +36,7 @@ void World::setupScene()
 	trans.scale = glm::vec3(0.05f, 0.05f, 0.05f);
 	auto &meshComp = m_Registry.emplace<MeshRendererComp>(sponza, ResourceManager::getInstance().load<Model>("models/sponza.obj"));
 	for (auto mat : meshComp.m_model->materials) {
-		mat->state.set(MaterialFlag::CASTSHADOW);
+		//mat->state.se.set(MaterialFlag::CASTSHADOW);
 	}
 	
 	dirLight = m_Registry.create();

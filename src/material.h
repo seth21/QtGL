@@ -13,12 +13,25 @@
 #include "shaderprogram.h"
 #include <bitset>
 
-enum MaterialFlag {
+enum class MaterialFlag {
 	TWOSIDED,
-	ADDBLEND,
-	BLENDING,
 	CASTSHADOW,
-	CUSTOM,
+	CUSTOMSHADER,
+	COUNT
+};
+
+enum class RenderPath {
+	DEFERRED,
+	FORWARD_OPAQUE,
+	FORWARD_TRANSPARENT,
+	COUNT
+};
+
+enum class RenderBlend {
+	STANDARD,
+	ALPHATEST,
+	ADDITIVE,
+	NONE,
 	COUNT
 };
 
@@ -46,7 +59,12 @@ public:
 	std::unordered_map<std::string, Texture*>& getTempTextures();
 	std::unordered_map<std::string, glm::vec3>& getVec3s();
 	std::unordered_map<std::string, float>& getFloats();
-	std::bitset<MaterialFlag::COUNT> state;
+	std::bitset<static_cast<int>(MaterialFlag::COUNT)> state;
+
+	const static std::string ALBEDO_UNIFORM, NORMAL_UNIFORM, SPEC_UNIFORM, BUMP_UNIFORM;
+	bool textureUniformExists(std::string name);
+	RenderBlend blending = RenderBlend::NONE;
+	RenderPath renderPath = RenderPath::DEFERRED;
 private:
 	std::unordered_map<std::string, float> floats;
 	std::unordered_map<std::string, glm::vec3> vec3s;

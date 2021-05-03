@@ -31,23 +31,23 @@ void MasterRenderer::enqueueComp(TransformComp* transformComp, MeshRendererComp*
 
 		//Can the camera see the object?
 		if (camera->frustum->boundsInFrustum(transformedAABB)) {
-			if (mat->state.test(MaterialFlag::BLENDING)) {
+			if (mat->blending == RenderBlend::STANDARD || mat->blending == RenderBlend::ADDITIVE) {
 				//add to forward blend queue
 				forwardBlendQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
 			}
-			else if (mat->state.test(MaterialFlag::CUSTOM)) {
+			//else if (mat->state.test(MaterialFlag::CUSTOM)) {
 				//add to forward opaque queue
-				forwardOpaqueQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
-			}
+			//	forwardOpaqueQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
+			//}
 			else {
 				//add to deferred queue
 				deferredRenderer->getQueue().createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
 			}
 		}
 
-		if (mat->state.test(MaterialFlag::CASTSHADOW)) {
+		//if (mat->state.test(MaterialFlag::CASTSHADOW)) {
 			shadowRenderer->addShadowCaster(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, &transformedAABB);
-		}
+		//}
 	}
 	else {
 		int meshesSize = model->meshes.size();
@@ -61,23 +61,23 @@ void MasterRenderer::enqueueComp(TransformComp* transformComp, MeshRendererComp*
 
 			//Can the camera see the object?
 			if (camera->frustum->boundsInFrustum(transformedAABB)) {
-				if (mat->state.test(MaterialFlag::BLENDING)) {
+				if (mat->blending == RenderBlend::STANDARD || mat->blending == RenderBlend::ADDITIVE) {
 					//add to forward blend queue
 					forwardBlendQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
 				}
-				else if (mat->state.test(MaterialFlag::CUSTOM)) {
+				//else if (mat->state.test(MaterialFlag::CUSTOMSHADER)) {
 					//add to forward opaque queue
-					forwardOpaqueQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
-				}
+				//	forwardOpaqueQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
+				//}
 				else {
 					//add to deferred queue
 					deferredRenderer->getQueue().createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
 				}
 			}
 
-			if (mat->state.test(MaterialFlag::CASTSHADOW)) {
+			//if (mat->state.test(MaterialFlag::CASTSHADOW)) {
 				shadowRenderer->addShadowCaster(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, &transformedAABB);
-			}
+			//}
 		}
 	}
 	
