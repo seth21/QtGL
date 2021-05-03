@@ -2,6 +2,7 @@
 #include "ecs/comp/meshrendererComp.h"
 #include "ecs/comp/transformComp.h"
 #include <QDebug>
+
 RenderSystem::RenderSystem(entt::registry* registry, MasterRenderer* masterRenderer) : ComponentSystem(registry, masterRenderer)
 {
 }

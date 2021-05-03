@@ -31,7 +31,7 @@ void Plane::set3Points(glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2)
 	d = -glm::dot(p0, normal);
 }
 
-PlaneSide Plane::testPoint(glm::vec3 &point)
+PlaneSide Plane::testPoint(const glm::vec3 &point) const
 {
 	float dist = distance(point);
 
@@ -44,7 +44,7 @@ PlaneSide Plane::testPoint(glm::vec3 &point)
 }
 
 
-float Plane::distance(glm::vec3 &point) {
+float Plane::distance(const glm::vec3 &point) const{
 	return glm::dot(normal, point) + d;
 }
 

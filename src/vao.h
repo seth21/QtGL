@@ -2,7 +2,7 @@
 #define VAO_H
 #include <vector>
 #include <QOpenGLExtraFunctions>
-#include "vertexattrib.h"
+#include "VertexAttrib.h"
 #include <QDebug>
 class VAO : protected QOpenGLExtraFunctions {
 public:

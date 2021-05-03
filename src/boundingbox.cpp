@@ -1,41 +1,41 @@
 #include "boundingbox.h"
 
-glm::vec3  BoundingBox::getCorner000(glm::vec3 &out) {
+glm::vec3  BoundingBox::getCorner000() const {
 	return glm::vec3(min.x, min.y, min.z);
 	
 }
 
-glm::vec3 BoundingBox::getCorner001(glm::vec3& out) {
+glm::vec3 BoundingBox::getCorner001() const {
 	return glm::vec3(min.x, min.y, max.z);
 
 }
 
-glm::vec3 BoundingBox::getCorner010(glm::vec3& out) {
+glm::vec3 BoundingBox::getCorner010() const {
 	return glm::vec3(min.x, max.y, min.z);
 
 }
 
-glm::vec3 BoundingBox::getCorner011(glm::vec3& out) {
+glm::vec3 BoundingBox::getCorner011() const {
 	return glm::vec3(min.x, max.y, max.z);
 
 }
 
-glm::vec3 BoundingBox::getCorner100(glm::vec3& out) {
+glm::vec3 BoundingBox::getCorner100() const {
 	return glm::vec3(max.x, min.y, min.z);
 
 }
 
-glm::vec3 BoundingBox::getCorner101(glm::vec3& out) {
+glm::vec3 BoundingBox::getCorner101() const {
 	return glm::vec3(max.x, min.y, max.z);
 
 }
 
-glm::vec3 BoundingBox::getCorner110(glm::vec3& out) {
+glm::vec3 BoundingBox::getCorner110() const {
 	return glm::vec3(max.x, max.y, min.z);
 
 }
 
-glm::vec3 BoundingBox::getCorner111(glm::vec3& out) {
+glm::vec3 BoundingBox::getCorner111() const {
 	return glm::vec3(max.x, max.y, max.z);
 
 }

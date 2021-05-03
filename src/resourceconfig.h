@@ -2,6 +2,7 @@
 #define RESOURCECONFIG_H
 #include <vector>
 #include <string>
+#include <algorithm>
 
 struct ResourceConfig {
 public:

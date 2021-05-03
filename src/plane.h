@@ -19,8 +19,8 @@ public:
 	Plane(glm::vec3 n, float d);
 	Plane(glm::vec3 n, glm::vec3 point);
 	Plane(glm::vec3 &point0, glm::vec3 &point1, glm::vec3 &point2);
-	float distance(glm::vec3 &point);
-	PlaneSide testPoint(glm::vec3 &point);
+	float distance(const glm::vec3 &point) const;
+	PlaneSide testPoint(const glm::vec3 &point) const;
 	void set3Points(glm::vec3 &point0, glm::vec3 &point1, glm::vec3 &point2);
 };
 
