@@ -1,5 +1,4 @@
 #include "frustum.h"
-#include "frustum.h"
 
 Frustum::Frustum()
 {
@@ -87,21 +86,20 @@ bool Frustum::sphereInFrustum(glm::vec3& p, float radius) {
 	return true;
 }
 
-bool Frustum::boundsInFrustum(BoundingBox &bounds) {
+bool Frustum::boundsInFrustum(const BoundingBox &bounds) {
 	glm::vec3 tmpV;
-	tmpV = bounds.getCorner000(tmpV);
+	tmpV = bounds.getCorner000();
 	//qDebug() << "Corner000: " << tmpV.x << "," << tmpV.y << "," << tmpV.z;
 	//qDebug() << "Plane:" << (planes[1]->normal.x) << "," << (planes[1]->normal.y) <<","<< (planes[1]->normal.z);
 	for (int i = 0; i < 6; i++) {
-		
-		if ((planes[i]->testPoint(bounds.getCorner000(tmpV)) == Back) &&
-		(planes[i]->testPoint(bounds.getCorner001(tmpV)) == Back) &&
-		(planes[i]->testPoint(bounds.getCorner010(tmpV)) == Back) &&
-		(planes[i]->testPoint(bounds.getCorner011(tmpV)) == Back) &&
-		(planes[i]->testPoint(bounds.getCorner100(tmpV)) == Back) &&
-		(planes[i]->testPoint(bounds.getCorner101(tmpV)) == Back) &&
-		(planes[i]->testPoint(bounds.getCorner110(tmpV)) == Back) &&
-		(planes[i]->testPoint(bounds.getCorner111(tmpV)) == Back))
+		if ((planes[i]->testPoint(bounds.getCorner000()) == PlaneSide::Back) &&
+		(planes[i]->testPoint(bounds.getCorner001()) == PlaneSide::Back) &&
+		(planes[i]->testPoint(bounds.getCorner010()) == PlaneSide::Back) &&
+		(planes[i]->testPoint(bounds.getCorner011()) == PlaneSide::Back) &&
+		(planes[i]->testPoint(bounds.getCorner100()) == PlaneSide::Back) &&
+		(planes[i]->testPoint(bounds.getCorner101()) == PlaneSide::Back) &&
+		(planes[i]->testPoint(bounds.getCorner110()) == PlaneSide::Back) &&
+		(planes[i]->testPoint(bounds.getCorner111()) == PlaneSide::Back))
 		return false;
 	}
 

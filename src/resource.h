@@ -6,5 +6,5 @@ public:
     Resource(const std::string &file, ResourceConfig config) {}
     virtual ~Resource() {}
     virtual bool loaded() { return false; }
-    virtual ResourceConfig& getResourceConfig() { return ResourceConfig(); }
+    virtual ResourceConfig& getResourceConfig() = 0;
 };

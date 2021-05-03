@@ -2,6 +2,7 @@
 #include "ecs/comp/meshrendererComp.h"
 #include "ecs/comp/transformComp.h"
 #include <QDebug>
+
 RenderSystem::RenderSystem(entt::registry* registry, MasterRenderer* masterRenderer) : ComponentSystem(registry, masterRenderer)
 {
 }
@@ -10,7 +11,7 @@ void RenderSystem::update(float deltaTime)
 {
 	auto group = m_ecs->group<TransformComp>(entt::get<MeshRendererComp>);
 	for (auto entity : group) {
-		auto& [transform, meshrenderer] = group.get<TransformComp, MeshRendererComp>(entity);
+		auto [transform, meshrenderer] = group.get<TransformComp, MeshRendererComp>(entity);
 		if (transform.dirty) {
 			transform.transformMatrix = getTRSMatrix(transform.position, transform.orientation, transform.scale);
 		}

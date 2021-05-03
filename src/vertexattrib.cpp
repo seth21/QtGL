@@ -1,4 +1,4 @@
-#include "vertexattrib.h"
+#include "VertexAttrib.h"
 #include <QDebug>
 const std::string VertexAttrib::POSITION = "aPos";
 const std::string VertexAttrib::NORMAL = "aNormal";

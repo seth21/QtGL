@@ -208,7 +208,7 @@ void DefRenderer::doPointLightPass(Camera* cam)
 		
 		float lightMax = std::fmaxf(std::fmaxf(lightColor.r, lightColor.g), lightColor.b);
 		float radius =
-			(-linear + std::sqrtf(linear * linear - 4 * quadratic * (constant - (exposure * 256.0 / 3.0) * lightMax)))
+			(-linear + std::sqrt(linear * linear - 4 * quadratic * (constant - (exposure * 256.0 / 3.0) * lightMax)))
 			/ (2 * quadratic);
 		pointLightShader->loadFloat("light.maxRadius", radius);
 		
