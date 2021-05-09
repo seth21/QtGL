@@ -35,56 +35,57 @@ Mesh::~Mesh()
 
 void Mesh::releaseResources() {
     // here we delete the opengl arrays
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
+    QOpenGLExtraFunctions* f = QOpenGLContext::currentContext()->extraFunctions();
+    f->glDeleteVertexArrays(1, &VAO);
+    f->glDeleteBuffers(1, &VBO);
+    f->glDeleteBuffers(1, &EBO);
 }
 
 // Initializes all the buffer objects/arrays
 void Mesh::setupMesh()
 {
-    initializeOpenGLFunctions();
+    QOpenGLExtraFunctions* f = QOpenGLContext::currentContext()->extraFunctions();
     // Create buffers/arrays
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    f->glGenVertexArrays(1, &VAO);
+    f->glGenBuffers(1, &VBO);
+    f->glGenBuffers(1, &EBO);
     
-    glBindVertexArray(VAO);
+    f->glBindVertexArray(VAO);
     // Load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    f->glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // A great thing about structs is that their memory layout is sequential for all its items.
     // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
     // again translates to 3/2 floats which translates to a byte array.
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+    f->glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+    f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    f->glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 
     // Set the vertex attribute pointers
     // Vertex Positions
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
+    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
+    f->glEnableVertexAttribArray(0);
     // Vertex Normals
     
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Normal));
-    glEnableVertexAttribArray(1);
+    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Normal));
+    f->glEnableVertexAttribArray(1);
     // Vertex Texture Coords
     
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TexCoords));
-    glEnableVertexAttribArray(2);
+    f->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, TexCoords));
+    f->glEnableVertexAttribArray(2);
 
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Tangent));
-    glEnableVertexAttribArray(3);
+    f->glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, Tangent));
+    f->glEnableVertexAttribArray(3);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    f->glBindBuffer(GL_ARRAY_BUFFER, 0);
+    f->glBindVertexArray(0);
 
 }
 
 void Mesh::drawNow(){
-    
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    QOpenGLExtraFunctions* f = QOpenGLContext::currentContext()->extraFunctions();
+    f->glBindVertexArray(VAO);
+    f->glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     
 }

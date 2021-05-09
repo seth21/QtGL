@@ -14,6 +14,12 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent)
 	setMinimumSize(800, 600);
 	
 	mp_scene3D = new Scene3D(this);
+	QGLFormat format;
+	format.setDepthBufferSize(24);
+	format.setStencilBufferSize(8);
+	format.setVersion(3, 3);
+	format.setProfile(QGLFormat::CoreProfile);
+	mp_scene3D->setFormat(format); // must be called before the widget or its parent window gets shown
 	setCentralWidget(mp_scene3D);
 	setMouseTracking(true);
 	//grabMouse();

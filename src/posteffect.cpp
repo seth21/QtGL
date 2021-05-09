@@ -3,13 +3,13 @@
 void PostEffect::blit(Material* material, FrameBuffer* dest)
 {
 	if (!dest) {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(screenX, screenY, screenWidth, screenHeight);
+		f->glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		f->glViewport(screenX, screenY, screenWidth, screenHeight);
 		
 	}
 	else {
 		dest->bind();
-		glViewport(0, 0, dest->getWidth(), dest->getHeight());
+		f->glViewport(0, 0, dest->getWidth(), dest->getHeight());
 	}
 	//do blit stuff
 	ShaderProgram* shader = material->shader.get();
@@ -34,7 +34,7 @@ void PostEffect::blit(Material* material, FrameBuffer* dest)
 	}
 	
 	screenVAO->bind();
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	f->glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	material->getTempTextures().clear();
 }

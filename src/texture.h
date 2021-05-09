@@ -3,13 +3,12 @@
 #include <QDir>
 #include <QApplication>
 #include <QDebug>
-#include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 #include "resource.h"
 #include "resourceconfig.h"
 #include <glm/vec3.hpp>
 
-class Texture : public Resource, protected QOpenGLFunctions
+class Texture : public Resource
 {
 public:
     Texture(const std::string& fileName, ResourceConfig config);
@@ -23,6 +22,7 @@ public:
     ResourceConfig& getResourceConfig();
     void uploadFloat2D(int width, int height, const float* data, GLint internalFormat, GLenum format, GLenum type, GLenum filter, GLenum wrap);
     unsigned int getHandle();
+    unsigned int getChannelsCount();
 private:
     unsigned char * mp_textureData;
     unsigned int m_texture, m_texUnit;
@@ -34,7 +34,7 @@ private:
     bool cubeTexture = false;
     ResourceConfig resConfig;
     std::vector<std::string> splitString(const std::string& s, const std::string& delim);
-    QOpenGLFunctions* gl;
+    QOpenGLExtraFunctions* gl;
 };
 
 #endif // TEXTURE_H

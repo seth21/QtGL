@@ -89,6 +89,18 @@ bool Material::textureUniformExists(std::string name)
 	else return false;
 }
 
+bool Material::hasAlbedoWithAlpha()
+{
+	auto it = textures.find(ALBEDO_UNIFORM);
+
+	if (it == textures.end())
+		return false;
+	else if (it->second) {
+		return it->second->getChannelsCount() == 4 ? true : false;
+	}
+	else return false;
+}
+
 void Material::releaseAllTextures()
 {
 }

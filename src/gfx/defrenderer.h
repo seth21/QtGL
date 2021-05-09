@@ -1,4 +1,4 @@
-#include <QOpenGLFunctions>
+
 #include <QOpenGLExtraFunctions>
 #include "framebuffer.h"
 #include "shaderprogram.h"
@@ -9,7 +9,7 @@
 #include <ssao.h>
 #include "lights/pointlight.h"
 
-class DefRenderer : protected QOpenGLExtraFunctions {
+class DefRenderer {
 public:
 	DefRenderer(int x, int y, int width, int height);
 	~DefRenderer();
@@ -30,7 +30,7 @@ private:
 	std::vector<DirectionalLight*> dirLights;
 	std::vector<PointLight*> pointLights;
 	std::unique_ptr<FrameBuffer> gBuffer;
-	std::shared_ptr<ShaderProgram> gBufferShader;
+	std::shared_ptr<ShaderProgram> gBufferShader2;
 	std::shared_ptr<ShaderProgram> dirLightShader;
 	std::shared_ptr<ShaderProgram> pointLightShader;
 	std::shared_ptr<ShaderProgram> combineShader;
@@ -45,5 +45,5 @@ private:
 	int m_height = 0;
 	int m_xS = 0, m_yS = 0;
 	float exposure = 0.5;
-
+	QOpenGLExtraFunctions* f;
 };

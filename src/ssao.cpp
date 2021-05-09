@@ -3,7 +3,7 @@
 //Calculate SSAO on half size buffer
 SSAO::SSAO(int width, int height)
 {
-    initializeOpenGLFunctions();
+    f = QOpenGLContext::currentContext()->extraFunctions();
     ssaoShader = ResourceManager::getInstance().load<ShaderProgram>("ssao");
     blurShader = ResourceManager::getInstance().load<ShaderProgram>("gaussianblur");
     generateKernelNoise();
@@ -38,11 +38,11 @@ SSAO::~SSAO()
 void SSAO::calculateSSAO(FrameBuffer* gBuffer, VAO* screenVAO, glm::mat4 projection, glm::mat4 view)
 {
     //GL state
-    glDisable(GL_DEPTH_TEST);
-    glCullFace(GL_BACK);
+    f->glDisable(GL_DEPTH_TEST);
+    f->glCullFace(GL_BACK);
     ssaoBuffer->bind();
     ssaoBuffer->setRenderTargets(1, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    f->glClear(GL_COLOR_BUFFER_BIT);
     //Bind GBuffer/noise Textures
     ssaoShader->start();
 
@@ -54,14 +54,14 @@ void SSAO::calculateSSAO(FrameBuffer* gBuffer, VAO* screenVAO, glm::mat4 project
     noiseTexture->bind(2);
     
     screenVAO->bind();
-    glViewport(0, 0, ssaoBuffer->getWidth(), ssaoBuffer->getHeight());
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    f->glViewport(0, 0, ssaoBuffer->getWidth(), ssaoBuffer->getHeight());
+    f->glDrawArrays(GL_TRIANGLES, 0, 6);
 
     //Blur result
     int blurIterations = 1;
     blurBuffer->bind();
     blurShader->start();
-    glViewport(0, 0, blurBuffer->getWidth(), blurBuffer->getHeight());
+    f->glViewport(0, 0, blurBuffer->getWidth(), blurBuffer->getHeight());
     for (int i = 0; i < blurIterations; i++) {
         //Horizontal blur
         blurBuffer->setRenderTargets(1, 0);
@@ -69,13 +69,13 @@ void SSAO::calculateSSAO(FrameBuffer* gBuffer, VAO* screenVAO, glm::mat4 project
         if (i == 0) ssaoBuffer->bindColorAttachment(0);
         else blurBuffer->bindColorAttachmentAtUnit(1, 0);
         blurShader->loadInt("mainTexture", 0);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        f->glDrawArrays(GL_TRIANGLES, 0, 6);
         //Vertical blur
         blurBuffer->setRenderTargets(1, 1);
         blurShader->loadFloat("horizontal", 0);
         blurBuffer->bindColorAttachmentAtUnit(0, 0);
         blurShader->loadInt("mainTexture", 0);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        f->glDrawArrays(GL_TRIANGLES, 0, 6);
     }
     
 }

@@ -9,7 +9,7 @@ Texture::Texture(const std::string &fileName, ResourceConfig config) : Resource(
     resConfig = config;
     cubeTexture = resConfig.flagExists("cube");
     //qDebug() << "Texture cube:" << cubeTexture;
-    gl = QOpenGLContext::currentContext()->functions();
+    gl = QOpenGLContext::currentContext()->extraFunctions();
     if (!cubeTexture) loadImage(fileName);
     else loadCubeImage(fileName);
     
@@ -25,7 +25,7 @@ Texture::Texture(): Resource("null", ResourceConfig())
     m_nrChannels = 0;
     
     //initializeOpenGLFunctions();
-    gl = QOpenGLContext::currentContext()->functions();
+    gl = QOpenGLContext::currentContext()->extraFunctions();
 }
 
 void Texture::loadCubeImage(const std::string& fileName) {
@@ -140,6 +140,11 @@ void Texture::uploadFloat2D(int width, int height, const float *data, GLint inte
 unsigned int Texture::getHandle()
 {
     return m_texture;
+}
+
+unsigned int Texture::getChannelsCount()
+{
+    return m_nrChannels;
 }
 
 bool Texture::loaded()

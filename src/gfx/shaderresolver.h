@@ -8,13 +8,18 @@ struct ShaderVariant {
 
 class ShaderResolver {
 public:
-	ShaderResolver();
-	void assignShaderToMaterial(Material* mat);
+	//ShaderResolver();
+	static void assignShaderToMaterial(Material* mat);
 private:
-	std::string ALBEDO_DEFINE = "ALBEDO";
-	std::string NORMAL_DEFINE = "NORMAL";
-	std::string SPECULAR_DEFINE = "SPECULAR";
-	std::string BUMP_DEFINE = "BUMP";
+	//standard defines
+	const static inline std::string ALBEDO_DEFINE = "ALBEDO";
+	const static inline std::string NORMAL_DEFINE = "NORMAL";
+	const static inline std::string SPECULAR_DEFINE = "SPECULAR";
+	const static inline std::string BUMP_DEFINE = "BUMP";
+	const static inline std::string ALPHATEST_DEFINE = "ALPHATEST";
+	//standard shaders
+	const static inline std::string STANDARD_DEFERRED_SHADER = "gbuffer";
+	const static inline std::string STANDARD_FORWARD_SHADER = "forward";
 };
 
 #endif

@@ -7,10 +7,9 @@
 #include "framebuffer.h"
 #include "vao.h"
 #include "camera.h"
-#include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 
-class PostEffectRenderer : protected QOpenGLFunctions {
+class PostEffectRenderer {
 public:
 	PostEffectRenderer(int xS, int yS, int width, int height);
 	~PostEffectRenderer();
@@ -29,7 +28,7 @@ private:
 	int screenHeight;
 	int screenX;
 	int screenY;
-	
+	QOpenGLExtraFunctions* f;
 };
 #endif
 

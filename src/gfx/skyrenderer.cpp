@@ -46,11 +46,10 @@ const float SkyRenderer::cubeVertices[] = {
 };
 
 SkyRenderer::SkyRenderer() {
-    initializeOpenGLFunctions();
+    f = QOpenGLContext::currentContext()->extraFunctions();
     generateCubeMesh();
-    ResourceConfig cubeConfig;
-    cubeConfig.flags.push_back("cube");
-    skyShader = ResourceManager::getInstance().load<ShaderProgram>("skybox", cubeConfig);
+    
+    skyShader = ResourceManager::getInstance().load<ShaderProgram>("skybox");
     skyShader->start();
     skyShader->loadInt("skybox", 0);
 }
@@ -71,9 +70,9 @@ void SkyRenderer::render(Camera* cam, FrameBuffer* target)
     if (!skyTexture || !skyShader) return;
     target->bind();
     target->setRenderTargets(1, 4);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glCullFace(GL_BACK);
+    f->glEnable(GL_DEPTH_TEST);
+    f->glDepthFunc(GL_LEQUAL);
+    f->glCullFace(GL_BACK);
     //glDepthMask(GL_FALSE);
     //Do not write to the depth buffer
     
@@ -85,9 +84,9 @@ void SkyRenderer::render(Camera* cam, FrameBuffer* target)
     skyShader->loadMatrix4f("view", view);
     skyTexture->bind(0);
     cubeVAO->bind();
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    f->glDrawArrays(GL_TRIANGLES, 0, 36);
     //glDepthMask(GL_TRUE);
-    glDisable(GL_DEPTH_TEST);
+    f->glDisable(GL_DEPTH_TEST);
 }
 
 void SkyRenderer::setSkyTexture(std::shared_ptr<Texture> skyTex)

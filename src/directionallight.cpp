@@ -10,7 +10,8 @@ DirectionalLight::DirectionalLight()
 	shadowBox = std::make_unique<ShadowBox>();
 	offset = createOffset();
 	setDirection(glm::vec3(0, -1, 0.2f));
-	setColor(glm::vec3(0.5, 0.5, 0.5));
+	//setDirection(glm::vec3(0, -1, -1));
+	setColor(glm::vec3(1.4, 1.3, 0.5));
 	lightViewMatrix = glm::mat4(1);
 }
 

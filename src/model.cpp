@@ -2,7 +2,6 @@
 
 
 Model::Model(std::string fileName, ResourceConfig config) : Resource (fileName, config){
-    initializeOpenGLFunctions();
     loadModel(fileName);
 }
 

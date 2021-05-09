@@ -88,21 +88,21 @@ void main()
     //float average = (FragColor.r + FragColor.g + FragColor.b) / 3.0;
     //FragColor = vec4(average, average, average, 1.0);
 
-    float ambientStrength = 0.1;
     float ssao = texture(ssaoTexture, TexCoords).r;
     //contrast
     ssao = pow(ssao, 1.2) * 1.6;
     
-    vec3 ambient = ambientLight * lightColor * ssao;
+    vec3 ambient = ambientLight * ssao;
   	vec3 lightDir = normalize(lightDir);
     // diffuse
     float diff = clamp(dot(worldNormal, -lightDir), 0, 1);
     vec3 diffuse = diff * lightColor;
     // specular
+    float shininess = 1;
     vec3 viewDir = normalize(viewPos - worldPos);
     vec3 reflectDir = reflect(lightDir, worldNormal);  
-    float spec = pow(clamp(dot(viewDir, reflectDir), 0, 1), 32);
-    vec3 specular = specularStrength * spec * lightColor;  
+    float spec = pow(clamp(dot(viewDir, reflectDir), 0, 1), 32 * shininess);
+    vec3 specular = 5 * specularStrength * spec * lightColor;  
 
     //Shadows
     float cameraDist = length(viewPos - worldPos);

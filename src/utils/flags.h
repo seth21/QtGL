@@ -2,6 +2,9 @@
 #define FLAGS_H
 #include <bitset>
 
+/**
+* The last member of the enum should be COUNT for the class to work!
+**/
 template <typename EnumT>
 class Flags {
     static_assert(std::is_enum_v<EnumT>, "Flags can only be specialized for enum types");
@@ -54,7 +57,7 @@ private:
     }
 
 private:
-    std::bitset<underlying(EnumT::size)> bits_;
+    std::bitset<underlying(EnumT::COUNT)> bits_;
 };
 
 #endif

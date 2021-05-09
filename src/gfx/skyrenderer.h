@@ -9,7 +9,7 @@
 #include "resourcemanager.h"
 #include "framebuffer.h"
 
-class SkyRenderer : protected QOpenGLExtraFunctions {
+class SkyRenderer {
 public:
 	SkyRenderer();
 	~SkyRenderer();
@@ -22,6 +22,7 @@ private:
 	void generateCubeMesh();
 	std::unique_ptr<VAO> cubeVAO;
 	const static float cubeVertices[];
+	QOpenGLExtraFunctions* f;
 };
 
 #endif

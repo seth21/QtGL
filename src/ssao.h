@@ -14,7 +14,7 @@
 #include <QOpenGLFunctions>
 #include <glm/gtx/vector_angle.hpp>
 
-class SSAO : protected QOpenGLExtraFunctions {
+class SSAO {
 public:
 	SSAO(int width, int height);
 	~SSAO();
@@ -33,5 +33,6 @@ private:
 	std::unique_ptr<Texture> noiseTexture;
 	std::shared_ptr<ShaderProgram> ssaoShader;
 	std::shared_ptr<ShaderProgram> blurShader;
+	QOpenGLExtraFunctions* f;
 };
 #endif

@@ -22,7 +22,7 @@ struct TextureAttachment {
 	std::string name;
 };
 
-class FrameBuffer : protected QOpenGLExtraFunctions {
+class FrameBuffer {
 public:
 	FrameBuffer(int width, int height);
 	~FrameBuffer();
@@ -64,5 +64,6 @@ private:
 	std::vector<std::unique_ptr<TextureAttachment>> colorAttachments;
 	std::unique_ptr<TextureAttachment> depthAttachment;
 	glm::vec3 clearColor;
+	QOpenGLExtraFunctions *f;
 };
 #endif // !FRAMEBUFFER_H

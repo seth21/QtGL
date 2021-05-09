@@ -9,9 +9,9 @@ out vec3 FragPos;
 uniform mat4 projMat;
 uniform mat4 viewMat; 
 uniform mat4 modelMat;
-uniform vec3 viewPos;
 
 #ifdef BUMP
+uniform vec3 viewPos;
 out vec3 tangentViewPos;
 out vec3 tangentFragPos;
 #endif

@@ -1,7 +1,7 @@
 #include "framebuffer.h"
 
 FrameBuffer::FrameBuffer(int width, int height) {
-	initializeOpenGLFunctions();
+	f = QOpenGLContext::currentContext()->extraFunctions();
 
 	this->width = width;
 	this->height = height;
@@ -20,7 +20,7 @@ FrameBuffer::FrameBuffer(int width, int height) {
 FrameBuffer::~FrameBuffer()
 {
 	unbind();
-	glDeleteFramebuffers(1, &fbo);
+	f->glDeleteFramebuffers(1, &fbo);
 	//delete textures
 	if (depthAttachment) {
 		//glDeleteTextures(1, &depthAttachment->texture);
@@ -38,21 +38,21 @@ void FrameBuffer::setup()
 		qDebug() << "Cannot initialize Framebuffer width/height is 0!";
 		return;
 	}
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	f->glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	//Destroy old textures, if any
 	if (depthAttachment && depthAttachment->tex.get() != nullptr) {
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, NULL, 0);
+		f->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, NULL, 0);
 		//glDeleteTextures(1, &(depthAttachment->texture));
 		depthAttachment->tex.reset(nullptr);
 		//depthAttachment->texture = 0;
 	}
 	for (int i = 0; i < colorAttachments.size(); i++) {
 		if (colorAttachments[i]->tex.get() == nullptr) continue; //Non initialized attachment, nothing to delete
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, NULL, 0);
+		f->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, NULL, 0);
 		//glDeleteTextures(1, &(colorAttachments[i]->texture));
 		//colorAttachments[i]->texture = 0;
 		colorAttachments[i]->tex.reset(nullptr);
-		qDebug() << "AAAAAAAAAAAAAAa";
+		//qDebug() << "AAAAAAAAAAAAAAa";
 	}
 	//Create new textures
 	for (int i = 0; i < colorAttachments.size(); i++) {
@@ -63,16 +63,16 @@ void FrameBuffer::setup()
 		//std::vector<unsigned int> attachments;
 		//for (int i = 0; i < renderTargetCount; i++) attachments.push_back(GL_COLOR_ATTACHMENT0 + renderTargets[i]);
 		//unsigned int attach[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-		glDrawBuffers(renderTargets.size(), &renderTargets[0]);
+		f->glDrawBuffers(renderTargets.size(), &renderTargets[0]);
 	}
 	else {
-		glDrawBuffers(0, NULL);
+		f->glDrawBuffers(0, NULL);
 		//glDrawBuffer(GL_NONE);
 		//glReadBuffer(GL_NONE);
 	}
 	if (depthAttachment) createTexAttachment(depthAttachment.get());
 	//unbind();
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	if (f->glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		qDebug() << "Framebuffer could not be set!";
 	else {
 		setupDone = true;
@@ -93,11 +93,11 @@ void FrameBuffer::setRenderTargets(int num, ...)
 		renderTargets.push_back(GL_COLOR_ATTACHMENT0 + va_arg(arguments, int)); 
 	va_end(arguments);
 	if (setupDone) {
-		if (num > 0) glDrawBuffers(renderTargets.size(), &renderTargets[0]);
+		if (num > 0) f->glDrawBuffers(renderTargets.size(), &renderTargets[0]);
 		else {
 			//glDrawBuffer(GL_NONE);
 			//glReadBuffer(GL_NONE);
-			glDrawBuffers(0, NULL);
+			f->glDrawBuffers(0, NULL);
 		}
 	}
 }
@@ -186,13 +186,13 @@ glm::vec3 FrameBuffer::getClearColor()
 
 void FrameBuffer::bind()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	f->glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	if (!setupDone) setup();
 }
 
 void FrameBuffer::unbind()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	f->glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 std::vector<std::unique_ptr<TextureAttachment>> const& FrameBuffer::getColorAttachments() const
@@ -220,7 +220,7 @@ void FrameBuffer::createTexAttachment(TextureAttachment* attachment)
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	//Attach the texture to the FBO
-	glFramebufferTexture2D(GL_FRAMEBUFFER, (attachment->depth) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + attachment->attachmentID, GL_TEXTURE_2D, attachment->tex->getHandle(), 0);
+	f->glFramebufferTexture2D(GL_FRAMEBUFFER, (attachment->depth) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + attachment->attachmentID, GL_TEXTURE_2D, attachment->tex->getHandle(), 0);
 }
 
 void FrameBuffer::registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name)
@@ -276,7 +276,7 @@ unsigned int FrameBuffer::getHeight()
 
 void FrameBuffer::createFBO()
 {
-	glGenFramebuffers(1, &fbo);
+	f->glGenFramebuffers(1, &fbo);
 }
 
 void FrameBuffer::clear()
@@ -284,6 +284,6 @@ void FrameBuffer::clear()
 	GLbitfield cl = GL_NONE;
 	if (renderTargets.size() > 0 && colorAttachments.size() > 0) cl = GL_COLOR_BUFFER_BIT;
 	if (depthAttachment) cl = cl | GL_DEPTH_BUFFER_BIT;
-	glClearColor(clearColor.x, clearColor.y, clearColor.z, 1.0);
-	glClear(cl);
+	f->glClearColor(clearColor.x, clearColor.y, clearColor.z, 1.0);
+	f->glClear(cl);
 }

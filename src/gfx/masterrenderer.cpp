@@ -23,6 +23,7 @@ void MasterRenderer::enqueueComp(TransformComp* transformComp, MeshRendererComp*
 	Model* model = rendererComp->m_model.get();
 	if (meshIndex >= 0) {
 		Material* mat = model->materials[meshIndex];
+		
 		Mesh* mesh = model->meshes[meshIndex];
 		//a
 		BoundingBox& transformedAABB = rendererComp->transformedAABB;
@@ -45,16 +46,16 @@ void MasterRenderer::enqueueComp(TransformComp* transformComp, MeshRendererComp*
 			}
 		}
 
-		//if (mat->state.test(MaterialFlag::CASTSHADOW)) {
+		if (mat->state[MaterialFlag::CASTSHADOW]) {
 			shadowRenderer->addShadowCaster(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, &transformedAABB);
-		//}
+		}
 	}
 	else {
 		int meshesSize = model->meshes.size();
 		for (int i = 0; i < meshesSize; i++) {
 			Mesh* mesh = model->meshes[i];
 			Material* mat = model->materials[mesh->materialIndex];
-
+			
 			BoundingBox& transformedAABB = rendererComp->transformedAABB;
 			transformedAABB.setAABB(mesh->aabb);
 			transformedAABB.mul(transformComp->transformMatrix);
@@ -75,9 +76,9 @@ void MasterRenderer::enqueueComp(TransformComp* transformComp, MeshRendererComp*
 				}
 			}
 
-			//if (mat->state.test(MaterialFlag::CASTSHADOW)) {
+			if (mat->state[MaterialFlag::CASTSHADOW]) {
 				shadowRenderer->addShadowCaster(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, &transformedAABB);
-			//}
+			}
 		}
 	}
 	

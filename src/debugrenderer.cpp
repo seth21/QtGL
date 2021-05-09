@@ -1,37 +1,37 @@
 #include "debugrenderer.h"
 
 DebugRenderer::DebugRenderer() {
-	initializeOpenGLFunctions();
+	f = QOpenGLContext::currentContext()->extraFunctions();
 	shader = ResourceManager::getInstance().load<ShaderProgram>("debug");
 
 	//VAO setup------
-	glGenVertexArrays(1, &vaoID);
-	glBindVertexArray(vaoID);
+	f->glGenVertexArrays(1, &vaoID);
+	f->glBindVertexArray(vaoID);
 
 	//VBO setup------
-	glGenBuffers(1, &vboID);
-	glBindBuffer(GL_ARRAY_BUFFER, vboID);
+	f->glGenBuffers(1, &vboID);
+	f->glBindBuffer(GL_ARRAY_BUFFER, vboID);
 	//allocate some memory
-	glBufferData(GL_ARRAY_BUFFER, maxVertices * vertexDataLength * sizeof(float), (GLvoid*)0, GL_DYNAMIC_DRAW);
+	f->glBufferData(GL_ARRAY_BUFFER, maxVertices * vertexDataLength * sizeof(float), (GLvoid*)0, GL_DYNAMIC_DRAW);
 	//where should opengl look for the attributes?
 	//vertices
 	int posAttribLoc = 0;
-	glVertexAttribPointer(posAttribLoc, 3, GL_FLOAT, GL_FALSE, vertexDataLength * sizeof(float), 0);
-	glEnableVertexAttribArray(posAttribLoc);
+	f->glVertexAttribPointer(posAttribLoc, 3, GL_FLOAT, GL_FALSE, vertexDataLength * sizeof(float), 0);
+	f->glEnableVertexAttribArray(posAttribLoc);
 	//colors
 	int colorAttribLoc = 1;
-	glVertexAttribPointer(colorAttribLoc, 3, GL_FLOAT, GL_FALSE, vertexDataLength * sizeof(float), (GLvoid*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(colorAttribLoc);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	f->glVertexAttribPointer(colorAttribLoc, 3, GL_FLOAT, GL_FALSE, vertexDataLength * sizeof(float), (GLvoid*)(3 * sizeof(float)));
+	f->glEnableVertexAttribArray(colorAttribLoc);
+	f->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// unbind the vao
-	glBindVertexArray(0);
+	f->glBindVertexArray(0);
 }
 
 DebugRenderer::~DebugRenderer()
 {
-	glDeleteVertexArrays(1, &vaoID);
-	glDeleteBuffers(1, &vboID);
+	f->glDeleteVertexArrays(1, &vaoID);
+	f->glDeleteBuffers(1, &vboID);
 	//loader.disposeAsset(shader);
 }
 
@@ -44,16 +44,16 @@ void DebugRenderer::glEnd(Camera* cam) {
 	//prepare
 	shader->start();
 	shader->loadMatrix4f("pv", cam->getPVmatrix());
-	glBindVertexArray(vaoID);
+	f->glBindVertexArray(vaoID);
 
 	//renew the vbo's data
 	uploadFloatsToVBO(vboID, dataList, GL_DYNAMIC_DRAW);
 
 	//draw
-	glDrawArrays(drawMode, 0, dataList.size() / vertexDataLength);
+	f->glDrawArrays(drawMode, 0, dataList.size() / vertexDataLength);
 	//Time.registerDrawCall();
 	//end
-	glBindVertexArray(0);
+	f->glBindVertexArray(0);
 	shader->stop();
 
 	dataList.clear();
@@ -78,8 +78,8 @@ void DebugRenderer::glVertex3f(glm::vec3 vertex) {
 }
 
 void DebugRenderer::uploadFloatsToVBO(unsigned int vbo, std::vector<glm::vec3>& dataList, GLenum usage) {
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	f->glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	//glBufferData(GL_ARRAY_BUFFER, dataList.size() * sizeof(float), &dataList[0], usage);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, dataList.size() * sizeof(float) * 3, &dataList[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	f->glBufferSubData(GL_ARRAY_BUFFER, 0, dataList.size() * sizeof(float) * 3, &dataList[0]);
+	f->glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

@@ -7,7 +7,7 @@ PostEffectRenderer::PostEffectRenderer(int xS, int yS, int width, int height)
 	screenX = xS;
 	screenY = yS;
 	currBuffer = 0;
-	
+	f = QOpenGLContext::currentContext()->extraFunctions();
 	for (int i = 0; i < 2; i++) {
 		std::unique_ptr<FrameBuffer> fbo = std::make_unique<FrameBuffer>(width, height);
 		fbo->registerColorAttachment(0, GL_FLOAT, GL_RGBA16F, GL_RGBA, GL_LINEAR, "post" + i);

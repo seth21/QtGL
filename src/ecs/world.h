@@ -16,10 +16,12 @@ public:
 	entt::entity createEntity();
 private:
 	entt::registry m_Registry;
-	entt::entity sponza, dirLight, pointLight, player;
+	entt::entity sponza, tank, crate, dirLight, pointLight, player;
 	std::unique_ptr<MasterRenderer> masterRenderer;
 	std::vector<std::unique_ptr<ComponentSystem>> systems;
 	int m_x, m_y, m_width, m_height;
+	std::shared_ptr<ShaderProgram> gBufferShader;
+	std::shared_ptr<ShaderProgram> gBufferShader2;
 };
 
 #endif

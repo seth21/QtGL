@@ -29,12 +29,13 @@ void main()
 { 
 	const float gamma = 2.2;
     vec3 color = texture(mainTex, TexCoords).rgb;
+	//color correction
 	color = changeContrast(color, contrast);
 	color = changeSaturation(color, saturation);
 	color += brightness;
 	// exposure tone mapping
     vec3 mapped = vec3(1.0) - exp(-color * exposure);
-    // gamma correction -> to srgb space
+    // gamma correction -> to sRGB space
     mapped = pow(mapped, vec3(1.0 / gamma));
 	
 

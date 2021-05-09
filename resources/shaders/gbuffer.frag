@@ -2,10 +2,10 @@
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
-#define BUMP
+
 in vec2 TexCoord;
 in vec3 FragPos;
-uniform vec3 viewPos;
+
 #ifdef ALBEDO
 uniform sampler2D albedoMap;
 #endif
@@ -28,6 +28,7 @@ uniform float height_scale = 1;
 uniform sampler2D specularMap;
 #endif
 
+#ifdef BUMP
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir, float heightScale)
 { 
     // number of depth layers
@@ -69,6 +70,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir, float heightScale)
 
     return finalTexCoords;
 }
+#endif
 
 void main()
 {    
@@ -97,18 +99,20 @@ void main()
    
     float gamma = 2.2;
     vec4 albedoTex = texture(albedoMap, UV);
+    #ifdef ALPHATEST
     if (albedoTex.a < 0.3) discard;
+    #endif
     //apply gamma correction ->to linear space
     gAlbedoSpec.rgb = pow(albedoTex.rgb, vec3(gamma));
     //gAlbedoSpec.rgb = albedoTex.rgb;
     #else
     gAlbedoSpec.rgb = vec3(0.8,0.8,0.8);
+
     #endif
     // store specular intensity in gAlbedoSpec's alpha component
     #ifdef SPECULAR
     gAlbedoSpec.a = texture(specularMap, UV).r;
     #else
-    //gAlbedoSpec.a = 0.5;
-    gAlbedoSpec.a = texture(bumpMap, UV).r;
+    gAlbedoSpec.a = 0.5;
     #endif
 }  

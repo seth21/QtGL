@@ -24,7 +24,7 @@ const float VAO::screenQuadUV[12] = {
 
 VAO::VAO()
 {
-    initializeOpenGLFunctions();
+    f = QOpenGLContext::currentContext()->extraFunctions();
 	m_interleavedData = NULL;
     interleavedDataSize = 0;
 	vaoHandle = NULL;
@@ -35,48 +35,48 @@ VAO::VAO()
 VAO::~VAO()
 {
     delete m_interleavedData;
-    glDeleteVertexArrays(1, &vaoHandle);
-    glDeleteBuffers(1, &vboHandle);
-    glDeleteBuffers(1, &eboHandle);
+    f->glDeleteVertexArrays(1, &vaoHandle);
+    f->glDeleteBuffers(1, &vboHandle);
+    f->glDeleteBuffers(1, &eboHandle);
 }
 
 void VAO::upload()
 {
     interleaveData();
     // Create buffers/arrays
-    glGenVertexArrays(1, &vaoHandle);
-    glGenBuffers(1, &vboHandle);
-    if (m_indices.size() > 0) glGenBuffers(1, &eboHandle);
+    f->glGenVertexArrays(1, &vaoHandle);
+    f->glGenBuffers(1, &vboHandle);
+    if (m_indices.size() > 0) f->glGenBuffers(1, &eboHandle);
 
-    glBindVertexArray(vaoHandle);
+    f->glBindVertexArray(vaoHandle);
     // Load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER, vboHandle);
+    f->glBindBuffer(GL_ARRAY_BUFFER, vboHandle);
     
-    glBufferData(GL_ARRAY_BUFFER, interleavedDataSize * sizeof(float), &m_interleavedData[0], GL_STATIC_DRAW);
+    f->glBufferData(GL_ARRAY_BUFFER, interleavedDataSize * sizeof(float), &m_interleavedData[0], GL_STATIC_DRAW);
     for (int i = 0; i < 24; i++) qDebug() << m_interleavedData[i];
 
     if (m_indices.size() > 0) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboHandle);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), &m_indices[0], GL_STATIC_DRAW);
+        f->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboHandle);
+        f->glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), &m_indices[0], GL_STATIC_DRAW);
     }
 
     // Set the vertex attribute pointers
     calculateVboOffsets();
     int stride = getStride();
     for (int i = 0; i < attributes.size(); i++) {
-        glVertexAttribPointer(attributes[i].m_location, attributes[i].m_size, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (void*)(attributes[i].m_vboOffset * sizeof(float)));
-        glEnableVertexAttribArray(attributes[i].m_location);
+        f->glVertexAttribPointer(attributes[i].m_location, attributes[i].m_size, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (void*)(attributes[i].m_vboOffset * sizeof(float)));
+        f->glEnableVertexAttribArray(attributes[i].m_location);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    f->glBindBuffer(GL_ARRAY_BUFFER, 0);
+    f->glBindVertexArray(0);
    
 }
 
 void VAO::bind()
 {
     //if (boundVAO != vaoHandle) {
-        glBindVertexArray(vaoHandle);
+    f->glBindVertexArray(vaoHandle);
         boundVAO = vaoHandle;
     //}
    
@@ -84,7 +84,7 @@ void VAO::bind()
 
 void VAO::unbind()
 {
-    glBindVertexArray(0);
+    f->glBindVertexArray(0);
     boundVAO = 0;
 }
 

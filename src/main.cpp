@@ -9,10 +9,19 @@ int main(int argc, char *argv[])
 	//freopen("CONOUT$", "w", stdout);
 	//freopen("CONOUT$", "w", stderr);
 #endif
-	QApplication a(argc, argv);
+	QApplication app(argc, argv);
+
+	QSurfaceFormat format;
+	format.setDepthBufferSize(24);
+	format.setVersion(3, 3);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+	QSurfaceFormat::setDefaultFormat(format);
+
+	app.setApplicationName("cube");
+	app.setApplicationVersion("0.1");
 
 	MainWindow w;
 	w.show();
 
-	return a.exec();
+	return app.exec();
 }

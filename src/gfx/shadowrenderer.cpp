@@ -2,7 +2,7 @@
 
 ShadowRenderer::ShadowRenderer()
 {
-	initializeOpenGLFunctions();
+	f = QOpenGLContext::currentContext()->extraFunctions();
 	dirLightShader = ResourceManager::getInstance().load<ShaderProgram>("gdirlight");
 	pointLightShader = ResourceManager::getInstance().load<ShaderProgram>("gpointlight");
 	dirLightDepthShader = ResourceManager::getInstance().load<ShaderProgram>("dirlightdepth");
@@ -40,26 +40,26 @@ void ShadowRenderer::clearQueues()
 void ShadowRenderer::doDirectionalLightDepthPass()
 {
 	//Prepare state
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
+	f->glEnable(GL_DEPTH_TEST);
+	f->glDepthMask(GL_TRUE);
+	f->glDepthFunc(GL_LEQUAL);
+	f->glEnable(GL_CULL_FACE);
+	f->glCullFace(GL_FRONT);
 	dirLightDepthShader->start();
 	
 	//Render directional shadowmaps
 	for (int i = 0; i < dirShadowQueues.size(); i++) {
 		DirectionalLight *dirLight = dirShadowQueues[i].m_light;
 		dirLight->getShadowMap()->bind();
-		glViewport(0, 0, dirLight->getShadowMapSize(), dirLight->getShadowMapSize());
-		glClear(GL_DEPTH_BUFFER_BIT);
+		f->glViewport(0, 0, dirLight->getShadowMapSize(), dirLight->getShadowMapSize());
+		f->glClear(GL_DEPTH_BUFFER_BIT);
 		dirLightDepthShader->loadMatrix4f("projMat", dirLight->getProjectionMatrix());
 		dirLightDepthShader->loadMatrix4f("lightViewMat", dirLight->getLightViewMatrix());
 		auto &commands = dirShadowQueues[i].queue.getCommands();
 		for (auto &command : commands) {
 			dirLightDepthShader->loadMatrix4f("modelMat", command.transformMatrix);
-			glBindVertexArray(command.vaoID);
-			glDrawElements(GL_TRIANGLES, command.vertexCount, GL_UNSIGNED_INT, (GLvoid*)command.baseVertex);
+			f->glBindVertexArray(command.vaoID);
+			f->glDrawElements(GL_TRIANGLES, command.vertexCount, GL_UNSIGNED_INT, (GLvoid*)command.baseVertex);
 		}
 		
 	}

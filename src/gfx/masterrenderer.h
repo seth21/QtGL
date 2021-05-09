@@ -11,7 +11,7 @@
 #include "posteffectrenderer.h"
 #include "debugrenderer.h"
 #include <gfx/skyrenderer.h>
-
+#include "shaderresolver.h"
 
 class MasterRenderer {
 public:

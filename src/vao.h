@@ -4,7 +4,7 @@
 #include <QOpenGLExtraFunctions>
 #include "VertexAttrib.h"
 #include <QDebug>
-class VAO : protected QOpenGLExtraFunctions {
+class VAO {
 public:
 	VAO();
 	~VAO();
@@ -29,6 +29,7 @@ private:
 	void calculateVboOffsets();
 	int getStride();
 	std::vector<VertexAttrib> attributes;
+	QOpenGLExtraFunctions* f;
 };
 
 #endif

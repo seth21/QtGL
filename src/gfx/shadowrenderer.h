@@ -1,7 +1,6 @@
 #ifndef LIGHTRENDERER_H
 #define LIGHTRENDERER_H
 #include "resourcemanager.h"
-#include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 #include "shaderprogram.h"
 #include "directionallight.h"
@@ -16,7 +15,7 @@ struct ShadowQueue {
 	}
 };
 
-class ShadowRenderer : protected QOpenGLExtraFunctions {
+class ShadowRenderer {
 public:
 
 	ShadowRenderer();
@@ -27,7 +26,7 @@ public:
 	void clearQueues();
 	
 private:
-	
+	QOpenGLExtraFunctions* f;
 	//SHADERS
 	std::shared_ptr<ShaderProgram> dirLightShader;
 	std::shared_ptr<ShaderProgram> dirLightDepthShader;

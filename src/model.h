@@ -10,12 +10,11 @@
 #include <QDir>
 #include <QApplication>
 #include <QOpenGLExtraFunctions>
-#include <QOpenGLFunctions>
 #include <QDebug>
 #include "resource.h"
 #include "resourceconfig.h"
 
-class Model : public Resource, protected QOpenGLExtraFunctions{
+class Model : public Resource{
 
     public:
         Model(std::string fileName, ResourceConfig config);

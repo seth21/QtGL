@@ -12,15 +12,14 @@
 #include <glm/gtc/type_ptr.inl>
 #include "resourceconfig.h"
 #include "resource.h"
-class ShaderProgram : public Resource, protected QOpenGLExtraFunctions
+class ShaderProgram : public Resource
 {
 public:
     static GLuint currentProg;
     ShaderProgram(const std::string& fileName, ResourceConfig config);
-    void addFlag(std::string flag);
     void init(std::string shaderName);
     ~ShaderProgram();
-    void start();
+    bool start();
     void stop();
     GLuint getID();
     struct GLintDefault
@@ -52,9 +51,9 @@ private:
     std::string readFile(const std::string& filePath);
     GLuint programID = 0;
     std::unordered_map<std::string, GLintDefault> uniformLocs;
-    std::vector<std::string> definedFlags;
     bool fileLoaded = false;
     ResourceConfig config;
+    QOpenGLExtraFunctions* f;
 };
 
 #endif // SHADERPROGRAM_H

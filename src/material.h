@@ -11,11 +11,12 @@
 #include <string>
 #include <glm/vec3.hpp>
 #include "shaderprogram.h"
-#include <bitset>
+#include "utils/flags.h"
 
 enum class MaterialFlag {
 	TWOSIDED,
 	CASTSHADOW,
+	RECEIVESHADOW,
 	CUSTOMSHADER,
 	COUNT
 };
@@ -59,10 +60,11 @@ public:
 	std::unordered_map<std::string, Texture*>& getTempTextures();
 	std::unordered_map<std::string, glm::vec3>& getVec3s();
 	std::unordered_map<std::string, float>& getFloats();
-	std::bitset<static_cast<int>(MaterialFlag::COUNT)> state;
+	Flags<MaterialFlag> state;
 
 	const static std::string ALBEDO_UNIFORM, NORMAL_UNIFORM, SPEC_UNIFORM, BUMP_UNIFORM;
 	bool textureUniformExists(std::string name);
+	bool hasAlbedoWithAlpha();
 	RenderBlend blending = RenderBlend::NONE;
 	RenderPath renderPath = RenderPath::DEFERRED;
 private:

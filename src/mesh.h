@@ -11,7 +11,7 @@
 #include "material.h"
 #include "boundingbox.h"
 
-class Mesh : protected QOpenGLExtraFunctions
+class Mesh
 {
 public:
     /*  Mesh Data  */

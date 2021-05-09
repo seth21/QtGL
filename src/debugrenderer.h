@@ -8,7 +8,7 @@
 #include "shaderprogram.h"
 #include "resourcemanager.h"
 
-class DebugRenderer : protected QOpenGLExtraFunctions {
+class DebugRenderer {
 public:
 	DebugRenderer();
 	~DebugRenderer();
@@ -27,6 +27,6 @@ private:
 	int vertexDataLength = 6;
 	std::vector<glm::vec3> dataList;
 	glm::vec3 color;
-
+	QOpenGLExtraFunctions* f;
 };
 #endif

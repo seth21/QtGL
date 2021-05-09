@@ -2,7 +2,7 @@
 
 DefRenderer::DefRenderer(int x, int y, int width, int height)
 {
-	initializeOpenGLFunctions();
+	f = QOpenGLContext::currentContext()->extraFunctions();
 	m_xS = x;
 	m_yS = y;
 	m_width = width;
@@ -28,10 +28,12 @@ DefRenderer::DefRenderer(int x, int y, int width, int height)
 	gBuffer->setRenderTargets(5, 0, 1, 2, 3, 4);
 	gBuffer->setup();
 
-	ResourceConfig shaderConfig;
-	shaderConfig.flags.push_back("ALBEDO");
-	shaderConfig.flags.push_back("BUMP");
-	gBufferShader = ResourceManager::getInstance().load<ShaderProgram>("gbuffer", shaderConfig);
+	//ResourceConfig shaderConfig2;
+	//shaderConfig2.addFlag("ALBEDO");
+	//shaderConfig2.addFlag("BUMP");
+	//gBufferShader2 = ResourceManager::getInstance().load<ShaderProgram>("gbuffer", shaderConfig2);
+
+
 	dirLightShader = ResourceManager::getInstance().load<ShaderProgram>("gdirlight");
 	pointLightShader = ResourceManager::getInstance().load<ShaderProgram>("gpointlight");
 	combineShader = ResourceManager::getInstance().load<ShaderProgram>("gfinal");
@@ -66,46 +68,46 @@ void DefRenderer::doGeometryPass(Camera* cam)
 	gBuffer->setRenderTargets(3, 0, 1, 2);
 	
 	//GEOMETRY PASS
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-	glClearColor(0.0, 0.0, 0.0, 1.0); // keep it black so it doesn't leak into g-buffer
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0, 0, gBuffer->getWidth(), gBuffer->getHeight());
-	gBufferShader->start();
-	gBufferShader->loadMatrix4f("viewMat", cam->getViewMatrix());
-	gBufferShader->loadMatrix4f("projMat", cam->getProjMatrix());
-	gBufferShader->loadVector3f("viewPos", cam->position);
-	/*
-	for(Object obj : Objects)
-	{
-		ConfigureShaderTransformsAndUniforms();
-		obj.Draw();
-	}  */
+	f->glEnable(GL_DEPTH_TEST);
+	f->glDepthMask(GL_TRUE);
+	f->glDepthFunc(GL_LEQUAL);
+	f->glEnable(GL_CULL_FACE);
+	f->glCullFace(GL_BACK);
+	f->glClearColor(0.0, 0.0, 0.0, 1.0); // keep it black so it doesn't leak into g-buffer
+	f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	f->glViewport(0, 0, gBuffer->getWidth(), gBuffer->getHeight());
+	
 	//DRAW ENTITIES
 	for (auto &command : deferredQueue.getCommands()) {
 		Material* mat = command.material;
-		if (mat) {
+		if (mat && mat->shader) {
+			auto *shader = mat->shader.get();
+			if (shader->start()) {
+				//Global uniforms
+				shader->loadMatrix4f("viewMat", cam->getViewMatrix());
+				shader->loadMatrix4f("projMat", cam->getProjMatrix());
+				shader->loadVector3f("viewPos", cam->position);
+			}
+				
+			//Per material uniforms
 			int counter = 0;
 			for (auto tex : mat->getTextures()) {
-				gBufferShader->loadInt(tex.first, counter);
+				shader->loadInt(tex.first, counter);
 				tex.second->bind(counter);
 				counter++;
 			}
 			for (auto f : mat->getFloats()) {
-				gBufferShader->loadFloat(f.first, f.second);
+				shader->loadFloat(f.first, f.second);
 			}
 			for (auto v3 : mat->getVec3s()) {
-				gBufferShader->loadVector3f(v3.first, v3.second);
+				shader->loadVector3f(v3.first, v3.second);
 			}
+			//Per object uniforms
+			shader->loadMatrix4f("modelMat", command.transformMatrix);
+			f->glBindVertexArray(command.vaoID);
+			f->glDrawElements(GL_TRIANGLES, command.vertexCount, GL_UNSIGNED_INT, (GLvoid*)command.baseVertex);
 		}
-		gBufferShader->loadMatrix4f("modelMat", command.transformMatrix);
-		glBindVertexArray(command.vaoID);
-		glDrawElements(GL_TRIANGLES, command.vertexCount, GL_UNSIGNED_INT, (GLvoid*)command.baseVertex);
 	}
-	//entity->drawNow(gBufferShader.get(), cam, true);
 }
 
 CommandQueue& DefRenderer::getQueue()
@@ -138,9 +140,9 @@ void DefRenderer::doDirectionalLightPass(Camera* cam, SSAO* ssao)
 	
 	for (auto dirLight : dirLights) {
 		//DIRECTIONAL LIGHT
-		glDisable(GL_DEPTH_TEST);
-		glCullFace(GL_BACK);
-		glDepthMask(GL_TRUE);
+		f->glDisable(GL_DEPTH_TEST);
+		f->glCullFace(GL_BACK);
+		f->glDepthMask(GL_TRUE);
 		dirLightShader->start();
 		//Bind GBuffer Textures
 		dirLightShader->loadInt("gPosition", 0);
@@ -151,8 +153,8 @@ void DefRenderer::doDirectionalLightPass(Camera* cam, SSAO* ssao)
 		gBuffer->bindColorAttachment(2);
 		//Lighting Uniforms
 		dirLightShader->loadVector3f("lightDir", dirLight->getDirection());
-		dirLightShader->loadVector3f("ambientLight", glm::vec3(0.11, 0.11, 0.06));
-		dirLightShader->loadVector3f("lightColor", glm::vec3(0.9, 0.8, 0.3));
+		dirLightShader->loadVector3f("ambientLight", dirLight->getColor()*0.08f);
+		dirLightShader->loadVector3f("lightColor", dirLight->getColor());
 		dirLightShader->loadVector3f("viewPos", cam->position);
 		dirLightShader->loadInt("shadowMap", 3);
 		dirLight->getShadowMap()->bindDepthAttachment(3);
@@ -162,11 +164,11 @@ void DefRenderer::doDirectionalLightPass(Camera* cam, SSAO* ssao)
 		//ssao
 		dirLightShader->loadInt("ssaoTexture", 4);
 		ssao->bindResult(4);
-		glViewport(0, 0, gBuffer->getWidth(), gBuffer->getHeight());
+		f->glViewport(0, 0, gBuffer->getWidth(), gBuffer->getHeight());
 		//Render Directional Light as a screen-sized Quad to render attachment 3
 		//glBindVertexArray(screenVAO);
 		screenVAO->bind();
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		f->glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 	
 }
@@ -174,12 +176,12 @@ void DefRenderer::doDirectionalLightPass(Camera* cam, SSAO* ssao)
 void DefRenderer::doPointLightPass(Camera* cam)
 {
 	//POINT LIGHTS
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_GEQUAL);
-	glCullFace(GL_FRONT);
-	glDepthMask(GL_FALSE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE);
+	f->glEnable(GL_DEPTH_TEST);
+	f->glDepthFunc(GL_GEQUAL);
+	f->glCullFace(GL_FRONT);
+	f->glDepthMask(GL_FALSE);
+	f->glEnable(GL_BLEND);
+	f->glBlendFunc(GL_ONE, GL_ONE);
 
 	pointLightShader->start();
 	pointLightShader->loadMatrix4f("pv", cam->getPVmatrix());
@@ -217,18 +219,18 @@ void DefRenderer::doPointLightPass(Camera* cam)
 		glm::mat4 trans = glm::translate(glm::mat4(1.0), position);
 		pointLightShader->loadMatrix4f("modelMat", trans * scl);
 		
-		glBindVertexArray(sphereMesh->VAO);
-		glDrawElements(GL_TRIANGLES, sphereMesh->indices.size(), GL_UNSIGNED_INT, 0);
+		f->glBindVertexArray(sphereMesh->VAO);
+		f->glDrawElements(GL_TRIANGLES, sphereMesh->indices.size(), GL_UNSIGNED_INT, 0);
 		
 	}
-	glDisable(GL_BLEND);
+	f->glDisable(GL_BLEND);
 }
 
 void DefRenderer::doDeferredLighting(Camera* cam, SSAO* ssao)
 {
 	gBuffer->bind();
 	gBuffer->setRenderTargets(1, 3); //Render to the light target only
-	glClear(GL_COLOR_BUFFER_BIT);
+	f->glClear(GL_COLOR_BUFFER_BIT);
 	doDirectionalLightPass(cam, ssao);
 	doPointLightPass(cam);
 }
@@ -238,12 +240,12 @@ void DefRenderer::doCombinePass()
 	gBuffer->bind();
 	gBuffer->setRenderTargets(1, 4); //Render to the combined target only
 	//COMBINE EVERYTHING(INCLUDING LIGHT)
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	f->glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glDisable(GL_DEPTH_TEST);
+	f->glDisable(GL_DEPTH_TEST);
 	//glDepthMask(GL_TRUE);
-	glCullFace(GL_BACK);
+	f->glCullFace(GL_BACK);
 	combineShader->start();
 	combineShader->loadInt("gAlbedoSpec", 2);
 	combineShader->loadInt("gLight", 3);
@@ -252,7 +254,7 @@ void DefRenderer::doCombinePass()
 	gBuffer->bindColorAttachment(3);
 	
 	screenVAO->bind();
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	f->glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void DefRenderer::setExposure(float exp)
