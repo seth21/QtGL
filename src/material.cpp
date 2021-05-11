@@ -44,6 +44,11 @@ void Material::setFloat(std::string name, float x)
 	floats[name] = x;
 }
 
+void Material::setVec2(std::string name, glm::vec2 xy)
+{
+	vec2s[name] = xy;
+}
+
 void Material::setVec3(std::string name, glm::vec3 xyz)
 {
 	vec3s[name] = xyz;
@@ -59,6 +64,11 @@ void Material::setTempTexture(std::string name, Texture* texture)
 	temptextures[name] = texture;
 }
 
+void Material::setMat4(std::string name, glm::mat4x4 mat4)
+{
+	mat4s[name] = mat4;
+}
+
 std::unordered_map<std::string, std::shared_ptr<Texture>>& Material::getTextures()
 {
 	return textures;
@@ -72,6 +82,16 @@ std::unordered_map<std::string, Texture*>& Material::getTempTextures()
 std::unordered_map<std::string, glm::vec3>& Material::getVec3s()
 {
 	return vec3s;
+}
+
+std::unordered_map<std::string, glm::vec2>& Material::getVec2s()
+{
+	return vec2s;
+}
+
+std::unordered_map<std::string, glm::mat4x4>& Material::getMat4s()
+{
+	return mat4s;
 }
 
 std::unordered_map<std::string, float>& Material::getFloats()

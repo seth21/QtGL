@@ -104,7 +104,18 @@ void Model::loadMaterialsFromModel(const aiScene* scene, std::string modelResour
         loadMaterialTextureDefs(material, aiTextureType_HEIGHT, "tex_bump", modelResourcePath, mat->bumpDefs);
         //textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());*/
         mat->fetchTextures();
-      
+        //other properties
+        aiString name;
+        material->Get(AI_MATKEY_NAME, name);
+        mat->internalName = name.C_Str();
+        float shininess;
+        material->Get(AI_MATKEY_SHININESS, shininess);
+        mat->shininess = shininess;
+        aiColor3D specularColor;
+        material->Get(AI_MATKEY_COLOR_SPECULAR, specularColor);
+        mat->setVec3("specularColor", glm::vec3(specularColor.r, specularColor.g, specularColor.b));
+        //qDebug() << mat->internalName.c_str() << " s " << specularColor.r << " " << specularColor.g;
+
         materials.push_back(mat);
 
     }

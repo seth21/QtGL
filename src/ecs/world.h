@@ -20,8 +20,7 @@ private:
 	std::unique_ptr<MasterRenderer> masterRenderer;
 	std::vector<std::unique_ptr<ComponentSystem>> systems;
 	int m_x, m_y, m_width, m_height;
-	std::shared_ptr<ShaderProgram> gBufferShader;
-	std::shared_ptr<ShaderProgram> gBufferShader2;
+
 };
 
 #endif

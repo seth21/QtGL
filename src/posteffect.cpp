@@ -16,21 +16,27 @@ void PostEffect::blit(Material* material, FrameBuffer* dest)
 	shader->start();
 	if (!shader) return;
 	int counter = 0;
-	for (auto tex : material->getTextures()) {
+	for (auto &tex : material->getTextures()) {
 		shader->loadInt(tex.first, counter);
 		tex.second->bind(counter);
 		counter++;
 	}
-	for (auto tex : material->getTempTextures()) {
+	for (auto &tex : material->getTempTextures()) {
 		shader->loadInt(tex.first, counter);
 		tex.second->bind(counter);
 		counter++;
 	}
-	for (auto f : material->getFloats()) {
+	for (auto &f : material->getFloats()) {
 		shader->loadFloat(f.first, f.second);
 	}
-	for (auto v3 : material->getVec3s()) {
+	for (auto& v2 : material->getVec2s()) {
+		shader->loadVector2f(v2.first, v2.second);
+	}
+	for (auto &v3 : material->getVec3s()) {
 		shader->loadVector3f(v3.first, v3.second);
+	}
+	for (auto &mat4 : material->getMat4s()) {
+		shader->loadMatrix4f(mat4.first, mat4.second);
 	}
 	
 	screenVAO->bind();

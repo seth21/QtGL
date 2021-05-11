@@ -9,6 +9,7 @@
 #include <QDebug>
 #include "fxaa.h"
 #include "colorcorrection.h"
+#include <gfx/ssr.h>
 
 World::World(int x, int y, int width, int height)
 {
@@ -80,6 +81,7 @@ void World::setupScene()
 	auto cubeTex = ResourceManager::getInstance().load<Texture>("textures/skybox/day/*right.jpg*left.jpg*top.jpg*bottom.jpg*front.jpg*back.jpg", cubeConfig);
 	masterRenderer->getSkyRenderer()->setSkyTexture(cubeTex);
 
+	SSR* ssr = masterRenderer->getPostEffectRenderer()->addEffect<SSR>();
 	FXAA* fxaa = masterRenderer->getPostEffectRenderer()->addEffect<FXAA>();
 	ColorCorrection *correction = masterRenderer->getPostEffectRenderer()->addEffect<ColorCorrection>();
 	correction->exposure = 0.5f;

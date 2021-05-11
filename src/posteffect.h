@@ -18,7 +18,7 @@ public:
 	int screenHeight = 0;
 	int screenX = 0;
 	int screenY = 0;
-	void setViewport(int x, int y, int w, int h);
+	virtual void setViewport(int x, int y, int w, int h);
 	VAO* screenVAO;
 protected:
 	QOpenGLExtraFunctions* f;

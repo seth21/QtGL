@@ -24,6 +24,7 @@ in vec3 tangentFragPos;
 uniform float height_scale = 1;
 #endif
 
+uniform vec3 specularColor;
 #ifdef SPECULAR
 uniform sampler2D specularMap;
 #endif
@@ -111,8 +112,8 @@ void main()
     #endif
     // store specular intensity in gAlbedoSpec's alpha component
     #ifdef SPECULAR
-    gAlbedoSpec.a = texture(specularMap, UV).r;
+    gAlbedoSpec.a = texture(specularMap, UV).r * specularColor.r;
     #else
-    gAlbedoSpec.a = 0.5;
+    gAlbedoSpec.a = specularColor.r;
     #endif
 }  

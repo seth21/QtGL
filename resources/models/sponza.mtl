@@ -27,7 +27,7 @@ newmtl vase_round
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.5000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\vase_round.tga
 	map_Kd textures\vase_round.tga
@@ -58,7 +58,7 @@ newmtl Material__298
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\background.tga
 	map_Kd textures\background.tga
@@ -88,7 +88,7 @@ newmtl bricks
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1500 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\spnza_bricks_a_diff.tga
 	map_Kd textures\spnza_bricks_a_diff.tga
@@ -104,7 +104,7 @@ newmtl arch
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_arch_diff.tga
 	map_Kd textures\sponza_arch_diff.tga
@@ -118,7 +118,7 @@ newmtl ceiling
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_ceiling_a_diff.tga
 	map_Kd textures\sponza_ceiling_a_diff.tga
@@ -132,7 +132,7 @@ newmtl column_a
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_column_a_diff.tga
 	map_Kd textures\sponza_column_a_diff.tga
@@ -148,7 +148,7 @@ newmtl floor
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.3500 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_floor_a_diff.tga
 	map_Kd textures\sponza_floor_a_diff.tga
@@ -163,7 +163,7 @@ newmtl column_c
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_column_c_diff.tga
 	map_Kd textures\sponza_column_c_diff.tga
@@ -179,7 +179,7 @@ newmtl details
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_details_diff.tga
 	map_Kd textures\sponza_details_diff.tga
@@ -193,7 +193,7 @@ newmtl column_b
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_column_b_diff.tga
 	map_Kd textures\sponza_column_b_diff.tga
@@ -221,7 +221,7 @@ newmtl flagpole
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.4000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_flagpole_diff.tga
 	map_Kd textures\sponza_flagpole_diff.tga
@@ -319,7 +319,7 @@ newmtl chain
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.5000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\chain_texture.tga
 	map_Kd textures\chain_texture.tga
@@ -336,7 +336,7 @@ newmtl vase_hanging
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.2000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\vase_hanging.tga
 	map_Kd textures\vase_hanging.tga
@@ -350,7 +350,7 @@ newmtl vase
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1500 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\vase_dif.tga
 	map_Kd textures\vase_dif.tga
@@ -366,7 +366,7 @@ newmtl Material__25
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\lion.tga
 	map_Kd textures\lion.tga
@@ -382,7 +382,7 @@ newmtl roof
 	illum 2
 	Ka 0.5880 0.5880 0.5880
 	Kd 0.5880 0.5880 0.5880
-	Ks 0.0000 0.0000 0.0000
+	Ks 0.1000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 	map_Ka textures\sponza_roof_diff.tga
 	map_Kd textures\sponza_roof_diff.tga
