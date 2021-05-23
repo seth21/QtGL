@@ -5,6 +5,7 @@
 #include <glm/vec3.hpp>
 #include <memory>
 #include "boundingbox.h"
+#include "boundingsphere.h"
 #include <QDebug>
 class Frustum {
 public:
@@ -15,7 +16,8 @@ public:
 	bool intersects();
 	std::unique_ptr<Plane> planes[6];
 	bool pointInFrustum(glm::vec3& p);
-	bool sphereInFrustum(glm::vec3& p, float radius);
+	bool sphereInFrustum(const glm::vec3& p, float radius);
+	bool sphereInFrustum(const BoundingSphere &sphere);
 	bool boundsInFrustum(const BoundingBox& bounds);
 	std::vector<glm::vec3> getLineSegments();
 	const std::vector<glm::vec3>& getFrustumPoints();

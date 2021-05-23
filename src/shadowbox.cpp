@@ -17,7 +17,7 @@ ShadowBox::ShadowBox() {
 	* possible while still ensuring that everything inside the camera's view
 	* (within a certain range) will cast shadows.
 	*/
-void ShadowBox::update(Camera *cam, glm::mat4 lightViewMatrix) {
+void ShadowBox::update(Camera *cam, glm::mat4 lightViewMatrix, float shadowMapWidth, float shadowMapHeight) {
 
 	frustum->calculateFrustum(cam->FOVy, cam->nearPlane, SHADOW_DISTANCE, cam->aspect, cam->position, cam->getFront(), cam->getRight());
 	//transform camera frustum points to light space
@@ -27,6 +27,15 @@ void ShadowBox::update(Camera *cam, glm::mat4 lightViewMatrix) {
 	
 	lightspaceBB.findMinMax(lightSpaceFrustumPoints);
 	lightspaceBB.max.z += OFFSET;
+
+	// Round the light's bounding box to the nearest texel unit to reduce flickering.
+	glm::vec2 unitsPerTexel = 2.0f * glm::vec2(lightspaceBB.getWidth(), lightspaceBB.getHeight()) / glm::vec2(shadowMapWidth, shadowMapHeight);
+
+	lightspaceBB.min.x = floor(lightspaceBB.min.x / unitsPerTexel.x) * unitsPerTexel.x;
+	lightspaceBB.max.x = floor(lightspaceBB.max.x / unitsPerTexel.x) * unitsPerTexel.x;
+
+	lightspaceBB.min.y = floor(lightspaceBB.min.y / unitsPerTexel.y) * unitsPerTexel.y;
+	lightspaceBB.max.y = floor(lightspaceBB.max.y / unitsPerTexel.y) * unitsPerTexel.y;
 }
 
 /**

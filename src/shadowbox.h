@@ -22,7 +22,7 @@
 class ShadowBox {
 public:
 	ShadowBox();
-	void update(Camera* cam, glm::mat4 lightViewMatrix);
+	void update(Camera* cam, glm::mat4 lightViewMatrix, float shadowMapWidth, float shadowMapHeight);
 	glm::vec3 getCenter(glm::mat4 lightViewMatrix);
 	float getWidth();
 	float getHeight();

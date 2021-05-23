@@ -18,6 +18,7 @@ struct TextureAttachment {
 	//GLuint texture = 0;
 	unsigned int attachmentID = 0;
 	bool depth = false;
+	bool cube = false;
 	std::unique_ptr<Texture> tex;
 	std::string name;
 };
@@ -34,8 +35,8 @@ public:
 	void setViewport(int xS, int yS, int width, int height);
 	unsigned int getWidth();
 	unsigned int getHeight();
-	void registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name);
-	void registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name);
+	void registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name, bool cube = false);
+	void registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name, bool cube = false);
 	void setup();
 	void setRenderTargets(int, ...);
 	void bindAllColorAttachments();

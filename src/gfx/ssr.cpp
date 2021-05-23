@@ -55,12 +55,15 @@ void SSR::update(Texture* mainTex, FrameBuffer* dest, Camera* cam, FrameBuffer* 
 	
 	//Blur result
 	//Horizontal
-	blurmat.setFloat("horizontal", 1);
+	blurmat.setVec2("texelSize", glm::vec2(1.0f / blurFBO1->getWidth(), 1.0f / blurFBO1->getHeight()));
+	blurmat.setTempTexture("distTex", ssrFBO->getColorAttachment("raydistance"));
+	
+	blurmat.setVec2("direction", glm::vec2(1, 0));
 	blurmat.setTempTexture("mainTexture", ssrFBO->getColorAttachment("ssr"));
 	blurmat.setFloat("final", 0);
 	blit(&blurmat, blurFBO1.get());
 	//Vertical
-	blurmat.setFloat("horizontal", 0);
+	blurmat.setVec2("direction", glm::vec2(0, 1));
 	blurmat.setTempTexture("mainTexture", blurFBO1->getColorAttachment("blur"));
 	blurmat.setFloat("final", 1);
 	blurmat.setTempTexture("sceneTex", mainTex);

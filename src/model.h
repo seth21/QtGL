@@ -13,6 +13,17 @@
 #include <QDebug>
 #include "resource.h"
 #include "resourceconfig.h"
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
+struct MeshNode {
+    std::vector<unsigned int> meshIndices;
+    glm::vec3 position;
+    glm::vec3 scale;
+    glm::quat orientation;
+    std::vector<std::unique_ptr<MeshNode>> children;
+    std::string name;
+};
 
 class Model : public Resource{
 
@@ -23,6 +34,7 @@ class Model : public Resource{
         bool loaded();
         std::vector<Mesh*> meshes;
         std::vector<Material*> materials;
+        std::unique_ptr<MeshNode> meshnode;
         void loadModel(std::string path);
         //Entity* entity;
         std::string filepath;
@@ -30,7 +42,7 @@ class Model : public Resource{
     private:
         ResourceConfig config;
         bool fileLoaded = false;
-        //void processNode(aiNode *node, const aiScene *scene);
+        void processNodes(aiNode *node, const aiScene *scene, MeshNode *meshnode);
         void processMeshes(const aiScene* scene);
         void loadMeshVertices(aiMesh *mesh, const aiScene *scene, std::vector<Vertex>& vertices, std::vector<GLuint>& indices);
         //std::vector<ModelTextureDef> loadMaterialTextureDefs(aiMaterial* mat, aiTextureType type, std::string typeName);

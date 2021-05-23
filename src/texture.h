@@ -21,6 +21,7 @@ public:
     void release();
     ResourceConfig& getResourceConfig();
     void uploadFloat2D(int width, int height, const float* data, GLint internalFormat, GLenum format, GLenum type, GLenum filter, GLenum wrap);
+    void uploadFloat3D(int faceWidth, int faceHeight, const float* faceData[6], GLint internalFormat, GLenum format, GLenum type, GLenum filter, GLenum wrap);
     unsigned int getHandle();
     unsigned int getChannelsCount();
 private:

@@ -4,13 +4,22 @@
 #include <QOpenGLExtraFunctions>
 #include "shaderprogram.h"
 #include "directionallight.h"
+#include "lights/pointlight.h"
 #include "commandqueue.h"
 #include <ecs/comp/transformComp.h>
 #include <ecs/comp/meshrendererComp.h>
-struct ShadowQueue {
+struct DirShadowQueue {
 	DirectionalLight* m_light;
 	CommandQueue queue;
-	ShadowQueue(DirectionalLight* light) {
+	DirShadowQueue(DirectionalLight* light) {
+		m_light = light;
+	}
+};
+
+struct PointShadowQueue {
+	PointLight* m_light;
+	CommandQueue queue;
+	PointShadowQueue(PointLight* light) {
 		m_light = light;
 	}
 };
@@ -20,9 +29,12 @@ public:
 
 	ShadowRenderer();
 	void addDirectionalLight(DirectionalLight* light);
-	void addShadowCaster(unsigned int vaoID, unsigned int baseVertex, unsigned int vertexCount, glm::mat4x4 transformMatrix, Material* material, BoundingBox* transformedAABB);
+	void addPointLight(PointLight* light);
+	void addShadowCaster(unsigned int vaoID, unsigned int baseVertex, unsigned int vertexCount, glm::mat4x4 transformMatrix, Material* material, BoundingSphere* boundingSphere);
 	void updateDirectionalLights(Camera* cam);
+	void updatePointLights();
 	void doDirectionalLightDepthPass();
+	void doPointLightsDepthPass();
 	void clearQueues();
 	
 private:
@@ -32,8 +44,8 @@ private:
 	std::shared_ptr<ShaderProgram> dirLightDepthShader;
 	std::shared_ptr<ShaderProgram> pointLightShader;
 	//QUEUES
-	std::vector<ShadowQueue> dirShadowQueues;
-	std::vector<ShadowQueue> pointShadowQueues;
+	std::vector<DirShadowQueue> dirShadowQueues;
+	std::vector<PointShadowQueue> pointShadowQueues;
 };
 
 #endif

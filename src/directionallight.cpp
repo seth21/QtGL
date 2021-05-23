@@ -9,7 +9,7 @@ DirectionalLight::DirectionalLight()
 	shadowMap->setup();
 	shadowBox = std::make_unique<ShadowBox>();
 	offset = createOffset();
-	setDirection(glm::vec3(0, -1, 0.2f));
+	setDirection(glm::vec3(0, -1, 0.35f));
 	//setDirection(glm::vec3(0, -1, -1));
 	setColor(glm::vec3(1.4, 1.3, 0.5));
 	lightViewMatrix = glm::mat4(1);
@@ -55,7 +55,7 @@ glm::mat4x4 DirectionalLight::getProjectionMatrix() {
 	 */
 void DirectionalLight::updateMatrices(Camera* cam) {
 	
-	shadowBox->update(cam, lightViewMatrix);
+	shadowBox->update(cam, lightViewMatrix, shadowMap->getWidth(), shadowMap->getHeight());
 	updateLightViewMatrix(direction, shadowBox->getCenter(lightViewMatrix));
 	updateOrthoProjectionMatrix(shadowBox->getWidth(), shadowBox->getHeight(), shadowBox->getLength());
 

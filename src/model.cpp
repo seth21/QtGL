@@ -2,6 +2,7 @@
 
 
 Model::Model(std::string fileName, ResourceConfig config) : Resource (fileName, config){
+
     loadModel(fileName);
 }
 
@@ -12,6 +13,7 @@ Model::~Model(){
     for (int i = 0; i < materials.size(); i++) {
         delete materials[i];
     }
+
 }
 
 void Model::addMesh(Mesh mesh){
@@ -25,45 +27,32 @@ bool Model::loaded()
 
 
 
-/*void Model::processNode(aiNode *node, const aiScene *scene)
+void Model::processNodes(aiNode *node, const aiScene *scene, MeshNode* meshnode)
 {
     //get the transformation details
     aiVector3D pos;
     aiVector3D scale;
     aiQuaternion orientation;
-    node->mTransformation.Decompose(pos, orientation, scale);
-    e->position.x = pos.x;
-    e->position.y = pos.y;
-    e->position.z = pos.z;
-    e->scale.x = scale.x == 0 ? 1 : scale.x;
-    e->scale.y = scale.y == 0 ? 1 : scale.y;
-    e->scale.z = scale.z == 0 ? 1 : scale.z;
-    e->rotation.x = orientation.x;
-    e->rotation.y = orientation.y;
-    e->rotation.z = orientation.z;
-    e->rotation.w = orientation.w;
-    // process all the node's meshes (if any)
+    node->mTransformation.Decompose(scale, orientation, pos);
+    meshnode->position = glm::vec3(pos.x, pos.y, pos.z);
+    meshnode->scale = glm::vec3(scale.x, scale.y, scale.z);
+    meshnode->orientation = glm::quat(orientation.w, orientation.x, orientation.y, orientation.z);
+    meshnode->name = node->mName.C_Str();
+    // add all the node's meshes (if any)
     for(unsigned int i = 0; i < node->mNumMeshes; i++)
     {
-        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]]; 
-        Mesh *m = new Mesh();
-        processMesh(mesh, scene, m->vertices, m->indices);
-        m->setupMesh();
-        //meshes.push_back(m);
-        e->meshes.push_back(m);
-        Material* meshMat = Resources::getInstance().getMaterial(filepath, mesh->mMaterialIndex);
-        e->materials.push_back(meshMat);
+        meshnode->meshIndices.push_back(node->mMeshes[i]); 
 		//std::cout << "Meshes size: " << meshes.size() << std::endl;			
-    }//mesh->mMaterialIndex
+    }
+    //qDebug() << node->mName.C_Str() << " Meshes:" << node->mNumMeshes << " Children:" << node->mNumChildren << " Parent:" << (node->mParent ? node->mParent->mName.C_Str() : "NULL");
     // then do the same for each of its children
     for(unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        Entity *echild = new Entity();
-        echild->parent = e;
-        processNode(node->mChildren[i], scene);
-        e->children.push_back(echild);
+        std::unique_ptr child = std::make_unique<MeshNode>();
+        processNodes(node->mChildren[i], scene, child.get());
+        meshnode->children.push_back(std::move(child));
     }
-}*/
+}
 
 void Model::processMeshes(const aiScene* scene)
 {
@@ -168,7 +157,8 @@ void Model::loadModel(std::string path)
     qDebug() << "Scene meshes " << scene->mNumMeshes;
     qDebug() << "Scene materials " << scene->mNumMaterials;
     loadMaterialsFromModel(scene, path);
-    //processNode(scene->mRootNode, scene);
+    meshnode = std::make_unique<MeshNode>();
+    processNodes(scene->mRootNode, scene, meshnode.get());
     processMeshes(scene);
     fileLoaded = true;
 }

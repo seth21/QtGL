@@ -137,6 +137,27 @@ void Texture::uploadFloat2D(int width, int height, const float *data, GLint inte
     fileOK = true;
 }
 
+void Texture::uploadFloat3D(int faceWidth, int faceHeight, const float* faceData[6], GLint internalFormat, GLenum format, GLenum type, GLenum filter, GLenum wrap)
+{
+    if (fileOK) return;
+    m_width = faceWidth;
+    m_height = faceHeight;
+    cubeTexture = true;
+    gl->glGenTextures(1, &m_texture);
+    gl->glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
+    
+    gl->glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, filter);
+    gl->glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, filter);
+    gl->glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, wrap);
+    gl->glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, wrap);
+    gl->glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, wrap);
+
+    for (unsigned int i = 0; i < 6; ++i)
+        gl->glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, m_width, m_height, 0, format, type, (faceData == NULL) ? NULL : faceData[i]);
+
+    fileOK = true;
+}
+
 unsigned int Texture::getHandle()
 {
     return m_texture;

@@ -10,10 +10,16 @@ ShadowRenderer::ShadowRenderer()
 
 void ShadowRenderer::addDirectionalLight(DirectionalLight* light)
 {
-	dirShadowQueues.push_back(ShadowQueue(light));
+	dirShadowQueues.push_back(DirShadowQueue(light));
+	qDebug() << dirShadowQueues.size();
 }
 
-void ShadowRenderer::addShadowCaster(unsigned int vaoID, unsigned int baseVertex, unsigned int vertexCount, glm::mat4x4 transformMatrix, Material* material, BoundingBox *transformedAABB)
+void ShadowRenderer::addPointLight(PointLight* light)
+{
+	pointShadowQueues.push_back(PointShadowQueue(light));
+}
+
+void ShadowRenderer::addShadowCaster(unsigned int vaoID, unsigned int baseVertex, unsigned int vertexCount, glm::mat4x4 transformMatrix, Material* material, BoundingSphere *boundingSphere)
 {
 	//add to shadow caster queue if the light can "see" it
 	for (int i = 0; i < dirShadowQueues.size(); i++) {
@@ -22,19 +28,32 @@ void ShadowRenderer::addShadowCaster(unsigned int vaoID, unsigned int baseVertex
 			dirShadowQueues[i].queue.createCommand(vaoID, baseVertex, vertexCount, transformMatrix, material, 1);
 		//}
 	}
+
+	for (int i = 0; i < pointShadowQueues.size(); i++) {
+		PointLight* light = pointShadowQueues[i].m_light;
+		if (light->bSphere.intersect(*boundingSphere)) {
+			pointShadowQueues[i].queue.createCommand(vaoID, baseVertex, vertexCount, transformMatrix, material, 1);
+		}
+	}
 }
 
 void ShadowRenderer::updateDirectionalLights(Camera* cam)
 {
+	qDebug() << dirShadowQueues.size();
 	for (int i = 0; i < dirShadowQueues.size(); i++) {
 		DirectionalLight* light = dirShadowQueues[i].m_light;
 		light->updateMatrices(cam);
 	}
 }
 
+void ShadowRenderer::updatePointLights()
+{
+}
+
 void ShadowRenderer::clearQueues()
 {
 	dirShadowQueues.clear();
+	pointShadowQueues.clear();
 }
 
 void ShadowRenderer::doDirectionalLightDepthPass()
@@ -64,4 +83,8 @@ void ShadowRenderer::doDirectionalLightDepthPass()
 		
 	}
 	
+}
+
+void ShadowRenderer::doPointLightsDepthPass()
+{
 }

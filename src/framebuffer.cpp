@@ -223,7 +223,7 @@ void FrameBuffer::createTexAttachment(TextureAttachment* attachment)
 	f->glFramebufferTexture2D(GL_FRAMEBUFFER, (attachment->depth) ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0 + attachment->attachmentID, GL_TEXTURE_2D, attachment->tex->getHandle(), 0);
 }
 
-void FrameBuffer::registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name)
+void FrameBuffer::registerColorAttachment(unsigned int attachmentID, GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name, bool cube)
 {
 	std::unique_ptr<TextureAttachment> att = std::make_unique<TextureAttachment>();
 	for (int i = 0; i < colorAttachments.size(); i++) {
@@ -236,10 +236,11 @@ void FrameBuffer::registerColorAttachment(unsigned int attachmentID, GLenum data
 	att->format = format;
 	att->minMagFilter = minMag;
 	att->name = name;
+	att->cube = cube;
 	colorAttachments.push_back(std::move(att));
 }
 
-void FrameBuffer::registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name)
+void FrameBuffer::registerDepthAttachment(GLenum dataType, GLint internalFormat, GLenum format, GLint minMag, std::string name, bool cube)
 {
 	depthAttachment = std::make_unique<TextureAttachment>();
 	depthAttachment->depth = true;
@@ -249,6 +250,7 @@ void FrameBuffer::registerDepthAttachment(GLenum dataType, GLint internalFormat,
 	depthAttachment->format = format;
 	depthAttachment->minMagFilter = minMag;
 	depthAttachment->name = name;
+	depthAttachment->cube = cube;
 }
 
 void FrameBuffer::setViewport(int x, int y, int width, int height)

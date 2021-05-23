@@ -107,7 +107,8 @@ void main()
     //Shadows
     float cameraDist = length(viewPos - worldPos);
     float shadowFade = calcShadowStrength(cameraDist);
-    float shadowFactor = calculateShadowFactor(shadowMapSpaceMatrix * vec4(worldPos + worldNormal * 0.3, 1)) * shadowFade;
+    float normalOffsetFac = max(0.05 * (1.0 - diff), 0.005);
+    float shadowFactor = calculateShadowFactor(shadowMapSpaceMatrix * vec4(worldPos + worldNormal * normalOffsetFac, 1)) * shadowFade;
     
     vec3 result = (diffuse + specular) * shadowFactor + ambient;
     FragLight = vec4(result, 1.0);
