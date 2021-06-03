@@ -7,6 +7,8 @@ enum ACTION {
 	LEFT,
 	UP,
 	DOWN,
+	TREEUP,
+	TREEDOWN,
 	MAX_VALUE
 };
 

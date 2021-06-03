@@ -28,14 +28,14 @@ void MasterRenderer::enqueueComp(TransformComp* transformComp, MeshRendererComp*
 		//a
 		BoundingBox& transformedAABB = transformComp->getBoundingBox();
 		transformedAABB.setAABB(mesh->aabb);
-		transformedAABB.mul(transformComp->getWorldMatrix());
+		transformedAABB.mul(transformComp->transformMatrix);
 		transformedAABB.calculateCorners();
 		transformComp->getBoundingSphere().calculateSphereApproximate(transformedAABB);
 		//Can the camera see the object?
 		if (camera->frustum->boundsInFrustum(transformedAABB)) {
 			if (mat->blending == RenderBlend::STANDARD || mat->blending == RenderBlend::ADDITIVE) {
 				//add to forward blend queue
-				forwardBlendQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->getWorldMatrix(), mat, 0);
+				forwardBlendQueue.createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
 			}
 			//else if (mat->state.test(MaterialFlag::CUSTOM)) {
 				//add to forward opaque queue
@@ -43,12 +43,12 @@ void MasterRenderer::enqueueComp(TransformComp* transformComp, MeshRendererComp*
 			//}
 			else {
 				//add to deferred queue
-				deferredRenderer->getQueue().createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->getWorldMatrix(), mat, 0);
+				deferredRenderer->getQueue().createCommand(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, 0);
 			}
 		}
 
 		if (mat->state[MaterialFlag::CASTSHADOW]) {
-			shadowRenderer->addShadowCaster(mesh->VAO, 0, mesh->indices.size(), transformComp->getWorldMatrix(), mat, &transformComp->getBoundingSphere());
+			shadowRenderer->addShadowCaster(mesh->VAO, 0, mesh->indices.size(), transformComp->transformMatrix, mat, &transformComp->getBoundingSphere());
 		}
 	}
 	

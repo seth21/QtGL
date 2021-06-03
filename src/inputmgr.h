@@ -35,6 +35,8 @@ private:
 		keyBindings[Qt::Key_S] = BACK;
 		keyBindings[Qt::Key_Q] = UP;
 		keyBindings[Qt::Key_E] = DOWN;
+		keyBindings[Qt::Key_Z] = TREEUP;
+		keyBindings[Qt::Key_X] = TREEDOWN;
 	}
 
 	std::unordered_map<int, ACTION> keyBindings;

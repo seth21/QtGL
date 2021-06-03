@@ -26,16 +26,16 @@ void LightSystem::update(float deltaTime)
 		auto [transform, pointlight] = plview.get<TransformComp, PointLightComp>(entity);
 
 		//m_renderer->addLight(pointlight.pointLight.get());
-		if (transform.isDirty()) {
+		//if (transform.isDirty()) {
 			//if light moved set as dirtyLight
 		//	pointlight.setDirty(true);
 			//check all entities if they intersect->recalculate affectedEntities from the start
 			//pointlight.affectedEntities.clear();
 
-		}
-		else {
+		//}
+		//else {
 
-		}
+		//}
 	}
 
 	

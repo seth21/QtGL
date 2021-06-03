@@ -11,7 +11,6 @@ ShadowRenderer::ShadowRenderer()
 void ShadowRenderer::addDirectionalLight(DirectionalLight* light)
 {
 	dirShadowQueues.push_back(DirShadowQueue(light));
-	qDebug() << dirShadowQueues.size();
 }
 
 void ShadowRenderer::addPointLight(PointLight* light)
@@ -39,7 +38,6 @@ void ShadowRenderer::addShadowCaster(unsigned int vaoID, unsigned int baseVertex
 
 void ShadowRenderer::updateDirectionalLights(Camera* cam)
 {
-	qDebug() << dirShadowQueues.size();
 	for (int i = 0; i < dirShadowQueues.size(); i++) {
 		DirectionalLight* light = dirShadowQueues[i].m_light;
 		light->updateMatrices(cam);

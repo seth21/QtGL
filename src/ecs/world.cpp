@@ -4,11 +4,16 @@
 #include "ecs/comp/meshrendererComp.h"
 #include "ecs/comp/directionallightComp.h"
 #include "ecs/comp/pointlightComp.h"
+#include "ecs/comp/playerInputComp.h"
 #include "ecs/comp/cameraComp.h"
+#include "ecs/comp/moveComp.h"
+#include "ecs/comp/hierarchyComp.h"
 #include "ecs/system/lightSystem.h"
 #include "ecs/system/renderSystem.h"
 #include "ecs/system/transformSystem.h"
-#include "ecs/system/transformUndirtySystem.h"
+#include "ecs/system/hierarchySystem.h"
+#include "ecs/system/movementSystem.h"
+#include "ecs/system/playerInputSystem.h"
 #include <QDebug>
 #include "fxaa.h"
 #include "colorcorrection.h"
@@ -43,6 +48,12 @@ void World::setupScene()
 
 
 	//SYSTEMS
+	auto playerInputSystem = std::make_unique<PlayerInputSystem>(&m_Registry, masterRenderer.get());
+	systems.push_back(std::move(playerInputSystem));
+	auto hierarchySystem = std::make_unique<HierarchySystem>(&m_Registry, masterRenderer.get());
+	systems.push_back(std::move(hierarchySystem));
+	auto movementSystem = std::make_unique<MovementSystem>(&m_Registry, masterRenderer.get());
+	systems.push_back(std::move(movementSystem));
 	auto transformSystem = std::make_unique<TransformSystem>(&m_Registry, masterRenderer.get());
 	systems.push_back(std::move(transformSystem));
 	auto lightSystem = std::make_unique<LightSystem>(&m_Registry, masterRenderer.get());
@@ -51,24 +62,26 @@ void World::setupScene()
 	systems.push_back(std::move(cameraSystem));
 	auto renderSystem = std::make_unique<RenderSystem>(&m_Registry, masterRenderer.get());
 	systems.push_back(std::move(renderSystem));
-	auto transformUndirtySystem = std::make_unique<TransformUndirtySystem>(&m_Registry, masterRenderer.get());
-	systems.push_back(std::move(transformUndirtySystem));
+	
 	//ENTITIES
 
 	sponza = loadModelToEntity("models/medieval-scenery/medievalApplied.fbx");
 	auto& sceneTrans = m_Registry.get<TransformComp>(sponza);
-	sceneTrans.setScale(glm::vec3(0.05));
-
+	m_Registry.patch<TransformComp>(sponza, [](auto& trans) { trans.localScale = glm::vec3(0.05); });
+	m_Registry.emplace<MoveComp>((entt::entity)73);
+	auto &playerInput = m_Registry.emplace<PlayerInputComp>((entt::entity)73);
+	playerInput.velocity = glm::vec3(0, 2, 0);
+	
 	dirLight = m_Registry.create();
 	m_Registry.emplace<DirectionalLightComp>(dirLight);
-
+	
 	player = m_Registry.create();
 	m_Registry.emplace<CameraComp>(player);
-
+	
 	pointLight = m_Registry.create();
 	m_Registry.emplace<PointLightComp>(pointLight);
 	auto& transPointLight = m_Registry.emplace<TransformComp>(pointLight);
-	transPointLight.setPosition(glm::vec3(0, 4, 0));
+	transPointLight.localPosition = glm::vec3(0, 4, 0);
 
 	ResourceConfig cubeConfig;
 	cubeConfig.addFlag("cube");
@@ -126,36 +139,18 @@ entt::entity World::createMeshRendererFromNode(MeshNode* node, entt::entity pare
 {
 	entt::entity e = m_Registry.create();
 	auto& trans = m_Registry.emplace<TransformComp>(e);
-	trans.setPosition(node->position);
-	trans.setScale(node->scale);
-	trans.setOrientation(node->orientation);
-	trans.parent = parent;
-	trans.hierarchyDepth = depth;
-	if (parent != entt::null) m_Registry.get<TransformComp>(parent).getChildren().push_back(e);
+	trans.localPosition = node->position;
+	trans.localScale = node->scale;
+	trans.localOrientation = node->orientation;
+	auto& hier = m_Registry.emplace<HierarchyComp>(e, parent);
+	
 	if (node->meshIndices.size() > 0) m_Registry.emplace<MeshRendererComp>(e, model, node->meshIndices, node->name);
-	qDebug() << "Name:" << node->name.c_str() << " Mesh indices:" << node->meshIndices.size() << " Children:" << node->children.size();
+	//qDebug() << "ID:" << (int)e << "Name:" << node->name.c_str() << " Mesh indices:" << node->meshIndices.size() << " Children:" << node->children.size();
 	//Add children
 	entt::entity lastSibling = entt::null;
 	for (int i = 0; i < node->children.size(); i++) {
 		entt::entity child = createMeshRendererFromNode(node->children[i].get(), e, model, depth + 1);
 	}
-		/*if (lastSibling == entt::null) {
-			//This is the first child of the parent
-			trans.first_child = child;
-		}
-		else {
-			//Get the previous sibling
-			auto& transPrevSibling = m_Registry.get<TransformComp>(lastSibling);
-			//And assign the current child as the next sibling
-			transPrevSibling.next_sibling = child;
-			//Get the current sibling
-			auto& transCurrSibling = m_Registry.get<TransformComp>(child);
-			//And assign the last child as the previous sibling
-			transCurrSibling.prev_sibling = lastSibling;
-		}
-
-		lastSibling = child;
-	}*/
 	
 	return e;
 }
