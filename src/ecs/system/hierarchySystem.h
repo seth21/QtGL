@@ -1,7 +1,7 @@
 #ifndef HIERARCHYSYSTEM_H
 #define HIERARCHYSYSTEM_H
 #include "componentSystem.h"
-#include "ecs/comp/dirtyTransformComp.h"
+#include "ecs/comp/dirtytransformComp.h"
 #include "ecs/comp/hierarchyComp.h"
 
 class HierarchySystem : public ComponentSystem {
