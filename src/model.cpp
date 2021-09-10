@@ -143,7 +143,12 @@ void Model::loadModel(std::string path)
 {
     filepath = path;
 	Assimp::Importer import;
-    const aiScene *scene = import.ReadFile((QApplication::applicationDirPath() + "/resources/").toStdString() + path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+#ifdef PYTHON_USE
+	std::string resourcesFolder = QApplication::arguments()[1].toStdString() +"/";
+#else
+	std::string resourcesFolder = (QApplication::applicationDirPath() + "/resources/").toStdString();
+#endif
+    const aiScene *scene = import.ReadFile(resourcesFolder + path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 	
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
     {

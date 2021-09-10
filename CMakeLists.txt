@@ -34,6 +34,7 @@ link_directories(${CMAKE_SOURCE_DIR}/lib)
 ## your source files
 # Add source files
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.cpp)
+list(REMOVE_ITEM SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/python/mytestmodule.cpp)
 
 # Add header files
 file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.h)
@@ -67,12 +68,16 @@ endif()
 
 set(LIBS assimp)
 
+# PYTHON
+# find_package(PythonLibs REQUIRED)
+# include_directories(${PYTHON_INCLUDE_DIRS})
+
 # Copy dlls
 if(WIN32)
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		"${PROJECT_SOURCE_DIR}/dlls"
-		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_directory
+"${PROJECT_SOURCE_DIR}/dlls"
+$<TARGET_FILE_DIR:${PROJECT_NAME}>)
 endif()
 
 # also tell CMake to link with the libraries from the line 14
@@ -82,6 +87,7 @@ target_link_libraries(
 	Qt5::Widgets
 	Qt5::OpenGL
 	${LIBS}
+	# ${PYTHON_LIBRARIES}
 	)
 
 # copy folder resources and its contents

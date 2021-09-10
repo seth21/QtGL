@@ -40,8 +40,12 @@ void Texture::loadCubeImage(const std::string& fileName) {
     gl->glBindTexture(GL_TEXTURE_CUBE_MAP, m_texture);
     
     for (int i = 1; i < splits.size(); i++) {
+#ifdef PYTHON_USE
+		QDir imagePath = QDir(QApplication::arguments()[1] + "/" + splits[0].c_str() + splits[i].c_str());
+#else
         QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/" + splits[0].c_str() + splits[i].c_str());
-        mp_textureData = stbi_load(imagePath.absolutePath().toUtf8(), &m_width, &m_height, &m_nrChannels, 0);
+#endif
+        mp_textureData = stbi_load(imagePath.absolutePath().toUtf8().constData(), &m_width, &m_height, &m_nrChannels, 0);
         if (!mp_textureData) {
             qDebug() << "Failed to load cube texture data:" << imagePath.absolutePath().toStdString().c_str();
             fileOK = false;
@@ -66,7 +70,11 @@ void Texture::loadCubeImage(const std::string& fileName) {
 
 void Texture::loadImage(const std::string& fileName) {
     std::vector<std::string> splits = splitString(fileName, "%");
+#ifdef PYTHON_USE
+	QDir imagePath = QDir(QApplication::arguments()[1] +"/"+ fileName.c_str());
+#else
     QDir imagePath = QDir(QApplication::applicationDirPath() + "/resources/" + fileName.c_str());
+#endif
     mp_textureData = stbi_load(imagePath.absolutePath().toUtf8(), &m_width, &m_height, &m_nrChannels, 0);
     qDebug() << "Loaded texture:" << fileName.c_str() << "->" << sizeof(mp_textureData) << m_width << m_height << m_nrChannels;
     fullPath = imagePath.absolutePath().toStdString();

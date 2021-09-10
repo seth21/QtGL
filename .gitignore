@@ -78,3 +78,4 @@ out/*
 .vscode/*
 *.user
 .vs/*
+src/python/venv
