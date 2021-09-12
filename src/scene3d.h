@@ -21,7 +21,8 @@ public:
 
 	QSize sizeHint() const override;
     void paintGL() override;
-	
+	void stopTimer();
+
 	int scrWidth = 0, scrHeight = 0, scrX = 0, scrY = 0;
 	std::unique_ptr<World> world;
 protected:

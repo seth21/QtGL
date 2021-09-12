@@ -27,9 +27,6 @@ typedef struct {
 static void
 Application_dealloc(Application *self)
 {
-	for (std::vector<QWidget *>::iterator it = self->windows.begin(); it !=  self->windows.end(); ++it) {
-		if (*it != 0) delete (*it);
-	}
 	Py_TYPE(self)->tp_free((PyObject *) self);
 }
 
@@ -81,7 +78,7 @@ Application_exec(Application *self)
 	// }
 
 	// Retrieve executable name to pass to QApplication
-	wchar_t *pythonExe = Py_GetPath();
+	wchar_t *pythonExe = Py_GetExecPrefix();
 	int len = wcslen(pythonExe);
 	char *argv[2] = {new char [len], new char [self->resourceFolder.length()]};
 	wcstombs(argv[0], pythonExe, len);
@@ -101,10 +98,9 @@ Application_exec(Application *self)
 	}
 	self->started = 1;
 	int retVal = application.exec();
-	if (&application) {
-		delete &application;
-	}
-	// std::cout << static_cast<QObject *>(self->windows[0])->metaObject()->className();
+	delete argv[1];
+	delete argv[0];
+
 	return PyLong_FromLong(retVal);
 }
 

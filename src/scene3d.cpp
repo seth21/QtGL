@@ -46,6 +46,11 @@ void Scene3D::paintGL()
 	
 }
 
+void Scene3D::stopTimer()
+{
+	mp_timer->stop();
+}
+
 void Scene3D::resizeGL(int w, int h)
 {
 	float aspectRatio = 4.0f / 3.0f;

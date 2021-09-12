@@ -21,6 +21,10 @@ public:
 	void keyPressEvent(QKeyEvent* event);
 	void keyReleaseEvent(QKeyEvent* event);
 	void mouseMoveEvent(QMouseEvent* event);
+
+protected:
+	virtual void closeEvent(QCloseEvent *event);
+	
 private slots:
 	void OnFileNew();
 	void OnFileOpen();

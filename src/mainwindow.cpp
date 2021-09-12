@@ -97,3 +97,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent* event) {
 	InputManager::getInstance().registerMouse(event->pos().x(), event->pos().y());
 
 }
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+	mp_scene3D->stopTimer();
+	mp_scene3D->world.reset();
+}
